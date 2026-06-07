@@ -17,6 +17,8 @@ def save_experiment(record: dict[str, Any]) -> Path:
     run_id = record.get("run_id", datetime.now().strftime("%Y%m%d_%H%M%S"))
     if record.get("type") == "pipeline":
         filename = f"{run_id}_pipeline.json"
+    elif record.get("type") == "comparison":
+        filename = f"{run_id}_comparison.json"
     else:
         method = record.get("method", "unknown")
         filename = f"{run_id}_{method}.json"
@@ -47,14 +49,22 @@ def list_experiments(
                 continue
             if node:
                 record_node = record.get("node")
-                if record.get("type") == "pipeline":
+                record_type = record.get("type")
+                if record_type == "pipeline":
                     step_nodes = [s.get("node") for s in record.get("steps", [])]
                     if record_node != node and node not in step_nodes:
                         continue
+                elif record_type == "comparison":
+                    if record_node != node:
+                        continue
                 elif record_node != node:
                     continue
-            if method and record.get("method") != method:
-                continue
+            if method:
+                if record.get("type") == "comparison":
+                    if method not in record.get("methods", []):
+                        continue
+                elif record.get("method") != method:
+                    continue
             records.append(record)
         except (json.JSONDecodeError, OSError):
             continue

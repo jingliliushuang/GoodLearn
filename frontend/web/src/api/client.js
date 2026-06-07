@@ -45,6 +45,20 @@ export async function runPipeline(imageFile, pipeline) {
   return data;
 }
 
+export async function compareMethods(domain, node, methods, imageFile) {
+  const form = new FormData();
+  form.append('domain', domain);
+  form.append('node', node);
+  form.append('methods', JSON.stringify(methods));
+  form.append('image', imageFile);
+
+  const { data } = await client.post('/api/compare-methods', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 300000,
+  });
+  return data;
+}
+
 export async function runTimerDemo(payload) {
   const { data } = await client.post('/api/demos/embedded/timer', payload);
   return data;

@@ -44,6 +44,10 @@ def get_pipelines_dir() -> Path:
     return get_project_root() / "backend" / "runtime" / "pipelines"
 
 
+def get_comparisons_dir() -> Path:
+    return get_project_root() / "backend" / "runtime" / "comparisons"
+
+
 def get_external_model_root() -> Path:
     cfg = load_config()
     return Path(cfg["external_model_root"])
@@ -54,3 +58,4 @@ def ensure_runtime_dirs() -> None:
         path.mkdir(parents=True, exist_ok=True)
     get_experiments_dir().mkdir(parents=True, exist_ok=True)
     get_pipelines_dir().mkdir(parents=True, exist_ok=True)
+    get_comparisons_dir().mkdir(parents=True, exist_ok=True)

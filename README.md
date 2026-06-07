@@ -89,6 +89,7 @@ E:\A_Exp_ML\GoodLearnApp\stop_dev.bat
 | 课程导航 | 紧凑 pill 路线图（基础插值 → CNN → 生成式/Transformer） |
 | 方法详情 | 当前选中方法的 problem / pipeline / 优缺点 |
 | 方法对比表 | 6 个可运行方法的速度、效果、特点一览 |
+| 模型对比实验 | 多方法同图推理，对比网格 + 指标表 + 教学结论 |
 | 模型测试 | Nearest / Bilinear / Bicubic / Lanczos / ESPCN / EDSR |
 | 论文资料 | 默认精选 3 篇，可展开全部 10 篇 |
 | 实验记录 | 每次运行自动保存，展示最近 20 条 |
@@ -99,6 +100,7 @@ E:\A_Exp_ML\GoodLearnApp\stop_dev.bat
 |------|------|------|
 | CV 图像模型测试 | CV 节点 | `POST /api/run` |
 | **组合实验流水线** | CV → 组合实验流水线 | `POST /api/run-pipeline` |
+| **模型对比实验** | CV → 图像超分 | `POST /api/compare-methods` |
 | Timer 周期计算器 | Embedded → Timer | `POST /api/demos/embedded/timer` |
 | Round Robin 调度模拟 | OS → Process Scheduling | `POST /api/demos/os/round_robin` |
 
@@ -120,6 +122,20 @@ E:\A_Exp_ML\GoodLearnApp\stop_dev.bat
 | 保存为永久组合节点 | ❌ 第一版不支持 |
 
 > 当前仍为**开发阶段**，使用 `start_dev.bat` 启动，**不要** build / 打包 exe。
+
+## 模型对比实验（Model Comparison Lab）
+
+图像超分节点支持**多方法同图对比**：
+
+1. 进入 **CV → 图像超分**，在「模型对比实验」区域勾选多个方法（默认 Bicubic / Lanczos / ESPCN / EDSR）
+2. 上传图片，点击「运行对比实验」
+3. 查看对比网格图、各方法 runtime / PSNR / MSE、教学结论
+
+| 能力 | 说明 |
+|------|------|
+| 同时运行 | 对同一张上传图依次调用各 `model.process()`，不调用 `dataset.degrade()` |
+| 输出 | `backend/runtime/comparisons/{id}/` 含各方法 PNG 与 `comparison_grid.png` |
+| 实验记录 | `type: "comparison"` 写入 `runtime/experiments/` |
 
 ## 当前可运行模型
 
@@ -228,6 +244,7 @@ E:\A_Exp_ML\GoodLearnApp\.conda\goodlearnapp-backend\python.exe -m pip install o
 | GET | /api/nodes/{domain}/{node} | 节点详情（含方法可用性检测） |
 | POST | /api/run | 运行单方法（仅 available=true） |
 | POST | /api/run-pipeline | 运行 cascade 组合流水线 |
+| POST | /api/compare-methods | 多方法同图对比实验 |
 
 ## 版本
 

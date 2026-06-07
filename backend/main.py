@@ -4,8 +4,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from api import demos, domains, experiments, methods, nodes, pipeline, run as run_api
-from core.utils import ensure_runtime_dirs, get_pipelines_dir, get_project_root, load_config
+from api import compare, demos, domains, experiments, methods, nodes, pipeline, run as run_api
+from core.utils import ensure_runtime_dirs, get_comparisons_dir, get_pipelines_dir, get_project_root, load_config
 
 app = FastAPI(title="GoodLearn API", version="0.1.0")
 
@@ -30,7 +30,12 @@ runtime_pipelines = get_pipelines_dir()
 runtime_pipelines.mkdir(parents=True, exist_ok=True)
 app.mount("/runtime/pipelines", StaticFiles(directory=str(runtime_pipelines)), name="runtime_pipelines")
 
+runtime_comparisons = get_comparisons_dir()
+runtime_comparisons.mkdir(parents=True, exist_ok=True)
+app.mount("/runtime/comparisons", StaticFiles(directory=str(runtime_comparisons)), name="runtime_comparisons")
+
 app.include_router(experiments.router)
+app.include_router(compare.router)
 app.include_router(demos.router)
 app.include_router(domains.router)
 app.include_router(nodes.router)

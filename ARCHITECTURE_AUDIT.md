@@ -40,7 +40,7 @@
 | Electron 桌面壳 | `desktop/` | 符合 | 加载 Vite dev URL | 保持 |
 | CLI 层 | — | 未实现 | 无 `frontend/cli/` | 非当前阶段必须项 |
 | 输出目录 | `backend/runtime/outputs/` | 符合 | input/output/comparison PNG | gitignore 已排除 |
-| 实验记录 | `backend/runtime/experiments/` | 符合 | JSON 记录 MSE/PSNR/SSIM/runtime_ms | gitignore 已排除 |
+| 实验记录 | `backend/runtime/experiments/` | 符合 | 支持 single（默认）/ pipeline / comparison 三种 type | gitignore 已排除 |
 | config.yaml | 项目根 | 符合 | project_root、external_model_root、端口、runtime | 保持 |
 
 ---
@@ -257,6 +257,16 @@ GoodLearnApp/
 | `backend/core/runner.py` | 优先调用节点 dataset/metrics |
 | `README.md` | 架构映射说明 |
 | `ARCHITECTURE_AUDIT.md` | 本报告 |
+
+---
+
+## 实验记录类型
+
+| type | 说明 | API |
+|------|------|-----|
+| `single`（默认） | 单模型运行 | `POST /api/run` |
+| `pipeline` | 组合流水线 | `POST /api/run-pipeline` |
+| `comparison` | 多模型同图对比 | `POST /api/compare-methods` |
 
 ---
 

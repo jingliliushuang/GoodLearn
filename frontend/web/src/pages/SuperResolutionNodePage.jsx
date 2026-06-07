@@ -6,6 +6,7 @@ import ModelTester from '../components/ModelTester';
 import CourseRoadmap from '../components/CourseRoadmap';
 import MethodDetailPanel from '../components/MethodDetailPanel';
 import MethodCompareTable from '../components/MethodCompareTable';
+import ModelComparisonLab from '../components/ModelComparisonLab';
 import ExperimentHistory from '../components/ExperimentHistory';
 
 const FEATURED_PAPERS = ['srcnn', 'espcn', 'edsr'];
@@ -82,6 +83,15 @@ export default function SuperResolutionNodePage({ node, domainId, nodeId }) {
           nodeId={nodeId}
           methods={methods}
           selectedMethod={selectedMethod}
+          onRunComplete={() => setExperimentRefresh((k) => k + 1)}
+        />
+      </section>
+
+      <section className="section section-compact">
+        <ModelComparisonLab
+          domainId={domainId}
+          nodeId={nodeId}
+          methods={methods}
           onRunComplete={() => setExperimentRefresh((k) => k + 1)}
         />
       </section>
