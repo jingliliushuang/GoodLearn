@@ -1,11 +1,71 @@
-export default function MethodDetailPanel({ detail, methodTitle }) {
-  if (!detail) {
+import { openExternalLink, resolvePaperRelation } from '../utils/paperRelation';
+
+function PaperRelationSection({ resolved }) {
+  if (!resolved) return null;
+
+  if (resolved.kind === 'string') {
     return (
-      <div className="detail-panel empty">
-        <p className="card-desc">选择左侧方法卡片查看详细说明。</p>
+      <div className="detail-section">
+        <h4 className="detail-heading">论文关联</h4>
+        <p>{resolved.text}</p>
       </div>
     );
   }
+
+  const { citation, title, note, paper_url, code_url } = resolved.data;
+  const headline = [citation, title].filter(Boolean).join(' — ');
+
+  return (
+    <div className="detail-section">
+      <h4 className="detail-heading">论文关联</h4>
+      {headline && <p className="paper-relation-headline">{headline}</p>}
+      {note && <p className="paper-relation-note">{note}</p>}
+      {(paper_url || code_url) && (
+        <div className="paper-relation-actions">
+          {paper_url && (
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm btn-paper-link"
+              onClick={() => openExternalLink(paper_url)}
+            >
+              打开论文
+            </button>
+          )}
+          {code_url && (
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm btn-paper-link"
+              onClick={() => openExternalLink(code_url)}
+            >
+              查看代码
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function MethodDetailPanel({
+  detail,
+  methodTitle,
+  methodId,
+  papers,
+}) {
+  if (!detail) {
+    return (
+      <div className="detail-panel empty">
+        <p className="card-desc">选择课程导航中的方法查看详细说明。</p>
+      </div>
+    );
+  }
+
+  const paperRelation = resolvePaperRelation(
+    detail,
+    methodId,
+    methodTitle || detail.title,
+    papers,
+  );
 
   const ListSection = ({ title, items }) => {
     if (!items || items.length === 0) return null;
@@ -45,12 +105,7 @@ export default function MethodDetailPanel({ detail, methodTitle }) {
         </div>
       )}
 
-      {detail.paper_relation && (
-        <div className="detail-section">
-          <h4 className="detail-heading">论文关联</h4>
-          <p>{detail.paper_relation}</p>
-        </div>
-      )}
+      <PaperRelationSection resolved={paperRelation} />
 
       {detail.teaching_notes && (
         <div className="detail-section detail-notes">

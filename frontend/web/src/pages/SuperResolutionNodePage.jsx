@@ -70,6 +70,8 @@ export default function SuperResolutionNodePage({ node, domainId, nodeId }) {
         <MethodDetailPanel
           detail={detailOrFallback}
           methodTitle={selectedMeta?.title || pathItem?.title}
+          methodId={selectedMethod}
+          papers={node.papers}
         />
       </section>
 

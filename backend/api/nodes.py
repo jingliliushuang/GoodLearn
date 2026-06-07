@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 
 from core.loader import get_method_readme, load_method_metadata
 from core.model_checker import check_method, check_node_methods
+from core.paper_relation import enrich_method_details
 from core.tree import (
     get_method_dir,
     load_all_method_details,
@@ -25,6 +26,7 @@ def get_node(domain_id: str, node_id: str):
         methods = check_node_methods(domain_id, node_id)
         learning_path = load_learning_path(domain_id, node_id)
         method_details = load_all_method_details(domain_id, node_id)
+        method_details = enrich_method_details(method_details, papers)
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Node not found")
 

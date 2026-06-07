@@ -25,6 +25,13 @@
     "实时超分场景的教学演示"
   ],
   "code_entry": "knowledge/cv/super_resolution/methods/espcn/model.py → OpenCV dnn_superres",
-  "paper_relation": "Shi et al., CVPR 2016 — Real-Time Single Image and Video Super-Resolution",
+  "paper_relation": {
+    "paper_id": "espcn",
+    "citation": "Shi et al., CVPR 2016",
+    "title": "Real-Time Single Image and Video Super-Resolution Using an Efficient Sub-Pixel Convolutional Neural Network",
+    "paper_url": "https://arxiv.org/abs/1609.05158",
+    "code_url": "https://github.com/Lornatang/ESPCN-PyTorch",
+    "note": "ESPCN 提出了高效的亚像素卷积结构，先在低分辨率空间提取特征，再通过 PixelShuffle 完成上采样，适合实时图像和视频超分。"
+  },
   "teaching_notes": "本平台通过 OpenCV dnn_superres 加载 ESPCN_x2.pb 权重进行推理。"
 }

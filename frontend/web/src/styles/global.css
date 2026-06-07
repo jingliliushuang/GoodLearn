@@ -823,6 +823,35 @@ a:hover {
   border-radius: 8px;
 }
 
+.paper-relation-headline {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin-bottom: 0.35rem;
+}
+
+.paper-relation-note {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 0.25rem;
+}
+
+.paper-relation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.btn-paper-link {
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+.btn-paper-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .experiment-history {
   background: var(--bg-card);
   border: 1px solid var(--border);

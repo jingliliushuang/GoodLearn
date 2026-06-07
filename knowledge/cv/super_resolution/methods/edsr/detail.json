@@ -25,6 +25,13 @@
     "与传统/轻量 CNN 方法对比"
   ],
   "code_entry": "knowledge/cv/super_resolution/methods/edsr/model.py → OpenCV dnn_superres",
-  "paper_relation": "Lim et al., CVPR 2017 Workshop — Enhanced Deep Residual Networks for SR",
+  "paper_relation": {
+    "paper_id": "edsr",
+    "citation": "Lim et al., CVPRW 2017",
+    "title": "Enhanced Deep Residual Networks for Single Image Super-Resolution",
+    "paper_url": "https://arxiv.org/abs/1707.02921",
+    "code_url": "https://github.com/thstkdgus35/EDSR-PyTorch",
+    "note": "EDSR 去掉 BatchNorm，并使用更深的残差网络提升超分效果。"
+  },
   "teaching_notes": "首次运行 EDSR 可能较慢，属于正常现象，可对比 runtime_ms 指标。"
 }
