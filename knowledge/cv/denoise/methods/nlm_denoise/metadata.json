@@ -1,0 +1,9 @@
+{
+  "id": "nlm_denoise",
+  "title": "Non-Local Means",
+  "description": "非局部均值去噪，利用图像自相似性",
+  "category": "traditional",
+  "requirements": [],
+  "weights": [],
+  "inference_enabled": true
+}

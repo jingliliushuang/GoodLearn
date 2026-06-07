@@ -1,0 +1,9 @@
+{
+  "id": "bilateral_filter",
+  "title": "Bilateral Filter",
+  "description": "双边滤波，去噪同时保留边缘",
+  "category": "traditional",
+  "requirements": [],
+  "weights": [],
+  "inference_enabled": true
+}

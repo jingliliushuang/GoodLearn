@@ -1,20 +1,122 @@
 [
   {
-    "name": "SRCNN",
+    "id": "srcnn",
+    "method": "SRCNN",
     "title": "Image Super-Resolution Using Deep Convolutional Networks",
-    "url": "https://arxiv.org/abs/1501.00271",
-    "summary": "SRCNN 是首个将 CNN 用于单图超分的经典工作，端到端学习 LR 到 HR 的映射。"
+    "year": 2015,
+    "type": "cnn",
+    "paper_url": "https://arxiv.org/abs/1501.00271",
+    "code_url": "https://github.com/yjn870/SRCNN-pytorch",
+    "summary": "首个将 CNN 用于单图超分的端到端方法，用三层卷积学习 LR→HR 映射。",
+    "core_idea": ["浅层 CNN 直接回归 HR 像素", "三阶段：特征提取、非线性映射、重建", "为后续深度超分奠定基础"],
+    "difficulty": "easy"
   },
   {
-    "name": "ESPCN",
+    "id": "fsrcnn",
+    "method": "FSRCNN",
+    "title": "Accelerating the Super-Resolution Convolutional Neural Network",
+    "year": 2016,
+    "type": "cnn",
+    "paper_url": "https://arxiv.org/abs/1608.00367",
+    "code_url": "https://github.com/yjn870/FSRCNN-pytorch",
+    "summary": "在 LR 空间做卷积并在末端上采样，显著加速 SRCNN 推理。",
+    "core_idea": ["LR 空间卷积减少计算量", "末端反卷积上采样", "压缩/扩展层控制参数量"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "espcn",
+    "method": "ESPCN",
     "title": "Real-Time Single Image and Video Super-Resolution Using an Efficient Sub-Pixel Convolutional Neural Network",
-    "url": "https://arxiv.org/abs/1609.05158",
-    "summary": "ESPCN 提出亚像素卷积（Sub-Pixel Convolution），在特征图上直接放大，实现实时超分。"
+    "year": 2016,
+    "type": "cnn",
+    "paper_url": "https://arxiv.org/abs/1609.05158",
+    "code_url": "https://github.com/Lornatang/ESPCN-PyTorch",
+    "summary": "提出亚像素卷积（Pixel Shuffle），在特征图上高效完成上采样，实现实时超分。",
+    "core_idea": ["Sub-Pixel Convolution 重排通道", "全部卷积在 LR 空间完成", "适合视频实时超分"],
+    "difficulty": "medium"
   },
   {
-    "name": "EDSR",
+    "id": "vdsr",
+    "method": "VDSR",
+    "title": "Accurate Image Super-Resolution Using Very Deep Convolutional Networks",
+    "year": 2016,
+    "type": "cnn",
+    "paper_url": "https://arxiv.org/abs/1511.06421",
+    "code_url": "https://github.com/twty123456/VDSR",
+    "summary": "20 层深度卷积网络 + 全局残差学习，大幅提升 PSNR。",
+    "core_idea": ["极深卷积网络", "全局残差连接预测残差", "多尺度训练增强泛化"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "edsr",
+    "method": "EDSR",
     "title": "Enhanced Deep Residual Networks for Single Image Super-Resolution",
-    "url": "https://arxiv.org/abs/1707.02921",
-    "summary": "EDSR 移除 Batch Normalization，加深残差网络，在 DIV2K 上取得当时最优 PSNR。"
+    "year": 2017,
+    "type": "cnn",
+    "paper_url": "https://arxiv.org/abs/1707.02921",
+    "code_url": "https://github.com/thstkdgus35/EDSR-PyTorch",
+    "summary": "移除 Batch Normalization，加深加宽残差网络，DIV2K 上取得当时最优 PSNR。",
+    "core_idea": ["去掉 BN 减少内存、提升 PSNR", "加深 ResBlock 数量", "L1 Loss 训练"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "mdsr",
+    "method": "MDSR",
+    "title": "Enhanced Deep Residual Networks for Single Image Super-Resolution (Multi-scale)",
+    "year": 2017,
+    "type": "cnn",
+    "paper_url": "https://arxiv.org/abs/1707.02921",
+    "code_url": "https://github.com/thstkdgus35/EDSR-PyTorch",
+    "summary": "EDSR 的多尺度扩展版本，单一模型支持 ×2/×3/×4 等多种放大倍数。",
+    "core_idea": ["共享主体特征提取", "不同尺度独立上采样头", "减少多模型部署成本"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "rcan",
+    "method": "RCAN",
+    "title": "Image Super-Resolution Using Very Deep Residual Channel Attention Networks",
+    "year": 2018,
+    "type": "cnn",
+    "paper_url": "https://arxiv.org/abs/1807.02758",
+    "code_url": "https://github.com/yulunzhang/RCAN",
+    "summary": "引入通道注意力机制（CA），自适应强调有用特征通道。",
+    "core_idea": ["Residual Channel Attention Block", "长距离跳跃连接", "通道级特征重标定"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "esrgan",
+    "method": "ESRGAN",
+    "title": "ESRGAN: Enhanced Super-Resolution Generative Adversarial Networks",
+    "year": 2018,
+    "type": "gan",
+    "paper_url": "https://arxiv.org/abs/1809.00219",
+    "code_url": "https://github.com/xinntao/ESRGAN",
+    "summary": "改进 SRGAN，使用 RRDB 和 Relativistic GAN，生成更自然的纹理细节。",
+    "core_idea": ["RRDB 无 BN 残差块", "Relativistic Discriminator", "感知损失 + 对抗损失"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "real_esrgan",
+    "method": "Real-ESRGAN",
+    "title": "Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data",
+    "year": 2021,
+    "type": "gan",
+    "paper_url": "https://arxiv.org/abs/2107.10833",
+    "code_url": "https://github.com/xinntao/Real-ESRGAN",
+    "summary": "面向真实世界盲超分，用高阶退化模型合成训练数据，实用性强。",
+    "core_idea": ["高阶退化模拟真实噪声/模糊", "U-Net Discriminator", "纯合成数据训练"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "swinir",
+    "method": "SwinIR",
+    "title": "SwinIR: Image Restoration Using Swin Transformer",
+    "year": 2021,
+    "type": "transformer",
+    "paper_url": "https://arxiv.org/abs/2108.10257",
+    "code_url": "https://github.com/JingyunLiang/SwinIR",
+    "summary": "将 Swin Transformer 引入图像恢复，在超分/去噪/压缩伪影等任务上表现优异。",
+    "core_idea": ["Swin Transformer 窗口自注意力", "RSTB 残差 Swin Transformer 块", "多任务统一架构"],
+    "difficulty": "hard"
   }
 ]

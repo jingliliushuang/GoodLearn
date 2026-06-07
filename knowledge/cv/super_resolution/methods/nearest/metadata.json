@@ -1,0 +1,9 @@
+{
+  "id": "nearest",
+  "title": "Nearest 最近邻插值",
+  "description": "最近邻插值，速度最快，块效应明显",
+  "category": "traditional",
+  "requirements": [],
+  "weights": [],
+  "inference_enabled": true
+}

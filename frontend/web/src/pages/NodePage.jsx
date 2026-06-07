@@ -18,7 +18,11 @@ export default function NodePage() {
       .then((data) => {
         setNode(data);
         const firstAvailable = data.methods.find((m) => m.available);
-        if (firstAvailable) setSelectedMethod(firstAvailable.id);
+        if (firstAvailable) {
+          setSelectedMethod(firstAvailable.id);
+        } else if (data.methods.length > 0) {
+          setSelectedMethod(data.methods[0].id);
+        }
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
@@ -42,12 +46,12 @@ export default function NodePage() {
       </section>
 
       <section className="section">
-        <h2 className="section-title">相关论文</h2>
+        <h2 className="section-title">相关论文与方法</h2>
         <PaperList papers={node.papers} />
       </section>
 
       <section className="section">
-        <h2 className="section-title">方法选择</h2>
+        <h2 className="section-title">模型选择</h2>
         <MethodSelector
           methods={node.methods}
           selected={selectedMethod}
@@ -60,6 +64,7 @@ export default function NodePage() {
         <ModelTester
           domainId={domainId}
           nodeId={nodeId}
+          methods={node.methods}
           selectedMethod={selectedMethod}
         />
       </section>

@@ -1,20 +1,110 @@
 [
   {
-    "name": "Non-Local Means",
+    "id": "gaussian_filter",
+    "method": "Gaussian Filter",
+    "title": "Digital Image Processing — Gaussian Smoothing",
+    "year": 1970,
+    "type": "traditional",
+    "paper_url": "https://en.wikipedia.org/wiki/Gaussian_blur",
+    "code_url": "",
+    "summary": "用高斯核对邻域加权平均，平滑图像并抑制高频噪声，是最基础的去噪方法。",
+    "core_idea": ["高斯权重随距离衰减", "空域线性滤波", "计算简单但会模糊边缘"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "median_filter",
+    "method": "Median Filter",
+    "title": "Digital Image Processing — Median Filtering",
+    "year": 1970,
+    "type": "traditional",
+    "paper_url": "https://en.wikipedia.org/wiki/Median_filter",
+    "code_url": "",
+    "summary": "用邻域像素中值替换中心像素，对椒盐噪声和脉冲噪声效果显著。",
+    "core_idea": ["非线性排序统计滤波", "保留边缘优于均值/高斯", "对孤立噪点鲁棒"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "bilateral_filter",
+    "method": "Bilateral Filter",
+    "title": "Bilateral Filtering for Gray and Color Images",
+    "year": 1998,
+    "type": "traditional",
+    "paper_url": "https://doi.org/10.1109/ICCV.1998.710815",
+    "code_url": "https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html#ga9d2064ac8b87c0cb0f17e85fc683124",
+    "summary": "结合空间距离和像素值相似度的加权滤波，在去噪同时较好保留边缘。",
+    "core_idea": ["空间域 + 值域双重高斯权重", "边缘保持平滑", "适合轻微噪声"],
+    "difficulty": "easy"
+  },
+  {
+    "id": "nlm",
+    "method": "Non-Local Means",
     "title": "A Non-Local Algorithm for Image Denoising",
-    "url": "https://www.ipol.im/pub/algo/bcm_non_local_means/",
-    "summary": "非局部均值去噪利用图像中相似块进行加权平均，是经典的去噪方法之一。"
+    "year": 2005,
+    "type": "traditional",
+    "paper_url": "https://www.ipol.im/pub/algo/bcm_non_local_means/",
+    "code_url": "https://docs.opencv.org/4.x/d1/d79/group__photo__denoise.html",
+    "summary": "利用图像中相似块进行非局部加权平均，经典且效果优秀的传统去噪方法。",
+    "core_idea": ["搜索相似图像块", "加权平均去噪", "利用图像自相似性"],
+    "difficulty": "medium"
   },
   {
-    "name": "FFDNet",
-    "title": "FFDNet: Toward a Fast and Flexible Solution for CNN-based Image Denoising",
-    "url": "https://arxiv.org/abs/1710.04026",
-    "summary": "FFDNet 通过可变形卷积网络实现快速灵活的去噪，支持不同噪声级别。"
+    "id": "bm3d",
+    "method": "BM3D",
+    "title": "Image Denoising by Sparse 3-D Transform-Domain Collaborative Filtering",
+    "year": 2007,
+    "type": "traditional",
+    "paper_url": "https://doi.org/10.1109/TIP.2007.901238",
+    "code_url": "https://github.com/ericmjonas/pybm3d",
+    "summary": "块匹配 + 3D 变换域协同滤波，长期作为传统去噪的 SOTA 基准。",
+    "core_idea": ["块匹配分组", "3D 变换域稀疏表示", "两步协同滤波"],
+    "difficulty": "hard"
   },
   {
-    "name": "DnCNN",
+    "id": "dncnn",
+    "method": "DnCNN",
     "title": "Beyond a Gaussian Denoiser: Residual Learning of Deep CNN for Image Denoising",
-    "url": "https://arxiv.org/abs/1608.03981",
-    "summary": "DnCNN 使用残差学习预测噪声，是深度学习去噪的里程碑工作。"
+    "year": 2017,
+    "type": "cnn",
+    "paper_url": "https://arxiv.org/abs/1608.03981",
+    "code_url": "https://github.com/cszn/DnCNN",
+    "summary": "使用残差学习直接预测噪声，是深度学习去噪的里程碑工作。",
+    "core_idea": ["残差学习预测噪声", "Batch Normalization + ReLU", "盲去噪（未知噪声级别）"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "ffdnet",
+    "method": "FFDNet",
+    "title": "FFDNet: Toward a Fast and Flexible Solution for CNN-based Image Denoising",
+    "year": 2018,
+    "type": "cnn",
+    "paper_url": "https://arxiv.org/abs/1710.04026",
+    "code_url": "https://github.com/cszn/FFDNet",
+    "summary": "在下采样域处理并支持可变噪声级别输入，速度快且灵活。",
+    "core_idea": ["下采样域卷积加速", "噪声级别作为网络输入", "灵活适应不同 σ"],
+    "difficulty": "medium"
+  },
+  {
+    "id": "cbdnet",
+    "method": "CBDNet",
+    "title": "Toward Convolutional Blind Denoising of Real Photographs",
+    "year": 2019,
+    "type": "cnn",
+    "paper_url": "https://arxiv.org/abs/1904.10225",
+    "code_url": "https://github.com/GuoShi28/CBDNet",
+    "summary": "面向真实照片盲去噪，联合估计噪声并去噪，处理相机真实噪声分布。",
+    "core_idea": ["噪声估计子网络", "盲去噪主网络", "真实噪声合成训练"],
+    "difficulty": "hard"
+  },
+  {
+    "id": "restormer",
+    "method": "Restormer",
+    "title": "Restormer: Efficient Transformer for High-Resolution Image Restoration",
+    "year": 2022,
+    "type": "transformer",
+    "paper_url": "https://arxiv.org/abs/2111.09881",
+    "code_url": "https://github.com/swz30/Restormer",
+    "summary": "高效 Transformer 用于高分辨率图像恢复，在去噪/去雨/去模糊等任务表现优异。",
+    "core_idea": ["Multi-DConv Head Transposed Attention", "MDTA 高效自注意力", "GDFN 门控前馈网络"],
+    "difficulty": "hard"
   }
 ]

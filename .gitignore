@@ -37,6 +37,8 @@ out/
 
 # Outputs
 outputs/
+assets/samples/*.png
+assets/samples/*.jpg
 *.zip
 
 # IDE / OS

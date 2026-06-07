@@ -1,0 +1,9 @@
+{
+  "id": "bilinear",
+  "title": "Bilinear 双线性插值",
+  "description": "双线性插值，平滑但细节损失",
+  "category": "traditional",
+  "requirements": [],
+  "weights": [],
+  "inference_enabled": true
+}

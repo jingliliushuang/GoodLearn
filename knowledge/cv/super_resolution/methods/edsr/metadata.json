@@ -2,6 +2,9 @@
   "id": "edsr",
   "title": "EDSR",
   "description": "Enhanced Deep Super-Resolution，增强深度残差超分网络",
-  "available": false,
-  "external_model": "EDSR_x2.pb"
+  "category": "cnn",
+  "requirements": ["onnxruntime"],
+  "weights": ["EDSR_x2.pb"],
+  "external_model": "EDSR_x2.pb",
+  "inference_enabled": false
 }

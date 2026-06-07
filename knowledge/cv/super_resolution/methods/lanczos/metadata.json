@@ -1,0 +1,9 @@
+{
+  "id": "lanczos",
+  "title": "Lanczos 插值",
+  "description": "Lanczos 插值，高质量传统上采样方法",
+  "category": "traditional",
+  "requirements": [],
+  "weights": [],
+  "inference_enabled": true
+}

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 
-from core.loader import load_method_metadata
+from core.model_checker import check_method
 from core.runner import run_model
 from core.tree import get_method_dir
 
@@ -16,13 +16,14 @@ async def run_inference(
 ):
     method_dir = get_method_dir(domain, node, method)
     if not method_dir.exists():
-        raise HTTPException(status_code=404, detail="Method not found")
+        raise HTTPException(status_code=404, detail=f"Method '{method}' not found")
 
-    meta = load_method_metadata(domain, node, method)
-    if not meta.get("available", False):
+    status = check_method(domain, node, method)
+    if not status["available"]:
+        reason = status.get("reason") or "Method is not available"
         raise HTTPException(
             status_code=400,
-            detail=f"Method '{method}' is not available for inference yet",
+            detail=f"Method '{method}' is not available: {reason}",
         )
 
     if not image.content_type or not image.content_type.startswith("image/"):

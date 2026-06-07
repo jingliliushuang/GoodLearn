@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { runModel } from '../api/client';
 import ResultCompare from './ResultCompare';
 
-export default function ModelTester({ domainId, nodeId, selectedMethod }) {
+export default function ModelTester({ domainId, nodeId, methods, selectedMethod }) {
   const fileRef = useRef(null);
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -10,17 +10,21 @@ export default function ModelTester({ domainId, nodeId, selectedMethod }) {
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
 
+  const selected = methods?.find((m) => m.id === selectedMethod);
+  const canRun = selected?.available === true;
+  const hasAnyAvailable = methods?.some((m) => m.available);
+
   const handleFileChange = (e) => {
-    const selected = e.target.files?.[0];
-    if (!selected) return;
-    setFile(selected);
-    setPreview(URL.createObjectURL(selected));
+    const picked = e.target.files?.[0];
+    if (!picked) return;
+    setFile(picked);
+    setPreview(URL.createObjectURL(picked));
     setResult(null);
     setError(null);
   };
 
   const handleRun = async () => {
-    if (!file || !selectedMethod) return;
+    if (!file || !selectedMethod || !canRun) return;
 
     setLoading(true);
     setError(null);
@@ -37,8 +41,25 @@ export default function ModelTester({ domainId, nodeId, selectedMethod }) {
     }
   };
 
+  if (!hasAnyAvailable) {
+    return (
+      <div className="tester-panel">
+        <div className="warn-box">
+          当前节点没有可运行的模型。请检查是否缺少 Python 依赖或模型权重，
+          或将权重放入对应方法的 weights/ 目录及 external_model_root。
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="tester-panel">
+      {selected && !selected.available && (
+        <div className="warn-box">
+          「{selected.title}」不可运行：{selected.reason || '未启用'}
+        </div>
+      )}
+
       <div
         className="upload-area"
         onClick={() => fileRef.current?.click()}
@@ -52,7 +73,7 @@ export default function ModelTester({ domainId, nodeId, selectedMethod }) {
           accept="image/*"
           onChange={handleFileChange}
         />
-        <p>点击或拖拽上传测试图片</p>
+        <p>点击上传测试图片</p>
         {preview && (
           <img src={preview} alt="预览" className="preview-thumb" />
         )}
@@ -61,7 +82,7 @@ export default function ModelTester({ domainId, nodeId, selectedMethod }) {
       <button
         type="button"
         className="btn btn-primary"
-        disabled={!file || !selectedMethod || loading}
+        disabled={!file || !selectedMethod || !canRun || loading}
         onClick={handleRun}
       >
         {loading ? '运行中...' : '运行模型'}
@@ -69,7 +90,7 @@ export default function ModelTester({ domainId, nodeId, selectedMethod }) {
 
       {!selectedMethod && (
         <p className="card-desc" style={{ marginTop: '0.75rem' }}>
-          请先选择一个可用的方法
+          请先选择一个方法
         </p>
       )}
 
