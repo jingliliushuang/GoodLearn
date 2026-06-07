@@ -836,6 +836,174 @@ a:hover {
   border-top: 1px solid var(--border);
 }
 
+.section-compact {
+  margin-bottom: 1.25rem;
+}
+
+.section-compact .section-title {
+  margin-bottom: 0.6rem;
+}
+
+.card-compact {
+  padding: 1rem;
+}
+
+.course-roadmap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.roadmap-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.roadmap-label {
+  color: var(--text-muted);
+  white-space: nowrap;
+  min-width: 7rem;
+}
+
+.roadmap-pills {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+}
+
+.roadmap-pill-wrap {
+  display: inline-flex;
+  align-items: center;
+}
+
+.roadmap-arrow {
+  color: var(--text-muted);
+  margin: 0 0.2rem;
+  font-size: 0.75rem;
+}
+
+.roadmap-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-hover);
+  color: var(--text);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.roadmap-pill:hover {
+  border-color: var(--accent);
+}
+
+.roadmap-pill.selected {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.15);
+}
+
+.roadmap-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-ready {
+  background: var(--success);
+}
+
+.dot-theory {
+  background: var(--warning);
+}
+
+.dot-future {
+  background: var(--text-muted);
+}
+
+.current-method-line {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.current-method-line strong {
+  color: var(--text);
+}
+
+.paper-toggle {
+  margin-left: auto;
+}
+
+.paper-hint {
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.paper-item-compact .paper-summary {
+  margin-bottom: 0.35rem;
+}
+
+.compare-table-wrap {
+  overflow-x: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.method-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.method-compare-table th,
+.method-compare-table td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.65rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.method-compare-table th {
+  background: var(--bg-hover);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.method-compare-table tbody tr {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.method-compare-table tbody tr:hover {
+  background: rgba(59, 130, 246, 0.06);
+}
+
+.method-compare-table tr.selected-row {
+  background: rgba(59, 130, 246, 0.12);
+}
+
+.method-compare-table .col-name {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 @media (max-width: 768px) {
   .app-main {
     padding: 1rem;

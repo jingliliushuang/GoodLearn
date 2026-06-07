@@ -64,10 +64,12 @@ E:\A_Exp_ML\GoodLearnApp\stop_dev.bat
 
 | 功能 | 说明 |
 |------|------|
-| 学习路线 | 9 步推荐路径（插值 → CNN → Transformer） |
-| 方法详情 | 6 个可运行方法的 problem / pipeline / 优缺点 |
+| 课程导航 | 紧凑 pill 路线图（基础插值 → CNN → 生成式/Transformer） |
+| 方法详情 | 当前选中方法的 problem / pipeline / 优缺点 |
+| 方法对比表 | 6 个可运行方法的速度、效果、特点一览 |
 | 模型测试 | Nearest / Bilinear / Bicubic / Lanczos / ESPCN / EDSR |
-| 实验记录 | 每次运行自动保存，页面展示最近 20 条 |
+| 论文资料 | 默认精选 3 篇，可展开全部 10 篇 |
+| 实验记录 | 每次运行自动保存，展示最近 20 条 |
 
 ## 可交互 Demo
 

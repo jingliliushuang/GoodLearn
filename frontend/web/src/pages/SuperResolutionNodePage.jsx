@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import MarkdownViewer from '../components/MarkdownViewer';
 import PaperList from '../components/PaperList';
-import MethodSelector from '../components/MethodSelector';
 import ModelTester from '../components/ModelTester';
-import LearningPath from '../components/LearningPath';
+import CourseRoadmap from '../components/CourseRoadmap';
 import MethodDetailPanel from '../components/MethodDetailPanel';
+import MethodCompareTable from '../components/MethodCompareTable';
 import ExperimentHistory from '../components/ExperimentHistory';
+
+const FEATURED_PAPERS = ['srcnn', 'espcn', 'edsr'];
 
 export default function SuperResolutionNodePage({ node, domainId, nodeId }) {
   const methods = node.methods || [];
@@ -18,6 +20,17 @@ export default function SuperResolutionNodePage({ node, domainId, nodeId }) {
 
   const detail = selectedMethod ? node.method_details?.[selectedMethod] : null;
   const selectedMeta = methods.find((m) => m.id === selectedMethod);
+  const pathItem = node.learning_path?.find((p) => p.id === selectedMethod);
+
+  const detailOrFallback = detail || (pathItem ? {
+    title: pathItem.title,
+    problem: pathItem.description,
+    teaching_notes: pathItem.status === 'theory'
+      ? '该方法当前仅提供理论介绍，暂无可运行实验。'
+      : pathItem.status === 'future'
+        ? '该方法计划在后续版本接入。'
+        : '',
+  } : null);
 
   return (
     <div>
@@ -25,49 +38,38 @@ export default function SuperResolutionNodePage({ node, domainId, nodeId }) {
       <h1 className="page-title">{node.title}</h1>
       <p className="page-desc">{node.description}</p>
 
-      <section className="section">
-        <h2 className="section-title">课程简介</h2>
-        <div className="card">
+      <section className="section section-compact">
+        <div className="card card-compact">
           <MarkdownViewer content={node.content_markdown} />
         </div>
       </section>
 
-      {node.learning_path?.length > 0 && (
-        <section className="section">
-          <h2 className="section-title">学习路线</h2>
-          <p className="card-desc">按推荐顺序学习，点击「可运行」步骤可快速选中对应方法。</p>
-          <LearningPath
-            items={node.learning_path}
-            methods={methods}
-            selectedMethod={selectedMethod}
-            onSelect={setSelectedMethod}
-          />
-        </section>
-      )}
-
-      {node.papers?.length > 0 && (
-        <section className="section">
-          <h2 className="section-title">论文与资料</h2>
-          <PaperList papers={node.papers} />
-        </section>
-      )}
-
-      {methods.length > 0 && (
-        <section className="section">
-          <h2 className="section-title">方法选择</h2>
-          <MethodSelector
-            methods={methods}
-            selected={selectedMethod}
-            onSelect={setSelectedMethod}
-          />
-        </section>
-      )}
+      <section className="section section-compact">
+        <h2 className="section-title">课程导航</h2>
+        <CourseRoadmap
+          learningPath={node.learning_path}
+          selectedMethod={selectedMethod}
+          onSelect={setSelectedMethod}
+        />
+        {selectedMethod && (
+          <p className="current-method-line">
+            当前方法：
+            <strong>{selectedMeta?.title || pathItem?.title || selectedMethod}</strong>
+            {selectedMeta?.available && (
+              <span className="method-status status-ready">可运行</span>
+            )}
+            {selectedMeta && !selectedMeta.available && (
+              <span className="method-status status-disabled">{selectedMeta.reason || '不可运行'}</span>
+            )}
+          </p>
+        )}
+      </section>
 
       <section className="section">
         <h2 className="section-title">方法详情</h2>
         <MethodDetailPanel
-          detail={detail}
-          methodTitle={selectedMeta?.title}
+          detail={detailOrFallback}
+          methodTitle={selectedMeta?.title || pathItem?.title}
         />
       </section>
 
@@ -81,6 +83,25 @@ export default function SuperResolutionNodePage({ node, domainId, nodeId }) {
           onRunComplete={() => setExperimentRefresh((k) => k + 1)}
         />
       </section>
+
+      <section className="section">
+        <h2 className="section-title">方法对比</h2>
+        <MethodCompareTable
+          selectedMethod={selectedMethod}
+          onSelect={setSelectedMethod}
+        />
+      </section>
+
+      {node.papers?.length > 0 && (
+        <section className="section">
+          <h2 className="section-title">论文与资料</h2>
+          <PaperList
+            papers={node.papers}
+            featuredIds={FEATURED_PAPERS}
+            defaultCollapsed
+          />
+        </section>
+      )}
 
       <section className="section">
         <h2 className="section-title">最近实验记录</h2>
