@@ -80,4 +80,31 @@ export async function fetchExperiments(domain, node, method) {
   return data;
 }
 
+export async function fetchManagerNodes(domain) {
+  const { data } = await client.get('/api/node-manager/nodes', { params: { domain } });
+  return data;
+}
+
+export async function createNodeTemplate(payload) {
+  const { data } = await client.post('/api/node-manager/create-template', payload);
+  return data;
+}
+
+export async function exportNode(payload) {
+  const { data } = await client.post('/api/node-manager/export', payload);
+  return data;
+}
+
+export async function importNode(file, targetDomain, overwrite) {
+  const form = new FormData();
+  form.append('file', file);
+  form.append('target_domain', targetDomain);
+  form.append('overwrite', overwrite ? 'true' : 'false');
+  const { data } = await client.post('/api/node-manager/import', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 120000,
+  });
+  return data;
+}
+
 export default client;

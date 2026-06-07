@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { fetchDomains } from '../api/client';
 import DomainCard from '../components/DomainCard';
 
@@ -22,6 +23,10 @@ export default function HomePage() {
       <h1 className="page-title">选择计算机领域</h1>
       <p className="page-desc">
         从知识树中选择一个领域，深入细化知识点，学习理论并本地测试算法模型。
+      </p>
+      <p className="page-desc">
+        <Link to="/node-manager">节点管理</Link>
+        {' — 生成模板、导出 / 导入节点 zip'}
       </p>
       <div className="card-grid">
         {domains.map((domain) => (

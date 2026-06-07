@@ -149,6 +149,18 @@ E:\A_Exp_ML\GoodLearnApp\stop_dev.bat
 
 Pipeline Builder 与模型对比实验暂使用**默认参数**。
 
+## 节点管理
+
+支持扩展知识树节点（开发阶段功能）：
+
+| 功能 | API | 说明 |
+|------|-----|------|
+| 生成模板 | `POST /api/node-manager/create-template` | 标准 metadata / dataset / metrics / methods/baseline |
+| 导出 zip | `POST /api/node-manager/export` | 输出到 `outputs/exports/`，**不含模型权重** |
+| 导入 zip | `POST /api/node-manager/import` | 结构校验 + zip slip 防护，不执行导入代码 |
+
+前端入口：首页或顶栏 **节点管理**。
+
 ## 当前可运行模型
 
 ### 图像超分 (super_resolution)
@@ -257,6 +269,9 @@ E:\A_Exp_ML\GoodLearnApp\.conda\goodlearnapp-backend\python.exe -m pip install o
 | POST | /api/run | 运行单方法（支持 params JSON 参数） |
 | POST | /api/run-pipeline | 运行 cascade 组合流水线 |
 | POST | /api/compare-methods | 多方法同图对比实验 |
+| POST | /api/node-manager/create-template | 生成节点模板 |
+| POST | /api/node-manager/export | 导出节点 zip |
+| POST | /api/node-manager/import | 导入节点 zip |
 
 ## 版本
 
