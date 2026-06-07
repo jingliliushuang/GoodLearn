@@ -1,52 +1,50 @@
 [
   {
     "id": "pytorch_transfer",
-    "title": "PyTorch Transfer Learning Tutorial",
+    "title": "PyTorch 迁移学习官方教程",
     "type": "tutorial",
     "url": "https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html",
-    "summary": "官方迁移学习教程，含训练与验证流程。",
-    "tags": [
-      "pytorch"
-    ]
+    "summary": "官方迁移学习教程，含训练与验证流程，适合 ImageNet 预训练模型微调。",
+    "tags": ["pytorch", "transfer-learning", "fine-tune"]
   },
   {
     "id": "torchvision_models",
-    "title": "TorchVision Models Documentation",
+    "title": "TorchVision 预训练模型文档",
     "type": "documentation",
     "url": "https://pytorch.org/vision/stable/models.html",
-    "summary": "预训练模型列表与 API。",
-    "tags": [
-      "torchvision"
-    ]
+    "summary": "预训练模型列表与 API，含 ResNet、MobileNet、EfficientNet 等。",
+    "tags": ["torchvision", "models", "pretrained"]
   },
   {
     "id": "cs231n",
-    "title": "CS231n: Convolutional Neural Networks for Visual Recognition",
+    "title": "CS231n：视觉识别卷积神经网络课程",
     "type": "course",
     "url": "https://cs231n.stanford.edu/",
-    "summary": "Stanford 经典 CV 课程，含分类章节。",
-    "tags": [
-      "course"
-    ]
+    "summary": "Stanford 经典 CV 课程，含图像分类、CNN 架构与训练技巧。",
+    "tags": ["course", "stanford", "classification"]
   },
   {
     "id": "imagenet",
-    "title": "ImageNet Large Scale Visual Recognition Challenge",
+    "title": "ImageNet 大规模视觉识别挑战赛",
     "type": "dataset",
     "url": "https://image-net.org/",
-    "summary": "ImageNet 数据集与 ILSVRC 介绍。",
-    "tags": [
-      "dataset"
-    ]
+    "summary": "ImageNet 数据集与 ILSVRC 介绍，是 CNN 分类发展的关键基准。",
+    "tags": ["imagenet", "dataset", "benchmark"]
   },
   {
     "id": "cnn_course",
-    "title": "Stanford CNN for Visual Recognition (notes)",
+    "title": "Stanford CS231n 卷积网络讲义",
     "type": "course",
     "url": "https://cs231n.github.io/convolutional-networks/",
-    "summary": "卷积网络讲义。",
-    "tags": [
-      "course"
-    ]
+    "summary": "卷积网络结构与反向传播讲义，配合 CS231n 课程使用。",
+    "tags": ["course", "cnn", "notes"]
+  },
+  {
+    "id": "topk_accuracy",
+    "title": "Top-1 / Top-5 Accuracy 指标说明",
+    "type": "tutorial",
+    "url": "",
+    "summary": "Top-1 为最高概率类别是否正确；Top-5 为正确类别是否在前 5 个预测中，ImageNet 常用 Top-5。",
+    "tags": ["metrics", "accuracy", "classification"]
   }
 ]

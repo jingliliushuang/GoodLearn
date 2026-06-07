@@ -1,0 +1,82 @@
+[
+  {
+    "id": "opencv_dnn_superres",
+    "title": "OpenCV DNN Super Resolution 官方文档",
+    "type": "documentation",
+    "url": "https://docs.opencv.org/4.x/da/d73/tutorial_dnn_superres_upscale_image_single.html",
+    "summary": "学习如何使用 OpenCV 加载 ESPCN、EDSR、FSRCNN、LapSRN 等超分模型。",
+    "tags": ["opencv", "dnn_superres", "espcn", "edsr"]
+  },
+  {
+    "id": "pytorch_sr_tutorial",
+    "title": "PyTorch 图像超分入门示例",
+    "type": "tutorial",
+    "url": "https://pytorch.org/tutorials/intermediate/super_resolution_with_onnxruntime_tutorial.html",
+    "summary": "学习用 PyTorch 实现基础图像超分推理流程。",
+    "tags": ["pytorch", "tutorial", "inference"]
+  },
+  {
+    "id": "basicsr",
+    "title": "BasicSR 开源图像复原框架",
+    "type": "code",
+    "url": "https://github.com/XPixelGroup/BasicSR",
+    "summary": "BasicSR 是常用图像复原开源框架，支持超分、去噪、去模糊等任务。",
+    "tags": ["basicsr", "framework", "restoration"]
+  },
+  {
+    "id": "real_esrgan",
+    "title": "Real-ESRGAN 代码仓库",
+    "type": "code",
+    "url": "https://github.com/xinntao/Real-ESRGAN",
+    "summary": "面向真实图像退化的超分增强方法。",
+    "tags": ["real-esrgan", "gan", "blind-sr"]
+  },
+  {
+    "id": "div2k",
+    "title": "DIV2K 超分训练数据集",
+    "type": "dataset",
+    "url": "https://data.vision.ee.ethz.ch/cvl/DIV2K/",
+    "summary": "单图像超分常用高质量训练数据集。",
+    "tags": ["div2k", "dataset", "training"]
+  },
+  {
+    "id": "sr_benchmarks",
+    "title": "Set5 / Set14 / BSD100 / Urban100 / Manga109 测试集",
+    "type": "dataset",
+    "url": "",
+    "summary": "超分领域常用 benchmark 测试集，广泛用于 PSNR/SSIM 对比实验。",
+    "tags": ["set5", "set14", "urban100", "benchmark"]
+  },
+  {
+    "id": "sr_metrics",
+    "title": "超分评价指标 PSNR / SSIM 讲解",
+    "type": "tutorial",
+    "url": "https://scikit-image.org/docs/stable/auto_examples/transform/plot_ssim.html",
+    "summary": "解释超分任务中常见评价指标的意义和局限。",
+    "tags": ["psnr", "ssim", "metrics"]
+  },
+  {
+    "id": "pwc_super_resolution",
+    "title": "Papers with Code - Image Super-Resolution",
+    "type": "benchmark",
+    "url": "https://paperswithcode.com/task/image-super-resolution",
+    "summary": "查看主流超分方法、排行榜和代码实现。",
+    "tags": ["benchmark", "sota", "papers-with-code"]
+  },
+  {
+    "id": "pixel_shuffle",
+    "title": "Sub-pixel Convolution / PixelShuffle 讲解",
+    "type": "tutorial",
+    "url": "https://pytorch.org/docs/stable/generated/torch.nn.PixelShuffle.html",
+    "summary": "帮助理解 ESPCN 的核心上采样结构 Sub-pixel Convolution。",
+    "tags": ["espcn", "pixel-shuffle", "sub-pixel"]
+  },
+  {
+    "id": "advanced_sr_code",
+    "title": "EDSR / RCAN / SwinIR 相关代码资料",
+    "type": "code",
+    "url": "https://github.com/XPixelGroup/BasicSR",
+    "summary": "作为深度学习超分进阶学习资料，BasicSR 中包含 EDSR、RCAN、SwinIR 等实现。",
+    "tags": ["edsr", "rcan", "swinir", "deep-learning"]
+  }
+]

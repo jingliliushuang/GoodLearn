@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import MarkdownViewer from '../components/MarkdownViewer';
 import PaperList from '../components/PaperList';
+import LearningResources from '../components/LearningResources';
 import ModelTester from '../components/ModelTester';
 import CourseRoadmap from '../components/CourseRoadmap';
 import MethodDetailPanel from '../components/MethodDetailPanel';
@@ -112,6 +113,13 @@ export default function SuperResolutionNodePage({ node, domainId, nodeId }) {
             featuredIds={FEATURED_PAPERS}
             defaultCollapsed
           />
+        </section>
+      )}
+
+      {node.resources?.length > 0 && (
+        <section className="section">
+          <h2 className="section-title">学习资料</h2>
+          <LearningResources resources={node.resources} />
         </section>
       )}
 

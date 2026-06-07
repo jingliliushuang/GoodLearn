@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { fetchNode } from '../api/client';
 import MarkdownViewer from '../components/MarkdownViewer';
 import PaperList from '../components/PaperList';
+import LearningResources from '../components/LearningResources';
 import ReferenceList from '../components/ReferenceList';
 import MethodSelector from '../components/MethodSelector';
 import ModelTester from '../components/ModelTester';
@@ -57,6 +58,7 @@ export default function NodePage() {
 
   const methods = node.methods || [];
   const hasPapers = node.papers && node.papers.length > 0;
+  const hasResources = node.resources && node.resources.length > 0;
   const hasReferences = node.references && node.references.length > 0;
   const hasMethods = methods.length > 0;
   const showTimerDemo = domainId === 'embedded' && nodeId === 'timer';
@@ -82,6 +84,13 @@ export default function NodePage() {
         <section className="section">
           <h2 className="section-title">相关论文与方法</h2>
           <PaperList papers={node.papers} />
+        </section>
+      )}
+
+      {hasResources && (
+        <section className="section">
+          <h2 className="section-title">学习资料</h2>
+          <LearningResources resources={node.resources} />
         </section>
       )}
 

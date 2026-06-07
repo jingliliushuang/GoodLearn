@@ -1,55 +1,50 @@
 [
   {
     "id": "opencv_feature_matching",
-    "title": "OpenCV Feature Matching Tutorials",
+    "title": "OpenCV 特征匹配官方教程",
     "type": "documentation",
     "url": "https://docs.opencv.org/4.x/dc/dc3/tutorial_py_matcher.html",
     "summary": "OpenCV 官方特征匹配教程，适合学习 BFMatcher、FLANN、Homography。",
-    "tags": [
-      "opencv",
-      "matching"
-    ]
+    "tags": ["opencv", "matching", "bfmatcher"]
   },
   {
     "id": "opencv_homography",
-    "title": "OpenCV Homography Tutorial",
+    "title": "OpenCV 单应矩阵与图像对齐教程",
     "type": "tutorial",
     "url": "https://docs.opencv.org/4.x/d1/de0/tutorial_py_feature_homography.html",
     "summary": "介绍如何使用 findHomography 与 RANSAC 进行图像对齐。",
-    "tags": [
-      "homography",
-      "ransac"
-    ]
+    "tags": ["homography", "ransac", "alignment"]
   },
   {
     "id": "opencv_sift_orb",
-    "title": "OpenCV SIFT and ORB Documentation",
+    "title": "OpenCV SIFT 与 ORB 官方文档",
     "type": "documentation",
     "url": "https://docs.opencv.org/4.x/da/df5/tutorial_py_sift_intro.html",
-    "summary": "SIFT 与 ORB 官方文档与示例。",
-    "tags": [
-      "sift",
-      "orb"
-    ]
+    "summary": "SIFT 与 ORB 官方文档与示例，含关键点检测与描述子计算。",
+    "tags": ["sift", "orb", "opencv"]
   },
   {
     "id": "mvg_book",
-    "title": "Multiple View Geometry in Computer Vision",
+    "title": "Multiple View Geometry in Computer Vision（书籍）",
     "type": "book",
     "url": "https://www.robots.ox.ac.uk/~vgg/hzbook/",
-    "summary": " Hartley & Zisserman 经典教材，扩展阅读几何视觉基础。",
-    "tags": [
-      "geometry"
-    ]
+    "summary": "Hartley & Zisserman 经典教材，扩展阅读多视图几何与特征匹配基础。",
+    "tags": ["geometry", "book", "advanced"]
   },
   {
     "id": "opencv_python_tutorial",
-    "title": "OpenCV-Python Tutorials",
+    "title": "OpenCV-Python 教程总览",
     "type": "course",
     "url": "https://docs.opencv.org/4.x/d9/df8/tutorial_root.html",
-    "summary": "OpenCV Python 教程总览。",
-    "tags": [
-      "opencv"
-    ]
+    "summary": "OpenCV Python 教程总览，含特征检测、匹配与相机几何章节。",
+    "tags": ["opencv", "course", "python"]
+  },
+  {
+    "id": "lowe_ratio_test",
+    "title": "Lowe Ratio Test 教学说明",
+    "type": "tutorial",
+    "url": "",
+    "summary": "Ratio Test 用于剔除歧义匹配，是 SIFT 匹配流程中的常用筛选步骤（见 SIFT 原论文 Section 7.1）。",
+    "tags": ["sift", "matching", "ratio-test"]
   }
 ]

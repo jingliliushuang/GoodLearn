@@ -4,8 +4,12 @@ import DomainPage from './pages/DomainPage';
 import NodePage from './pages/NodePage';
 import PipelinePage from './pages/PipelinePage';
 import NodeManagerPage from './pages/NodeManagerPage';
+import ThemeToggle from './components/ThemeToggle';
+import { useTheme } from './context/ThemeContext';
 
 export default function App() {
+  const { theme } = useTheme();
+
   return (
     <div className="app">
       <header className="app-header">
@@ -16,6 +20,10 @@ export default function App() {
         <nav className="app-nav">
           <Link to="/node-manager" className="nav-link">节点管理</Link>
         </nav>
+        <div className="header-actions">
+          <span className="theme-status">{theme === 'dark' ? '深色模式' : '浅色模式'}</span>
+          <ThemeToggle />
+        </div>
         <span className="tagline">本地计算机知识树教学桌面应用</span>
       </header>
       <main className="app-main">

@@ -1,0 +1,66 @@
+[
+  {
+    "id": "opencv_filtering",
+    "title": "OpenCV 图像滤波官方文档",
+    "type": "documentation",
+    "url": "https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html",
+    "summary": "学习 Gaussian Blur、Median Blur、Bilateral Filter 等传统滤波方法。",
+    "tags": ["opencv", "filtering", "traditional"]
+  },
+  {
+    "id": "opencv_nlm",
+    "title": "OpenCV Non-local Means Denoising 文档",
+    "type": "documentation",
+    "url": "https://docs.opencv.org/4.x/d5/d69/tutorial_py_non_local_means.html",
+    "summary": "学习 fastNlMeansDenoising 和 fastNlMeansDenoisingColored 的参数含义。",
+    "tags": ["opencv", "nlm", "denoising"]
+  },
+  {
+    "id": "skimage_denoise",
+    "title": "scikit-image 图像去噪示例",
+    "type": "tutorial",
+    "url": "https://scikit-image.org/docs/stable/auto_examples/filters/plot_denoise.html",
+    "summary": "包含 TV denoising、wavelet denoising、non-local means 等传统图像去噪示例。",
+    "tags": ["scikit-image", "tutorial", "traditional"]
+  },
+  {
+    "id": "bm3d",
+    "title": "BM3D 官方演示与相关实现",
+    "type": "code",
+    "url": "https://www.cs.helsinki.fi/p/demo/BM3D/",
+    "summary": "BM3D 是经典传统去噪强基线，适合作为传统方法扩展阅读。",
+    "tags": ["bm3d", "traditional", "baseline"]
+  },
+  {
+    "id": "dncnn",
+    "title": "DnCNN 官方 PyTorch 实现",
+    "type": "code",
+    "url": "https://github.com/cszn/DnCNN",
+    "summary": "DnCNN 是经典 CNN 去噪网络，可作为深度学习去噪入门。",
+    "tags": ["dncnn", "deep-learning", "cnn"]
+  },
+  {
+    "id": "restormer",
+    "title": "Restormer 代码仓库",
+    "type": "code",
+    "url": "https://github.com/swz30/Restormer",
+    "summary": "Restormer 是基于 Transformer 的图像复原方法，可作为高级扩展。",
+    "tags": ["restormer", "transformer", "restoration"]
+  },
+  {
+    "id": "image_quality_metrics",
+    "title": "图像质量评价指标（PSNR / SSIM / MSE）",
+    "type": "tutorial",
+    "url": "https://scikit-image.org/docs/stable/auto_examples/transform/plot_ssim.html",
+    "summary": "学习 PSNR、SSIM、MSE 在图像复原中的含义。",
+    "tags": ["metrics", "psnr", "ssim"]
+  },
+  {
+    "id": "denoise_datasets",
+    "title": "BSD / Set12 / Kodak 等去噪常用数据集",
+    "type": "dataset",
+    "url": "https://www2.eecs.berkeley.edu/Research/Projects/CS/vision/bsds/",
+    "summary": "介绍图像去噪常用测试数据集，如 BSDS500、Set12、Kodak 等。",
+    "tags": ["dataset", "benchmark", "bsd"]
+  }
+]

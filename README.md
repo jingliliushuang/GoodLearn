@@ -187,9 +187,23 @@ API：`POST /api/feature-matching/run`（multipart：`image_a`、`image_b`、`me
 
 ### 学习资料 resources.json
 
-除 `papers.json` 外，节点可包含 `resources.json`，用于教程、课程、文档、代码仓库、数据集等非论文资源。前端在节点页「学习资料」区域展示。
+除 `papers.json` 外，每个 CV 节点均包含 `resources.json`，用于教程、课程、文档、代码仓库、数据集等非论文资源：
 
-分类与检测节点第一版以**教学内容 + 论文 + 学习资料 + 方法详情**为主；无权重时不报错，显示「教学内容已补齐，模型推理待接入」。
+| 节点 | 资料数（约） | 说明 |
+|------|-------------|------|
+| denoise | 8 | OpenCV 滤波、NLM、BM3D、DnCNN、指标与数据集 |
+| super_resolution | 10 | dnn_superres、BasicSR、DIV2K、benchmark、PixelShuffle |
+| feature_matching | 6 | OpenCV 匹配、Homography、多视图几何 |
+| image_classification | 6 | PyTorch 迁移学习、CS231n、ImageNet |
+| object_detection | 7 | COCO、YOLO、MMDetection、Detectron2 |
+
+前端「学习资料」区域支持按类型筛选、展开全部/收起；无 URL 的资料显示「暂无链接」。
+
+### 深色 / 浅色主题
+
+- 顶部导航可切换 **深色 / 浅色** 模式（默认深色）
+- 主题选择保存在 `localStorage`（`goodlearn-theme`），下次打开 App 自动恢复
+- 主要页面使用 CSS 变量，两种主题下文字与卡片均清晰可读
 
 > 当前仍为**开发阶段**，使用 `start_dev.bat` 启动，**不要** build / 打包 exe。
 

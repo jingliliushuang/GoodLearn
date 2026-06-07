@@ -30,6 +30,12 @@
 
 **本次 CV 扩展**：新增 `feature_matching`、`image_classification`、`object_detection` 知识节点；`resources.json` 学习资料；`POST /api/feature-matching/run`；前端 `LearningResources`、`FeatureMatchingTester`、`TheoryNodePage`。
 
+**学习资料与主题（2026-06）**：
+- 全部 CV 节点已补齐 `resources.json`（denoise / super_resolution 新增；其余节点格式统一）
+- `papers.json` 存论文；`resources.json` 存非论文资料（文档、教程、课程、代码、数据集等）
+- 前端 `LearningResources` 支持类型筛选与展开/收起
+- 全局主题：`ThemeContext` + `data-theme` CSS 变量，支持 dark/light 切换并持久化到 localStorage
+
 **本次小范围补齐**：denoise / super_resolution 的 `dataset.py`、`metrics.py`；`knowledge/cv/combined/` 占位 README；`backend/core/combiner.py`、`packer.py` 占位；runner 优先调用节点 `dataset.degrade()`（denoise）与 `metrics.evaluate()`。
 
 ---
