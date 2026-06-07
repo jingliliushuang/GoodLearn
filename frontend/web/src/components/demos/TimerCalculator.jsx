@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { runTimerDemo } from '../api/client';
+import { runTimerDemo } from '../../api/client';
 
 export default function TimerCalculator() {
   const [clockHz, setClockHz] = useState(72000000);
