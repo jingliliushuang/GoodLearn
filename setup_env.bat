@@ -36,6 +36,8 @@ if not exist "%CONDA_ENV%" (
 )
 
 echo [2/6] Installing backend dependencies...
+echo       Switching to opencv-contrib-python (required for dnn_superres)...
+"%CONDA_ENV%\python.exe" -m pip uninstall -y opencv-python opencv-contrib-python >nul 2>&1
 "%CONDA_ENV%\python.exe" -m pip install -r "%BACKEND%\requirements.txt"
 if errorlevel 1 (
     echo [ERROR] Failed to install backend dependencies.

@@ -12,8 +12,9 @@ import numpy as np
 
 from core.loader import load_process_fn
 from core.metrics import compute_mse, compute_psnr
-from core.tree import load_node_metadata
-from core.utils import ensure_runtime_dirs, get_runtime_paths
+from core.model_checker import check_method
+from core.tree import get_method_dir, load_node_metadata
+from core.utils import ensure_runtime_dirs, get_external_model_root, get_runtime_paths
 
 
 def _add_noise(image: np.ndarray, sigma: float = 25.0) -> np.ndarray:
@@ -68,13 +69,22 @@ def run_model(
     model_input, reference = _prepare_input(image, node_id)
 
     process_fn = load_process_fn(domain_id, node_id, method_id)
+    method_dir = get_method_dir(domain_id, node_id, method_id)
+    status = check_method(domain_id, node_id, method_id)
+
+    process_kwargs: dict[str, Any] = {
+        "method_dir": str(method_dir),
+        "external_model_root": str(get_external_model_root()),
+    }
+    if status.get("detected_weights"):
+        process_kwargs["weight_path"] = status["detected_weights"][0]
 
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
     run_dir = runtime["outputs"] / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
 
     start = time.perf_counter()
-    output = process_fn(model_input, **kwargs)
+    output = process_fn(model_input, **process_kwargs)
     elapsed_ms = (time.perf_counter() - start) * 1000
 
     input_path = run_dir / "input.png"

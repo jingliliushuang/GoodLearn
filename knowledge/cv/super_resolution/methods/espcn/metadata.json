@@ -1,10 +1,12 @@
 {
   "id": "espcn",
   "title": "ESPCN",
-  "description": "Efficient Sub-Pixel Convolutional Neural Network，亚像素卷积实时超分",
   "category": "cnn",
-  "requirements": ["onnxruntime"],
+  "description": "Efficient Sub-Pixel Convolutional Neural Network，亚像素卷积实时超分",
+  "backend": "opencv_dnn_superres",
+  "algorithm": "espcn",
+  "scale": 2,
   "weights": ["ESPCN_x2.pb"],
-  "external_model": "ESPCN_x2.pb",
-  "inference_enabled": false
+  "requirements": ["opencv-contrib-python"],
+  "inference_enabled": true
 }

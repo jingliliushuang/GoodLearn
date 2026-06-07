@@ -48,16 +48,20 @@ E:\A_Exp_ML\GoodLearnApp\start_dev.bat
 E:\A_Exp_ML\GoodLearnApp\stop_dev.bat
 ```
 
-## 当前可运行模型（OpenCV / NumPy，无需权重）
+## 当前可运行模型
 
 ### 图像超分 (super_resolution)
 
-| 方法 | 说明 |
-|------|------|
-| nearest | 最近邻插值 |
-| bilinear | 双线性插值 |
-| bicubic | 双三次插值 |
-| lanczos | Lanczos 插值 |
+| 方法 | 说明 | 依赖 |
+|------|------|------|
+| nearest | 最近邻插值 | OpenCV |
+| bilinear | 双线性插值 | OpenCV |
+| bicubic | 双三次插值 | OpenCV |
+| lanczos | Lanczos 插值 | OpenCV |
+| ESPCN | 亚像素卷积超分 | opencv-contrib-python + ESPCN_x2.pb |
+| EDSR | 增强深度残差超分 | opencv-contrib-python + EDSR_x2.pb |
+
+`.pb` 权重通过 OpenCV `dnn_superres` 加载，**不需要** onnxruntime。
 
 ### 图像去噪 (denoise)
 
@@ -68,18 +72,45 @@ E:\A_Exp_ML\GoodLearnApp\stop_dev.bat
 | bilateral_filter | 双边滤波 |
 | nlm_denoise | 非局部均值 |
 
-## 深度学习模型为何显示「未启用」
+## 深度学习模型依赖说明
 
-节点页会自动检测每个方法的运行时状态，可能原因：
+节点页会自动检测每个方法的运行时状态：
+
+| 权重后缀 | 所需依赖 |
+|----------|----------|
+| `.pb` | `opencv-contrib-python`（`cv2.dnn_superres`） |
+| `.onnx` | `onnxruntime` |
+| `.pth` / `.pt` | `torch` |
+
+ESPCN / EDSR 使用 `.pb` 格式，通过 OpenCV DNN Super Resolution 推理，**不会**要求 onnxruntime。
+
+### OpenCV contrib 安装（仅项目内环境）
+
+若页面显示「缺少 opencv-contrib-python」：
+
+```bat
+E:\A_Exp_ML\GoodLearnApp\.conda\goodlearnapp-backend\python.exe -m pip uninstall -y opencv-python opencv-contrib-python
+E:\A_Exp_ML\GoodLearnApp\.conda\goodlearnapp-backend\python.exe -m pip install opencv-contrib-python==4.10.0.84
+```
+
+或重新运行 `setup_env.bat`（已包含卸载/切换逻辑）。
+
+验证：
+
+```bat
+E:\A_Exp_ML\GoodLearnApp\.conda\goodlearnapp-backend\python.exe -c "import cv2; print(cv2.__version__); print(hasattr(cv2, 'dnn_superres'))"
+```
+
+应输出 `True`。
+
+## 模型状态含义
 
 | 状态 | 含义 |
 |------|------|
-| 可运行 | 依赖齐全、权重就绪、推理已接入 |
-| 缺少依赖 | 如 `onnxruntime`、`torch` 未安装在项目 Conda 环境 |
-| 缺少权重 | 权重文件不在 `weights/` 或 `external_model_root` |
-| 未启用 | 推理接口尚未接入（如 ESPCN、EDSR） |
-
-当前 ESPCN / EDSR 已有外部权重引用，但缺少 `onnxruntime` 且推理代码未接入，因此显示不可用及具体原因。
+| 可运行 | 依赖齐全、权重就绪 |
+| 缺少依赖 | 如 `opencv-contrib-python`、`torch` 未安装 |
+| 缺少权重 | 权重不在 `weights/` 或 `external_model_root` |
+| 未启用 | 推理接口尚未接入 |
 
 ## 如何放置模型权重
 
@@ -102,6 +133,10 @@ external_model_root: "E:/A_Exp_ML/other used"
 ### 安装深度学习依赖（可选，仍在项目内环境）
 
 ```bat
+REM .pb 超分模型（ESPCN/EDSR）— 安装 opencv-contrib-python 即可
+E:\A_Exp_ML\GoodLearnApp\.conda\goodlearnapp-backend\python.exe -m pip install opencv-contrib-python==4.10.0.84
+
+REM .onnx 模型
 E:\A_Exp_ML\GoodLearnApp\.conda\goodlearnapp-backend\python.exe -m pip install onnxruntime
 ```
 

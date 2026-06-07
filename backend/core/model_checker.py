@@ -19,6 +19,15 @@ def _can_import(module_name: str) -> bool:
         return False
 
 
+def _has_dnn_superres() -> bool:
+    try:
+        import cv2
+
+        return hasattr(cv2, "dnn_superres")
+    except ImportError:
+        return False
+
+
 def _has_process_function(model_path: Path) -> bool:
     if not model_path.exists():
         return False
@@ -46,13 +55,57 @@ def _collect_weight_names(meta: dict[str, Any]) -> list[str]:
 
 
 def _resolve_weight(method_dir: Path, weight_name: str) -> Path | None:
-    local = method_dir / "weights" / weight_name
-    if local.exists():
-        return local
-    external = get_external_model_root() / weight_name
-    if external.exists():
-        return external
+    local_candidates = [
+        method_dir / "weights" / weight_name,
+        method_dir / weight_name,
+    ]
+    for path in local_candidates:
+        if path.exists():
+            return path
+
+    external_root = get_external_model_root()
+    direct = external_root / weight_name
+    if direct.exists():
+        return direct
+
+    if external_root.is_dir():
+        for path in external_root.rglob(weight_name):
+            if path.is_file():
+                return path
     return None
+
+
+def _infer_requirements(meta: dict[str, Any], weight_names: list[str]) -> list[str]:
+    """Derive runtime requirements from weight suffix and backend type."""
+    requirements: set[str] = set()
+    backend = meta.get("backend", "")
+
+    if backend == "opencv_dnn_superres":
+        if not _has_dnn_superres():
+            requirements.add("opencv-contrib-python")
+
+    for weight_name in weight_names:
+        suffix = Path(weight_name).suffix.lower()
+        if suffix == ".onnx":
+            requirements.add("onnxruntime")
+        elif suffix in {".pth", ".pt"}:
+            requirements.add("torch")
+        elif suffix == ".pb":
+            if not _has_dnn_superres():
+                requirements.add("opencv-contrib-python")
+
+    return sorted(requirements)
+
+
+def _check_requirements(requirements: list[str]) -> list[str]:
+    missing: list[str] = []
+    for dep in requirements:
+        if dep == "opencv-contrib-python":
+            if not _has_dnn_superres():
+                missing.append(dep)
+        elif not _can_import(dep):
+            missing.append(dep)
+    return missing
 
 
 def check_method(domain_id: str, node_id: str, method_id: str) -> dict[str, Any]:
@@ -76,8 +129,8 @@ def check_method(domain_id: str, node_id: str, method_id: str) -> dict[str, Any]
     with open(meta_path, encoding="utf-8") as f:
         meta = json.load(f)
 
-    requirements = list(meta.get("requirements", []))
     weight_names = _collect_weight_names(meta)
+    requirements = _infer_requirements(meta, weight_names)
     missing_dependencies: list[str] = []
     missing_weights: list[str] = []
     detected_weights: list[str] = []
@@ -91,10 +144,6 @@ def check_method(domain_id: str, node_id: str, method_id: str) -> dict[str, Any]
         return _build_status(meta, method_id, False, "model.py 未实现 process()", requirements,
                            weight_names, missing_dependencies, missing_weights, detected_weights)
 
-    for dep in requirements:
-        if not _can_import(dep):
-            missing_dependencies.append(dep)
-
     for weight_name in weight_names:
         resolved = _resolve_weight(method_dir, weight_name)
         if resolved is not None:
@@ -102,8 +151,14 @@ def check_method(domain_id: str, node_id: str, method_id: str) -> dict[str, Any]
         else:
             missing_weights.append(weight_name)
 
+    missing_dependencies = _check_requirements(requirements)
+
     if missing_dependencies:
-        reason = f"缺少依赖: {', '.join(missing_dependencies)}"
+        dep_msg = ", ".join(missing_dependencies)
+        if "opencv-contrib-python" in missing_dependencies:
+            reason = f"缺少 opencv-contrib-python，请在项目内后端环境安装 opencv-contrib-python"
+        else:
+            reason = f"缺少依赖: {dep_msg}"
         return _build_status(meta, method_id, False, reason, requirements, weight_names,
                            missing_dependencies, missing_weights, detected_weights)
 
@@ -136,6 +191,7 @@ def _build_status(
         "title": meta.get("title", method_id),
         "category": meta.get("category", "traditional"),
         "description": meta.get("description", ""),
+        "backend": meta.get("backend", ""),
         "available": available,
         "reason": reason,
         "requirements": requirements,
