@@ -16,6 +16,28 @@ FastAPI 后端 (backend/)
 knowledge/ 知识树 + model.py
 ```
 
+## 架构与原始设计映射
+
+GoodLearnApp 在原始「知识树 + 叶子节点 + 方法 + 统一运行器」设计上，采用 Electron 桌面开发形态。目录命名对照：
+
+| 原始设计 | 当前 GoodLearnApp | 说明 |
+|----------|-------------------|------|
+| `nodes/` | `knowledge/` | 教学型节点根目录，按领域组织叶子节点 |
+| `history/{method}/` | `methods/{method}/` | 节点下的具体算法（metadata、model.py、README） |
+| `frontend/web/` | `frontend/web/` | React UI |
+| `frontend/cli/` | — | **暂未实现**，开发阶段用 `start_dev.bat` |
+| `core/` | `backend/core/` | tree、loader、runner、metrics 等 |
+| `main.py` | `backend/main.py` | FastAPI 入口 |
+| `desktop/` | `desktop/` | Electron 壳，承载 Web 前端 |
+
+叶子节点标准接口（CV denoise / super_resolution 已部分落地）：
+
+- `dataset.py` → `degrade(clean_image, **params)` 生成退化输入
+- `methods/*/model.py` → `process(image, **kwargs)` 执行算法
+- `metrics.py` → `evaluate(clean, recovered)` 返回 MSE/PSNR/SSIM
+
+组合节点（`knowledge/cv/combined/`）与导入导出（`backend/core/packer.py`）为**架构预留**，详见 [ARCHITECTURE_AUDIT.md](./ARCHITECTURE_AUDIT.md)。
+
 ## 环境隔离
 
 | 组件 | 位置 |

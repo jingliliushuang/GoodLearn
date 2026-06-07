@@ -11,7 +11,7 @@ import cv2
 import numpy as np
 
 from core.experiments import save_experiment
-from core.loader import load_process_fn
+from core.loader import load_degrade_fn, load_evaluate_fn, load_process_fn
 from core.metrics import compute_mse, compute_psnr, compute_ssim
 from core.model_checker import check_method
 from core.tree import get_method_dir, load_node_metadata
@@ -24,12 +24,51 @@ def _add_noise(image: np.ndarray, sigma: float = 25.0) -> np.ndarray:
     return noisy
 
 
-def _prepare_input(image: np.ndarray, node_id: str) -> tuple[np.ndarray, np.ndarray]:
-    """Return (model_input, reference_for_metrics)."""
+def _prepare_input(
+    image: np.ndarray,
+    domain_id: str,
+    node_id: str,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Return (model_input, reference_for_metrics).
+
+    Uses node dataset.degrade() when present. Super-resolution keeps the uploaded
+    image as model input because ESPCN/EDSR perform internal downsampling in
+    model.py; applying dataset.degrade() here would double-degrade those models.
+    """
+    degrade_fn = load_degrade_fn(domain_id, node_id)
+    if degrade_fn is not None and node_id != "super_resolution":
+        degraded = degrade_fn(image)
+        return degraded, image
+
     if node_id == "denoise":
         noisy = _add_noise(image)
         return noisy, image
+
     return image, image
+
+
+def _compute_metrics(
+    reference: np.ndarray,
+    output: np.ndarray,
+    domain_id: str,
+    node_id: str,
+    elapsed_ms: float,
+) -> dict[str, Any]:
+    evaluate_fn = load_evaluate_fn(domain_id, node_id)
+    if evaluate_fn is not None:
+        metrics = dict(evaluate_fn(reference, output))
+    else:
+        mse = compute_mse(reference, output)
+        psnr = compute_psnr(reference, output)
+        ssim = compute_ssim(reference, output)
+        metrics = {
+            "mse": round(mse, 4),
+            "psnr": round(psnr, 4) if psnr != float("inf") else 999.99,
+            "ssim": round(ssim, 4) if ssim is not None else None,
+        }
+
+    metrics["runtime_ms"] = round(elapsed_ms, 2)
+    return metrics
 
 
 def _create_comparison(input_img: np.ndarray, output_img: np.ndarray) -> np.ndarray:
@@ -67,7 +106,7 @@ def run_model(
         raise ValueError("Invalid image file")
 
     node_meta = load_node_metadata(domain_id, node_id)
-    model_input, reference = _prepare_input(image, node_id)
+    model_input, reference = _prepare_input(image, domain_id, node_id)
 
     process_fn = load_process_fn(domain_id, node_id, method_id)
     method_dir = get_method_dir(domain_id, node_id, method_id)
@@ -98,9 +137,7 @@ def run_model(
     comparison = _create_comparison(model_input, output)
     cv2.imwrite(str(comparison_path), comparison)
 
-    mse = compute_mse(reference, output)
-    psnr = compute_psnr(reference, output)
-    ssim = compute_ssim(reference, output)
+    metrics = _compute_metrics(reference, output, domain_id, node_id, elapsed_ms)
 
     base_url = f"/runtime/outputs/{run_id}"
     timestamp = datetime.now().isoformat(timespec="seconds")
@@ -110,12 +147,7 @@ def run_model(
         "input_url": f"{base_url}/input.png",
         "output_url": f"{base_url}/output.png",
         "comparison_url": f"{base_url}/comparison.png",
-        "metrics": {
-            "mse": round(mse, 4),
-            "psnr": round(psnr, 4) if psnr != float("inf") else 999.99,
-            "ssim": round(ssim, 4) if ssim is not None else None,
-            "runtime_ms": round(elapsed_ms, 2),
-        },
+        "metrics": metrics,
         "node_type": node_meta.get("type", node_id),
     }
 
