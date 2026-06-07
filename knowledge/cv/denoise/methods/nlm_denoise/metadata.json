@@ -5,5 +5,33 @@
   "category": "traditional",
   "requirements": [],
   "weights": [],
-  "inference_enabled": true
+  "inference_enabled": true,
+  "params_schema": [
+    {
+      "name": "h",
+      "label": "去噪强度 h",
+      "type": "number",
+      "default": 10,
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "description": "h 越大去噪越强，但细节可能损失。"
+    },
+    {
+      "name": "templateWindowSize",
+      "label": "模板窗口大小",
+      "type": "select",
+      "default": 7,
+      "options": [3, 5, 7],
+      "description": "用于比较局部块相似度的窗口大小。"
+    },
+    {
+      "name": "searchWindowSize",
+      "label": "搜索窗口大小",
+      "type": "select",
+      "default": 21,
+      "options": [11, 15, 21, 31],
+      "description": "搜索相似块的范围，越大越慢。"
+    }
+  ]
 }

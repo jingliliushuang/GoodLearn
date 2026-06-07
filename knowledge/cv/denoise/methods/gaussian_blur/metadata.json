@@ -5,5 +5,15 @@
   "category": "traditional",
   "requirements": [],
   "weights": [],
-  "inference_enabled": true
+  "inference_enabled": true,
+  "params_schema": [
+    {
+      "name": "ksize",
+      "label": "卷积核大小",
+      "type": "select",
+      "default": 5,
+      "options": [3, 5, 7, 9, 11],
+      "description": "核越大，平滑越强，但图像越模糊。必须为奇数。"
+    }
+  ]
 }

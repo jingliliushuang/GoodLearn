@@ -137,6 +137,18 @@ E:\A_Exp_ML\GoodLearnApp\stop_dev.bat
 | 输出 | `backend/runtime/comparisons/{id}/` 含各方法 PNG 与 `comparison_grid.png` |
 | 实验记录 | `type: "comparison"` 写入 `runtime/experiments/` |
 
+## 方法参数可调
+
+单模型测试支持**方法参数可调**（`metadata.json` → `params_schema`）：
+
+- **图像去噪**：ksize、h、sigmaColor / sigmaSpace 等
+- **图像超分（传统）**：scale（2/3/4）
+- **ESPCN / EDSR**：scale=2（只读）
+
+`POST /api/run` 通过 `params` 字段传递 JSON；实验记录保存本次参数。
+
+Pipeline Builder 与模型对比实验暂使用**默认参数**。
+
 ## 当前可运行模型
 
 ### 图像超分 (super_resolution)
@@ -242,7 +254,7 @@ E:\A_Exp_ML\GoodLearnApp\.conda\goodlearnapp-backend\python.exe -m pip install o
 |------|------|------|
 | GET | /api/domains | 领域列表 |
 | GET | /api/nodes/{domain}/{node} | 节点详情（含方法可用性检测） |
-| POST | /api/run | 运行单方法（仅 available=true） |
+| POST | /api/run | 运行单方法（支持 params JSON 参数） |
 | POST | /api/run-pipeline | 运行 cascade 组合流水线 |
 | POST | /api/compare-methods | 多方法同图对比实验 |
 

@@ -13,7 +13,10 @@ async def run_inference(
     node: str = Form(...),
     method: str = Form(...),
     image: UploadFile = File(...),
+    params: str = Form("{}"),
 ):
+    import json
+
     method_dir = get_method_dir(domain, node, method)
     if not method_dir.exists():
         raise HTTPException(status_code=404, detail=f"Method '{method}' not found")
@@ -34,8 +37,19 @@ async def run_inference(
         raise HTTPException(status_code=400, detail="Empty image file")
 
     try:
-        result = run_model(domain, node, method, image_bytes)
+        user_params = json.loads(params) if params else {}
+        if not isinstance(user_params, dict):
+            raise ValueError("params must be a JSON object")
+    except json.JSONDecodeError as exc:
+        raise HTTPException(status_code=400, detail=f"Invalid params JSON: {exc}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    try:
+        result = run_model(domain, node, method, image_bytes, user_params=user_params)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
 
     return result

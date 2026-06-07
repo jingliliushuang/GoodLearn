@@ -1,9 +1,19 @@
 {
   "id": "lanczos",
   "title": "Lanczos 插值",
-  "description": "Lanczos 插值，高质量传统上采样方法",
+  "description": "Lanczos 插值，边缘较锐利",
   "category": "traditional",
   "requirements": [],
   "weights": [],
-  "inference_enabled": true
+  "inference_enabled": true,
+  "params_schema": [
+    {
+      "name": "scale",
+      "label": "放大倍率",
+      "type": "select",
+      "default": 2,
+      "options": [2, 3, 4],
+      "description": "传统插值方法支持不同放大倍率。"
+    }
+  ]
 }

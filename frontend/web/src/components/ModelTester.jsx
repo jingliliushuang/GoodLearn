@@ -1,5 +1,7 @@
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { runModel } from '../api/client';
+import { buildDefaultParams } from '../utils/methodParams';
+import MethodParamsPanel from './MethodParamsPanel';
 import ResultCompare from './ResultCompare';
 
 export default function ModelTester({ domainId, nodeId, methods, selectedMethod, onRunComplete }) {
@@ -9,10 +11,24 @@ export default function ModelTester({ domainId, nodeId, methods, selectedMethod,
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
+  const [params, setParams] = useState({});
 
   const selected = methods?.find((m) => m.id === selectedMethod);
   const canRun = selected?.available === true;
   const hasAnyAvailable = methods?.some((m) => m.available);
+  const paramsSchema = selected?.params_schema || [];
+
+  const resetParams = useCallback((schema) => {
+    setParams(buildDefaultParams(schema || []));
+  }, []);
+
+  useEffect(() => {
+    resetParams(selected?.params_schema);
+  }, [selectedMethod, selected?.params_schema, resetParams]);
+
+  const handleParamsChange = useCallback((next) => {
+    setParams(next);
+  }, []);
 
   const handleFileChange = (e) => {
     const picked = e.target.files?.[0];
@@ -31,7 +47,7 @@ export default function ModelTester({ domainId, nodeId, methods, selectedMethod,
     setResult(null);
 
     try {
-      const data = await runModel(domainId, nodeId, selectedMethod, file);
+      const data = await runModel(domainId, nodeId, selectedMethod, file, params);
       setResult(data);
       onRunComplete?.(data);
     } catch (err) {
@@ -60,6 +76,12 @@ export default function ModelTester({ domainId, nodeId, methods, selectedMethod,
           「{selected.title}」不可运行：{selected.reason || '未启用'}
         </div>
       )}
+
+      <MethodParamsPanel
+        paramsSchema={paramsSchema}
+        values={params}
+        onChange={handleParamsChange}
+      />
 
       <div
         className="upload-area"

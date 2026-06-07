@@ -199,6 +199,7 @@ def _build_status(
         "missing_dependencies": missing_dependencies,
         "missing_weights": missing_weights,
         "detected_weights": detected_weights,
+        "params_schema": meta.get("params_schema", []) if isinstance(meta.get("params_schema"), list) else [],
     }
 
 

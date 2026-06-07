@@ -1,9 +1,19 @@
 {
   "id": "bilinear",
   "title": "Bilinear 双线性插值",
-  "description": "双线性插值，平滑但细节损失",
+  "description": "双线性插值，平滑但细节模糊",
   "category": "traditional",
   "requirements": [],
   "weights": [],
-  "inference_enabled": true
+  "inference_enabled": true,
+  "params_schema": [
+    {
+      "name": "scale",
+      "label": "放大倍率",
+      "type": "select",
+      "default": 2,
+      "options": [2, 3, 4],
+      "description": "传统插值方法支持不同放大倍率。"
+    }
+  ]
 }

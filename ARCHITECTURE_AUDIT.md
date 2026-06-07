@@ -167,7 +167,8 @@ GoodLearnApp/
 | 接口 | 位置 | 状态 |
 |------|------|------|
 | `dataset.degrade(clean, **params)` | denoise/dataset.py, super_resolution/dataset.py | ✅ 已实现 |
-| `model.process(degraded, **kwargs)` | 10 个 model.py | ✅ 已实现（参数名多为 `image` 而非 `degraded_image`，语义一致） |
+| `model.process(degraded, **kwargs)` | 10 个 model.py | ✅ 已实现 | 支持用户参数（`params_schema` + `POST /api/run` 的 params） |
+| `metadata.json` → `params_schema` | 去噪 4 法 + 超分 6 法 | ✅ 已实现 | 前端 `MethodParamsPanel` 动态表单 |
 | `metrics.evaluate(clean, recovered)` | 两节点 metrics.py + core/metrics.py 函数级 | ✅ 已实现 |
 | `combiner.combine(images, strategy)` | backend/core/combiner.py | ⚠️ 占位，NotImplementedError |
 
@@ -264,7 +265,7 @@ GoodLearnApp/
 
 | type | 说明 | API |
 |------|------|-----|
-| `single`（默认） | 单模型运行 | `POST /api/run` |
+| `single`（默认） | 单模型运行 | `POST /api/run`（支持 params） |
 | `pipeline` | 组合流水线 | `POST /api/run-pipeline` |
 | `comparison` | 多模型同图对比 | `POST /api/compare-methods` |
 

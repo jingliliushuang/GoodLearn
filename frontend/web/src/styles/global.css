@@ -1374,6 +1374,84 @@ a:hover {
   border-radius: 8px;
 }
 
+.method-params-panel {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.param-panel-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.65rem;
+  color: var(--accent);
+}
+
+.param-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem 1rem;
+}
+
+.param-field {
+  font-size: 0.8rem;
+}
+
+.param-label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.param-value-tag {
+  margin-left: 0.5rem;
+  color: var(--text-muted);
+  font-weight: normal;
+}
+
+.param-control {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: inherit;
+  font-size: 0.8rem;
+}
+
+.param-desc {
+  margin: 0.25rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.param-empty {
+  margin-bottom: 1rem;
+}
+
+.param-readonly-value {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  background: var(--bg-card);
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.param-field-inline {
+  display: flex;
+  flex-direction: column;
+}
+
+.param-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .pipeline-layout {
     grid-template-columns: 1fr;

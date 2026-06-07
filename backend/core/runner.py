@@ -14,6 +14,7 @@ from core.experiments import save_experiment
 from core.loader import load_degrade_fn, load_evaluate_fn, load_process_fn
 from core.metrics import compute_mse, compute_psnr, compute_ssim
 from core.model_checker import check_method
+from core.params import merge_process_kwargs, validate_method_params
 from core.tree import get_method_dir, load_node_metadata
 from core.utils import ensure_runtime_dirs, get_external_model_root, get_runtime_paths
 
@@ -95,6 +96,7 @@ def run_model(
     node_id: str,
     method_id: str,
     image_bytes: bytes,
+    user_params: dict[str, Any] | None = None,
     **kwargs: Any,
 ) -> dict[str, Any]:
     ensure_runtime_dirs()
@@ -118,6 +120,9 @@ def run_model(
     }
     if status.get("detected_weights"):
         process_kwargs["weight_path"] = status["detected_weights"][0]
+
+    validated_params = validate_method_params(domain_id, node_id, method_id, user_params)
+    process_kwargs = merge_process_kwargs(process_kwargs, validated_params)
 
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
     run_dir = runtime["outputs"] / run_id
@@ -153,10 +158,12 @@ def run_model(
 
     save_experiment({
         "run_id": run_id,
+        "type": "single",
         "timestamp": timestamp,
         "domain": domain_id,
         "node": node_id,
         "method": method_id,
+        "params": validated_params,
         "input_path": str(input_path),
         "output_path": str(output_path),
         "comparison_path": str(comparison_path),

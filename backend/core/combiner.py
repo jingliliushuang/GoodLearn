@@ -14,6 +14,7 @@ import numpy as np
 from core.experiments import save_experiment
 from core.loader import load_process_fn
 from core.model_checker import check_method
+from core.params import merge_process_kwargs, validate_method_params
 from core.runner import _create_comparison
 from core.tree import get_method_dir
 from core.utils import ensure_runtime_dirs, get_external_model_root, get_pipelines_dir
@@ -53,10 +54,9 @@ def _build_process_kwargs(domain_id: str, node_id: str, method_id: str, params: 
     if status.get("detected_weights"):
         process_kwargs["weight_path"] = status["detected_weights"][0]
 
-    if params:
-        process_kwargs.update(params)
-
-    return process_kwargs
+    step_params = params if params else {}
+    validated = validate_method_params(domain_id, node_id, method_id, step_params)
+    return merge_process_kwargs(process_kwargs, validated)
 
 
 def run_pipeline(

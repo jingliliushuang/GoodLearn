@@ -20,12 +20,13 @@ export async function fetchNode(domainId, nodeId) {
   return data;
 }
 
-export async function runModel(domain, node, method, imageFile) {
+export async function runModel(domain, node, method, imageFile, params = {}) {
   const form = new FormData();
   form.append('domain', domain);
   form.append('node', node);
   form.append('method', method);
   form.append('image', imageFile);
+  form.append('params', JSON.stringify(params || {}));
 
   const { data } = await client.post('/api/run', form, {
     headers: { 'Content-Type': 'multipart/form-data' },

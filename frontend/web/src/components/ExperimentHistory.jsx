@@ -1,5 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
 import { fetchExperiments } from '../api/client';
+import { formatParamsBrief } from '../utils/methodParams';
+
+function formatMethodCell(rec) {
+  if (rec.type === 'comparison') {
+    const names = (rec.methods || []).slice(0, 3).join(', ');
+    const suffix = (rec.methods || []).length > 3 ? '…' : '';
+    return `对比实验: ${names}${suffix}`;
+  }
+  if (rec.type === 'pipeline') {
+    return `流水线 (${rec.steps?.length || 0} 步)`;
+  }
+  const base = rec.method || '-';
+  const paramsStr = formatParamsBrief(rec.params);
+  return paramsStr ? `${base} / ${paramsStr}` : base;
+}
 
 export default function ExperimentHistory({ domainId, nodeId, refreshKey }) {
   const [records, setRecords] = useState([]);
@@ -40,7 +55,7 @@ export default function ExperimentHistory({ domainId, nodeId, refreshKey }) {
           {records.map((rec) => (
             <tr key={rec.run_id}>
               <td>{rec.timestamp?.replace('T', ' ') || rec.run_id}</td>
-              <td>{rec.method}</td>
+              <td>{formatMethodCell(rec)}</td>
               <td>{rec.metrics?.psnr ?? '-'}</td>
               <td>{rec.metrics?.mse ?? '-'}</td>
               <td>{rec.metrics?.runtime_ms ?? '-'}</td>

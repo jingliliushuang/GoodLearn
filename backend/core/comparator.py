@@ -14,6 +14,7 @@ from core.experiments import save_experiment
 from core.loader import load_evaluate_fn, load_method_metadata, load_process_fn
 from core.metrics import compute_mse, compute_psnr, compute_ssim
 from core.model_checker import check_method
+from core.params import merge_process_kwargs, validate_method_params
 from core.tree import get_method_dir
 from core.utils import ensure_runtime_dirs, get_comparisons_dir, get_external_model_root
 
@@ -41,7 +42,9 @@ def _build_process_kwargs(domain_id: str, node_id: str, method_id: str) -> dict[
     }
     if status.get("detected_weights"):
         kwargs["weight_path"] = status["detected_weights"][0]
-    return kwargs
+
+    default_params = validate_method_params(domain_id, node_id, method_id, {})
+    return merge_process_kwargs(kwargs, default_params)
 
 
 def _compute_metrics(reference: np.ndarray, output: np.ndarray, domain_id: str, node_id: str) -> dict[str, Any]:

@@ -5,5 +5,37 @@
   "category": "traditional",
   "requirements": [],
   "weights": [],
-  "inference_enabled": true
+  "inference_enabled": true,
+  "params_schema": [
+    {
+      "name": "d",
+      "label": "邻域直径 d",
+      "type": "number",
+      "default": 9,
+      "min": 3,
+      "max": 15,
+      "step": 2,
+      "description": "参与滤波的邻域大小。"
+    },
+    {
+      "name": "sigmaColor",
+      "label": "颜色空间 sigmaColor",
+      "type": "number",
+      "default": 75,
+      "min": 10,
+      "max": 200,
+      "step": 5,
+      "description": "值越大，颜色差异较大的像素也会被混合。"
+    },
+    {
+      "name": "sigmaSpace",
+      "label": "空间距离 sigmaSpace",
+      "type": "number",
+      "default": 75,
+      "min": 10,
+      "max": 200,
+      "step": 5,
+      "description": "值越大，距离较远的像素也会参与滤波。"
+    }
+  ]
 }

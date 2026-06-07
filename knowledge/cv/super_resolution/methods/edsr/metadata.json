@@ -8,5 +8,14 @@
   "scale": 2,
   "weights": ["EDSR_x2.pb"],
   "requirements": ["opencv-contrib-python"],
-  "inference_enabled": true
+  "inference_enabled": true,
+  "params_schema": [
+    {
+      "name": "scale",
+      "label": "放大倍率",
+      "type": "readonly",
+      "default": 2,
+      "description": "当前权重仅支持 x2。"
+    }
+  ]
 }
