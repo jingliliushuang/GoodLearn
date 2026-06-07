@@ -1,0 +1,13 @@
+{
+  "id": "timer",
+  "title": "Timer 定时器",
+  "domain": "embedded",
+  "description": "定时器预分频、ARR 与中断周期计算",
+  "difficulty": "medium",
+  "tags": [
+    "timer",
+    "interrupt"
+  ],
+  "has_demos": true,
+  "demo_type": "timer_calculator"
+}

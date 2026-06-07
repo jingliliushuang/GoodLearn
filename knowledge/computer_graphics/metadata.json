@@ -1,0 +1,35 @@
+{
+  "id": "computer_graphics",
+  "title": "Computer Graphics",
+  "description": "计算机图形学渲染与变换基础",
+  "nodes": [
+    {
+      "id": "rendering_pipeline",
+      "title": "渲染管线",
+      "description": "从顶点到像素的全流程",
+      "status": "ready",
+      "difficulty": "medium"
+    },
+    {
+      "id": "transformation_matrix",
+      "title": "变换矩阵",
+      "description": "平移、旋转、缩放的齐次坐标",
+      "status": "ready",
+      "difficulty": "medium"
+    },
+    {
+      "id": "rasterization",
+      "title": "光栅化",
+      "description": "三角形覆盖与深度测试",
+      "status": "ready",
+      "difficulty": "hard"
+    },
+    {
+      "id": "shading_model",
+      "title": "光照模型",
+      "description": "Phong/Blinn 光照与材质",
+      "status": "ready",
+      "difficulty": "hard"
+    }
+  ]
+}

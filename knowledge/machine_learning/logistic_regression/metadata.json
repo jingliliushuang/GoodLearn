@@ -1,0 +1,11 @@
+{
+  "id": "logistic_regression",
+  "title": "逻辑回归",
+  "domain": "machine_learning",
+  "description": "二分类概率建模",
+  "difficulty": "easy",
+  "tags": [
+    "classification",
+    "supervised"
+  ]
+}

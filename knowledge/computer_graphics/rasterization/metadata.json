@@ -1,0 +1,11 @@
+{
+  "id": "rasterization",
+  "title": "光栅化",
+  "domain": "computer_graphics",
+  "description": "三角形覆盖与深度测试",
+  "difficulty": "hard",
+  "tags": [
+    "raster",
+    "gpu"
+  ]
+}

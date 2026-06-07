@@ -1,0 +1,11 @@
+{
+  "id": "file_system",
+  "title": "文件系统",
+  "domain": "operating_system",
+  "description": "inode、目录结构与缓存",
+  "difficulty": "medium",
+  "tags": [
+    "filesystem",
+    "storage"
+  ]
+}

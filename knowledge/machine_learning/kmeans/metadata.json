@@ -1,0 +1,11 @@
+{
+  "id": "kmeans",
+  "title": "K-Means 聚类",
+  "domain": "machine_learning",
+  "description": "无监督聚类与中心更新",
+  "difficulty": "medium",
+  "tags": [
+    "clustering",
+    "unsupervised"
+  ]
+}

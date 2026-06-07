@@ -1,0 +1,11 @@
+{
+  "id": "linear_regression",
+  "title": "线性回归",
+  "domain": "machine_learning",
+  "description": "用线性模型拟合连续值",
+  "difficulty": "easy",
+  "tags": [
+    "regression",
+    "supervised"
+  ]
+}

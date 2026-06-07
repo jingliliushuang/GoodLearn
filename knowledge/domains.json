@@ -8,25 +8,25 @@
   {
     "id": "embedded",
     "title": "Embedded System",
-    "description": "GPIO、UART、Timer、中断等内容",
-    "status": "planned"
+    "description": "GPIO、UART、Timer、中断、ADC 等嵌入式基础模块",
+    "status": "ready"
   },
   {
-    "id": "ml",
+    "id": "machine_learning",
     "title": "Machine Learning",
-    "description": "监督学习、无监督学习、强化学习基础",
-    "status": "planned"
+    "description": "线性回归、逻辑回归、决策树、聚类等机器学习基础",
+    "status": "ready"
   },
   {
-    "id": "os",
+    "id": "operating_system",
     "title": "Operating System",
-    "description": "进程调度、内存管理、文件系统",
-    "status": "planned"
+    "description": "进程调度、内存管理、死锁、文件系统等操作系统核心概念",
+    "status": "ready"
   },
   {
-    "id": "cg",
+    "id": "computer_graphics",
     "title": "Computer Graphics",
-    "description": "光栅化、着色、渲染管线",
-    "status": "planned"
+    "description": "渲染管线、矩阵变换、光栅化、光照模型等图形学基础",
+    "status": "ready"
   }
 ]

@@ -1,0 +1,11 @@
+{
+  "id": "rendering_pipeline",
+  "title": "渲染管线",
+  "domain": "computer_graphics",
+  "description": "从顶点到像素的全流程",
+  "difficulty": "medium",
+  "tags": [
+    "pipeline",
+    "gpu"
+  ]
+}

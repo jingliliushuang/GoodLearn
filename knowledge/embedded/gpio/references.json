@@ -1,0 +1,20 @@
+[
+  {
+    "title": "GPIO 基础 入门笔记",
+    "url": "https://developer.mozilla.org/",
+    "type": "tutorial",
+    "summary": "关于GPIO 基础的基础概念与示例"
+  },
+  {
+    "title": "STM32 Reference Manual",
+    "url": "https://www.st.com/resource/en/reference_manual/",
+    "type": "document",
+    "summary": "STM32 外设参考手册"
+  },
+  {
+    "title": "Embedded Systems: Introduction",
+    "url": "https://en.wikipedia.org/wiki/Embedded_system",
+    "type": "tutorial",
+    "summary": "嵌入式系统概述"
+  }
+]

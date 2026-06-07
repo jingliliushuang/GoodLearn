@@ -7,6 +7,7 @@ from core.tree import (
     load_node_content,
     load_node_metadata,
     load_node_papers,
+    load_node_references,
 )
 
 router = APIRouter(prefix="/api/nodes", tags=["nodes"])
@@ -18,6 +19,7 @@ def get_node(domain_id: str, node_id: str):
         meta = load_node_metadata(domain_id, node_id)
         content = load_node_content(domain_id, node_id)
         papers = load_node_papers(domain_id, node_id)
+        references = load_node_references(domain_id, node_id)
         methods = check_node_methods(domain_id, node_id)
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="Node not found")
@@ -26,9 +28,15 @@ def get_node(domain_id: str, node_id: str):
         "id": node_id,
         "title": meta.get("title", node_id),
         "description": meta.get("description", ""),
+        "domain": meta.get("domain", domain_id),
+        "difficulty": meta.get("difficulty", "medium"),
+        "tags": meta.get("tags", []),
         "content_markdown": content,
         "papers": papers,
+        "references": references,
         "methods": methods,
+        "has_demos": meta.get("has_demos", False),
+        "demo_type": meta.get("demo_type", ""),
     }
 
 

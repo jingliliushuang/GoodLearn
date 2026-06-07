@@ -1,0 +1,13 @@
+{
+  "id": "process_scheduling",
+  "title": "进程调度",
+  "domain": "operating_system",
+  "description": "CPU 调度算法与性能指标",
+  "difficulty": "medium",
+  "tags": [
+    "scheduling",
+    "cpu"
+  ],
+  "has_demos": true,
+  "demo_type": "round_robin"
+}

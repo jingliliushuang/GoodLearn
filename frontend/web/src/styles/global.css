@@ -635,6 +635,65 @@ a:hover {
   font-size: 0.875rem;
 }
 
+.demo-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.demo-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.demo-subtitle {
+  font-size: 0.9rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.demo-form {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 400px;
+  margin-bottom: 1rem;
+}
+
+.demo-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.demo-form input {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-hover);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.demo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.demo-table th,
+.demo-table td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.demo-table th {
+  background: var(--bg-hover);
+}
+
 @media (max-width: 768px) {
   .app-main {
     padding: 1rem;

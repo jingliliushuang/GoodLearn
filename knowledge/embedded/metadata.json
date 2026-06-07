@@ -1,0 +1,35 @@
+{
+  "id": "embedded",
+  "title": "Embedded System",
+  "description": "GPIO、UART、Timer、中断等嵌入式系统基础",
+  "nodes": [
+    {
+      "id": "gpio",
+      "title": "GPIO 基础",
+      "description": "通用输入输出端口配置与读写",
+      "status": "ready",
+      "difficulty": "easy"
+    },
+    {
+      "id": "uart",
+      "title": "UART 串口通信",
+      "description": "异步串口协议与帧格式",
+      "status": "ready",
+      "difficulty": "medium"
+    },
+    {
+      "id": "timer",
+      "title": "Timer 定时器",
+      "description": "定时器预分频、ARR 与中断周期计算",
+      "status": "ready",
+      "difficulty": "medium"
+    },
+    {
+      "id": "interrupt",
+      "title": "中断系统",
+      "description": "NVIC、中断优先级与 ISR 设计",
+      "status": "ready",
+      "difficulty": "hard"
+    }
+  ]
+}

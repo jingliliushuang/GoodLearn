@@ -38,6 +38,16 @@ def load_node_content(domain_id: str, node_id: str) -> str:
 
 def load_node_papers(domain_id: str, node_id: str) -> list[dict[str, Any]]:
     path = get_node_dir(domain_id, node_id) / "papers.json"
+    if not path.exists():
+        return []
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def load_node_references(domain_id: str, node_id: str) -> list[dict[str, Any]]:
+    path = get_node_dir(domain_id, node_id) / "references.json"
+    if not path.exists():
+        return []
     with open(path, encoding="utf-8") as f:
         return json.load(f)
 

@@ -1,0 +1,35 @@
+{
+  "id": "operating_system",
+  "title": "Operating System",
+  "description": "操作系统核心机制与资源管理",
+  "nodes": [
+    {
+      "id": "process_scheduling",
+      "title": "进程调度",
+      "description": "CPU 调度算法与性能指标",
+      "status": "ready",
+      "difficulty": "medium"
+    },
+    {
+      "id": "memory_paging",
+      "title": "内存分页",
+      "description": "虚拟内存、页表与缺页中断",
+      "status": "ready",
+      "difficulty": "hard"
+    },
+    {
+      "id": "deadlock",
+      "title": "死锁",
+      "description": "死锁条件、检测与预防",
+      "status": "ready",
+      "difficulty": "hard"
+    },
+    {
+      "id": "file_system",
+      "title": "文件系统",
+      "description": "inode、目录结构与缓存",
+      "status": "ready",
+      "difficulty": "medium"
+    }
+  ]
+}

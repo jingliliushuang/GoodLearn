@@ -1,0 +1,11 @@
+{
+  "id": "shading_model",
+  "title": "光照模型",
+  "domain": "computer_graphics",
+  "description": "Phong/Blinn 光照与材质",
+  "difficulty": "hard",
+  "tags": [
+    "shading",
+    "lighting"
+  ]
+}

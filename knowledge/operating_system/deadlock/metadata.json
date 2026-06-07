@@ -1,0 +1,11 @@
+{
+  "id": "deadlock",
+  "title": "死锁",
+  "domain": "operating_system",
+  "description": "死锁条件、检测与预防",
+  "difficulty": "hard",
+  "tags": [
+    "deadlock",
+    "sync"
+  ]
+}

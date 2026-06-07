@@ -1,0 +1,11 @@
+{
+  "id": "memory_paging",
+  "title": "内存分页",
+  "domain": "operating_system",
+  "description": "虚拟内存、页表与缺页中断",
+  "difficulty": "hard",
+  "tags": [
+    "memory",
+    "paging"
+  ]
+}

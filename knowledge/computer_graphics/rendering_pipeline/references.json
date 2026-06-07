@@ -1,0 +1,20 @@
+[
+  {
+    "title": "渲染管线 入门笔记",
+    "url": "https://developer.mozilla.org/",
+    "type": "tutorial",
+    "summary": "关于渲染管线的基础概念与示例"
+  },
+  {
+    "title": "LearnOpenGL",
+    "url": "https://learnopengl.com/",
+    "type": "tutorial",
+    "summary": "现代 OpenGL 图形学教程"
+  },
+  {
+    "title": "Real-Time Rendering",
+    "url": "https://www.realtimerendering.com/",
+    "type": "book",
+    "summary": "实时渲染经典参考书"
+  }
+]

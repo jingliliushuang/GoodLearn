@@ -1,0 +1,20 @@
+[
+  {
+    "title": "内存分页 入门笔记",
+    "url": "https://developer.mozilla.org/",
+    "type": "tutorial",
+    "summary": "关于内存分页的基础概念与示例"
+  },
+  {
+    "title": "Operating Systems: Three Easy Pieces",
+    "url": "https://pages.cs.wisc.edu/~remzi/OSTEP/",
+    "type": "book",
+    "summary": "免费 OS 教材 OSTEP"
+  },
+  {
+    "title": "Linux Kernel Documentation",
+    "url": "https://www.kernel.org/doc/html/latest/",
+    "type": "document",
+    "summary": "Linux 内核文档"
+  }
+]

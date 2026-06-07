@@ -1,0 +1,11 @@
+{
+  "id": "interrupt",
+  "title": "中断系统",
+  "domain": "embedded",
+  "description": "NVIC、中断优先级与 ISR 设计",
+  "difficulty": "hard",
+  "tags": [
+    "interrupt",
+    "nvic"
+  ]
+}

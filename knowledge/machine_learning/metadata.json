@@ -1,0 +1,35 @@
+{
+  "id": "machine_learning",
+  "title": "Machine Learning",
+  "description": "经典机器学习算法与基本流程",
+  "nodes": [
+    {
+      "id": "linear_regression",
+      "title": "线性回归",
+      "description": "用线性模型拟合连续值",
+      "status": "ready",
+      "difficulty": "easy"
+    },
+    {
+      "id": "logistic_regression",
+      "title": "逻辑回归",
+      "description": "二分类概率建模",
+      "status": "ready",
+      "difficulty": "easy"
+    },
+    {
+      "id": "decision_tree",
+      "title": "决策树",
+      "description": "基于特征分裂的可解释模型",
+      "status": "ready",
+      "difficulty": "medium"
+    },
+    {
+      "id": "kmeans",
+      "title": "K-Means 聚类",
+      "description": "无监督聚类与中心更新",
+      "status": "ready",
+      "difficulty": "medium"
+    }
+  ]
+}

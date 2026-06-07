@@ -1,0 +1,20 @@
+[
+  {
+    "title": "线性回归 入门笔记",
+    "url": "https://developer.mozilla.org/",
+    "type": "tutorial",
+    "summary": "关于线性回归的基础概念与示例"
+  },
+  {
+    "title": "Scikit-learn User Guide",
+    "url": "https://scikit-learn.org/stable/user_guide.html",
+    "type": "document",
+    "summary": "经典 ML 算法实践文档"
+  },
+  {
+    "title": "Pattern Recognition and Machine Learning",
+    "url": "https://www.microsoft.com/en-us/research/publication/pattern-recognition-machine-learning/",
+    "type": "book",
+    "summary": "Bishop 经典教材"
+  }
+]

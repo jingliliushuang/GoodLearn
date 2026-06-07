@@ -48,6 +48,24 @@ E:\A_Exp_ML\GoodLearnApp\start_dev.bat
 E:\A_Exp_ML\GoodLearnApp\stop_dev.bat
 ```
 
+## 支持的领域
+
+| 领域 | 说明 |
+|------|------|
+| Computer Vision | 图像去噪、超分、模型测试 |
+| Embedded System | GPIO、UART、Timer、中断 |
+| Machine Learning | 线性/逻辑回归、决策树、K-Means |
+| Operating System | 进程调度、内存分页、死锁、文件系统 |
+| Computer Graphics | 渲染管线、变换矩阵、光栅化、光照 |
+
+## 可交互 Demo
+
+| Demo | 位置 | 接口 |
+|------|------|------|
+| CV 图像模型测试 | CV 节点 | `POST /api/run` |
+| Timer 周期计算器 | Embedded → Timer | `POST /api/demos/embedded/timer` |
+| Round Robin 调度模拟 | OS → Process Scheduling | `POST /api/demos/os/round_robin` |
+
 ## 当前可运行模型
 
 ### 图像超分 (super_resolution)

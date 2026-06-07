@@ -33,4 +33,14 @@ export async function runModel(domain, node, method, imageFile) {
   return data;
 }
 
+export async function runTimerDemo(payload) {
+  const { data } = await client.post('/api/demos/embedded/timer', payload);
+  return data;
+}
+
+export async function runRoundRobinDemo(payload) {
+  const { data } = await client.post('/api/demos/os/round_robin', payload);
+  return data;
+}
+
 export default client;

@@ -1,0 +1,11 @@
+{
+  "id": "decision_tree",
+  "title": "决策树",
+  "domain": "machine_learning",
+  "description": "基于特征分裂的可解释模型",
+  "difficulty": "medium",
+  "tags": [
+    "tree",
+    "supervised"
+  ]
+}

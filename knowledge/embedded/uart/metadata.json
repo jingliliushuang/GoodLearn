@@ -1,0 +1,11 @@
+{
+  "id": "uart",
+  "title": "UART 串口通信",
+  "domain": "embedded",
+  "description": "异步串口协议与帧格式",
+  "difficulty": "medium",
+  "tags": [
+    "uart",
+    "serial"
+  ]
+}

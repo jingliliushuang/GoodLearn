@@ -1,0 +1,11 @@
+{
+  "id": "transformation_matrix",
+  "title": "变换矩阵",
+  "domain": "computer_graphics",
+  "description": "平移、旋转、缩放的齐次坐标",
+  "difficulty": "medium",
+  "tags": [
+    "matrix",
+    "3d"
+  ]
+}
