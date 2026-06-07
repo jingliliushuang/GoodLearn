@@ -1,0 +1,6 @@
+{
+  "id": "median_filter",
+  "title": "Median Filter",
+  "description": "中值滤波，对椒盐噪声和非高斯噪声效果较好",
+  "available": true
+}

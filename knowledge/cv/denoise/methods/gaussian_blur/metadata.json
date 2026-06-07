@@ -1,0 +1,6 @@
+{
+  "id": "gaussian_blur",
+  "title": "Gaussian Blur",
+  "description": "高斯模糊滤波，平滑图像并抑制高频噪声",
+  "available": true
+}

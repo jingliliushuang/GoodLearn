@@ -1,0 +1,13 @@
+{
+  "name": "goodlearnapp-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "main": "electron-main.js",
+  "scripts": {
+    "dev": "electron ."
+  },
+  "dependencies": {
+    "electron": "^35.0.0"
+  },
+  "devDependencies": {}
+}

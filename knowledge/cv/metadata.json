@@ -1,0 +1,37 @@
+{
+  "id": "cv",
+  "title": "Computer Vision",
+  "description": "图像恢复、图像理解、三维视觉等内容",
+  "nodes": [
+    {
+      "id": "denoise",
+      "title": "图像去噪",
+      "description": "从含噪图像中恢复干净图像",
+      "status": "ready"
+    },
+    {
+      "id": "super_resolution",
+      "title": "图像超分",
+      "description": "从低分辨率图像恢复高分辨率图像",
+      "status": "ready"
+    },
+    {
+      "id": "feature_matching",
+      "title": "特征匹配",
+      "description": "SIFT、ORB、RANSAC 等经典方法",
+      "status": "planned"
+    },
+    {
+      "id": "classification",
+      "title": "图像分类",
+      "description": "CNN 分类与迁移学习",
+      "status": "planned"
+    },
+    {
+      "id": "detection",
+      "title": "目标检测",
+      "description": "YOLO、Faster R-CNN 等检测框架",
+      "status": "planned"
+    }
+  ]
+}

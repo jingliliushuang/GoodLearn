@@ -1,0 +1,22 @@
+project_root: "E:/A_Exp_ML/GoodLearnApp"
+external_model_root: "E:/A_Exp_ML/other used"
+
+backend:
+  host: "127.0.0.1"
+  port: 8000
+
+frontend:
+  host: "127.0.0.1"
+  port: 5173
+
+runtime:
+  uploads: "E:/A_Exp_ML/GoodLearnApp/backend/runtime/uploads"
+  outputs: "E:/A_Exp_ML/GoodLearnApp/backend/runtime/outputs"
+  temp: "E:/A_Exp_ML/GoodLearnApp/backend/runtime/temp"
+
+external_models:
+  espcn_pb: "ESPCN_x2.pb"
+  espcn_dl_pb: "ESPCN_x2_DL.pb"
+  edsr_pb: "EDSR_x2.pb"
+  fsrcnn_pb: "FSRCNN_x2.pb"
+  lapsrn_pb: "LapSRN_x2.pb"

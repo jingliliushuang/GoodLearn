@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local env
+.conda/
+.venv/
+venv/
+env/
+
+# Runtime files
+backend/runtime/uploads/
+backend/runtime/outputs/
+backend/runtime/temp/
+backend/logs/
+
+# Node
+node_modules/
+frontend/web/node_modules/
+desktop/node_modules/
+
+# Build outputs
+dist/
+build/
+release/
+out/
+
+# Model weights
+*.pth
+*.pt
+*.onnx
+*.ckpt
+*.safetensors
+*.h5
+*.pb
+
+# Outputs
+outputs/
+*.zip
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local secrets
+.env
+*.local

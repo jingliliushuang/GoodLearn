@@ -1,0 +1,32 @@
+[
+  {
+    "id": "cv",
+    "title": "Computer Vision",
+    "description": "图像恢复、图像理解、特征匹配、深度学习视觉",
+    "status": "ready"
+  },
+  {
+    "id": "embedded",
+    "title": "Embedded System",
+    "description": "GPIO、UART、Timer、中断等内容",
+    "status": "planned"
+  },
+  {
+    "id": "ml",
+    "title": "Machine Learning",
+    "description": "监督学习、无监督学习、强化学习基础",
+    "status": "planned"
+  },
+  {
+    "id": "os",
+    "title": "Operating System",
+    "description": "进程调度、内存管理、文件系统",
+    "status": "planned"
+  },
+  {
+    "id": "cg",
+    "title": "Computer Graphics",
+    "description": "光栅化、着色、渲染管线",
+    "status": "planned"
+  }
+]

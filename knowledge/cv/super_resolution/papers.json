@@ -1,0 +1,20 @@
+[
+  {
+    "name": "SRCNN",
+    "title": "Image Super-Resolution Using Deep Convolutional Networks",
+    "url": "https://arxiv.org/abs/1501.00271",
+    "summary": "SRCNN 是首个将 CNN 用于单图超分的经典工作，端到端学习 LR 到 HR 的映射。"
+  },
+  {
+    "name": "ESPCN",
+    "title": "Real-Time Single Image and Video Super-Resolution Using an Efficient Sub-Pixel Convolutional Neural Network",
+    "url": "https://arxiv.org/abs/1609.05158",
+    "summary": "ESPCN 提出亚像素卷积（Sub-Pixel Convolution），在特征图上直接放大，实现实时超分。"
+  },
+  {
+    "name": "EDSR",
+    "title": "Enhanced Deep Residual Networks for Single Image Super-Resolution",
+    "url": "https://arxiv.org/abs/1707.02921",
+    "summary": "EDSR 移除 Batch Normalization，加深残差网络，在 DIV2K 上取得当时最优 PSNR。"
+  }
+]

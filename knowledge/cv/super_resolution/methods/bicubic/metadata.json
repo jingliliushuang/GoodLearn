@@ -1,0 +1,6 @@
+{
+  "id": "bicubic",
+  "title": "Bicubic 插值",
+  "description": "双三次插值，经典超分基线方法",
+  "available": true
+}

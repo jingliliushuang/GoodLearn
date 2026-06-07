@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Non-Local Means",
+    "title": "A Non-Local Algorithm for Image Denoising",
+    "url": "https://www.ipol.im/pub/algo/bcm_non_local_means/",
+    "summary": "非局部均值去噪利用图像中相似块进行加权平均，是经典的去噪方法之一。"
+  },
+  {
+    "name": "FFDNet",
+    "title": "FFDNet: Toward a Fast and Flexible Solution for CNN-based Image Denoising",
+    "url": "https://arxiv.org/abs/1710.04026",
+    "summary": "FFDNet 通过可变形卷积网络实现快速灵活的去噪，支持不同噪声级别。"
+  },
+  {
+    "name": "DnCNN",
+    "title": "Beyond a Gaussian Denoiser: Residual Learning of Deep CNN for Image Denoising",
+    "url": "https://arxiv.org/abs/1608.03981",
+    "summary": "DnCNN 使用残差学习预测噪声，是深度学习去噪的里程碑工作。"
+  }
+]
