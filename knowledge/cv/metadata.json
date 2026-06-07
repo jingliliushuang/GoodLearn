@@ -7,31 +7,50 @@
       "id": "denoise",
       "title": "图像去噪",
       "description": "从含噪图像中恢复干净图像",
-      "status": "ready"
+      "status": "ready",
+      "section": "basic",
+      "order": 1
     },
     {
       "id": "super_resolution",
       "title": "图像超分",
       "description": "从低分辨率图像恢复高分辨率图像",
-      "status": "ready"
+      "status": "ready",
+      "section": "basic",
+      "order": 2
+    },
+    {
+      "id": "pipeline_builder",
+      "title": "组合实验流水线",
+      "description": "将去噪、超分等节点拖入顺序框，按 Step 依次执行组合实验。",
+      "status": "ready",
+      "section": "advanced",
+      "order": 30,
+      "link_type": "pipeline"
     },
     {
       "id": "feature_matching",
       "title": "特征匹配",
       "description": "SIFT、ORB、RANSAC 等经典方法",
-      "status": "planned"
+      "status": "planned",
+      "section": "planned",
+      "order": 100
     },
     {
       "id": "classification",
       "title": "图像分类",
       "description": "CNN 分类与迁移学习",
-      "status": "planned"
+      "status": "planned",
+      "section": "planned",
+      "order": 101
     },
     {
       "id": "detection",
       "title": "目标检测",
       "description": "YOLO、Faster R-CNN 等检测框架",
-      "status": "planned"
+      "status": "planned",
+      "section": "planned",
+      "order": 102
     }
   ]
 }

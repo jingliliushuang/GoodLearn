@@ -1033,15 +1033,32 @@ a:hover {
   white-space: nowrap;
 }
 
-.pipeline-entry-card {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-  border-color: rgba(34, 197, 94, 0.35);
+.domain-section {
+  margin-bottom: 2rem;
 }
 
-.pipeline-entry-grid {
-  margin-bottom: 1.25rem;
+.domain-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.badge-advanced {
+  background: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+}
+
+.pipeline-entry-card {
+  border-color: rgba(139, 92, 246, 0.35);
 }
 
 .pipeline-page .pipeline-hint {
