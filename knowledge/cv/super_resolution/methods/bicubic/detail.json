@@ -1,0 +1,30 @@
+{
+  "id": "bicubic",
+  "title": "Bicubic 双三次插值",
+  "problem": "如何在传统方法中获得比双线性更好的视觉质量，并作为深度学习超分的标准基线？",
+  "core_idea": [
+    "使用 4×4 邻域和三次多项式进行插值",
+    "同时考虑更多邻域像素，曲线更平滑",
+    "在 PSNR 评测中常作为传统方法的代表基线"
+  ],
+  "pipeline": [
+    "LR 图像下采样模拟退化",
+    "对下采样结果做 Bicubic 上采样",
+    "与原始 HR 对比计算 MSE/PSNR"
+  ],
+  "advantages": [
+    "传统方法中质量与速度的平衡较好",
+    "论文与竞赛中广泛使用的 baseline"
+  ],
+  "limitations": [
+    "无法利用语义信息恢复真实纹理",
+    "过度平滑时可能丢失锐利边缘"
+  ],
+  "suitable_for": [
+    "超分论文中的传统 baseline",
+    "课程实验的标准对照方法"
+  ],
+  "code_entry": "knowledge/cv/super_resolution/methods/bicubic/model.py → process()",
+  "paper_relation": "与 SRCNN 等深度方法对比时常用的传统基线",
+  "teaching_notes": "本平台默认用 downscale→upscale 流程模拟超分任务。"
+}

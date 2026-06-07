@@ -1,0 +1,74 @@
+[
+  {
+    "id": "nearest",
+    "title": "Nearest 最近邻插值",
+    "stage": "基础插值方法",
+    "status": "runnable",
+    "difficulty": "easy",
+    "description": "速度最快，但块状伪影明显。"
+  },
+  {
+    "id": "bilinear",
+    "title": "Bilinear 双线性插值",
+    "stage": "基础插值方法",
+    "status": "runnable",
+    "difficulty": "easy",
+    "description": "比最近邻更平滑，但细节仍然模糊。"
+  },
+  {
+    "id": "bicubic",
+    "title": "Bicubic 双三次插值",
+    "stage": "传统超分基线",
+    "status": "runnable",
+    "difficulty": "easy",
+    "description": "经典传统超分基线。"
+  },
+  {
+    "id": "lanczos",
+    "title": "Lanczos 插值",
+    "stage": "高质量传统上采样",
+    "status": "runnable",
+    "difficulty": "medium",
+    "description": "边缘较锐利，但可能产生振铃伪影。"
+  },
+  {
+    "id": "srcnn",
+    "title": "SRCNN",
+    "stage": "早期 CNN 超分",
+    "status": "theory",
+    "difficulty": "medium",
+    "description": "最早将 CNN 用于单图像超分的代表方法。"
+  },
+  {
+    "id": "espcn",
+    "title": "ESPCN",
+    "stage": "实时 CNN 超分",
+    "status": "runnable",
+    "difficulty": "medium",
+    "description": "在低分辨率空间提取特征，最后通过 PixelShuffle 上采样。"
+  },
+  {
+    "id": "edsr",
+    "title": "EDSR",
+    "stage": "增强残差超分",
+    "status": "runnable",
+    "difficulty": "hard",
+    "description": "去掉 BatchNorm，使用更深的残差网络提升超分效果。"
+  },
+  {
+    "id": "real_esrgan",
+    "title": "Real-ESRGAN",
+    "stage": "真实退化图像增强",
+    "status": "future",
+    "difficulty": "hard",
+    "description": "面向真实世界退化图像的生成式超分方法。"
+  },
+  {
+    "id": "swinir",
+    "title": "SwinIR",
+    "stage": "Transformer 图像复原",
+    "status": "future",
+    "difficulty": "hard",
+    "description": "基于 Swin Transformer 的图像复原模型。"
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "id": "espcn",
+  "title": "ESPCN",
+  "problem": "如何在 CNN 中高效完成上采样，实现接近实时的单图超分？",
+  "core_idea": [
+    "在低分辨率特征空间完成大部分卷积计算",
+    "最后一层输出 r² 通道，经 PixelShuffle 重组为 HR",
+    "避免在高分辨率空间做卷积，显著降低计算量"
+  ],
+  "pipeline": [
+    "输入 LR 图像（本平台先下采样模拟）",
+    "CNN 提取 LR 特征",
+    "Sub-Pixel/PixelShuffle 上采样输出 HR"
+  ],
+  "advantages": [
+    "相比 SRCNN 等早期方法速度更快",
+    "结构清晰，适合理解亚像素卷积思想"
+  ],
+  "limitations": [
+    "对复杂真实退化（模糊+噪声）泛化有限",
+    "PSNR 通常低于更深的 EDSR 类模型"
+  ],
+  "suitable_for": [
+    "学习 Sub-Pixel Convolution 概念",
+    "实时超分场景的教学演示"
+  ],
+  "code_entry": "knowledge/cv/super_resolution/methods/espcn/model.py → OpenCV dnn_superres",
+  "paper_relation": "Shi et al., CVPR 2016 — Real-Time Single Image and Video Super-Resolution",
+  "teaching_notes": "本平台通过 OpenCV dnn_superres 加载 ESPCN_x2.pb 权重进行推理。"
+}

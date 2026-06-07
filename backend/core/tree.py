@@ -79,3 +79,35 @@ def list_node_methods(domain_id: str, node_id: str) -> list[dict[str, Any]]:
 
 def get_method_dir(domain_id: str, node_id: str, method_id: str) -> Path:
     return get_node_dir(domain_id, node_id) / "methods" / method_id
+
+
+def load_learning_path(domain_id: str, node_id: str) -> list[dict[str, Any]]:
+    path = get_node_dir(domain_id, node_id) / "learning_path.json"
+    if not path.exists():
+        return []
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def load_method_detail(domain_id: str, node_id: str, method_id: str) -> dict[str, Any] | None:
+    path = get_method_dir(domain_id, node_id, method_id) / "detail.json"
+    if not path.exists():
+        return None
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def load_all_method_details(domain_id: str, node_id: str) -> dict[str, dict[str, Any]]:
+    methods_dir = get_node_dir(domain_id, node_id) / "methods"
+    if not methods_dir.exists():
+        return {}
+
+    details: dict[str, dict[str, Any]] = {}
+    for method_dir in sorted(methods_dir.iterdir()):
+        if not method_dir.is_dir():
+            continue
+        detail_path = method_dir / "detail.json"
+        if detail_path.exists():
+            with open(detail_path, encoding="utf-8") as f:
+                details[method_dir.name] = json.load(f)
+    return details

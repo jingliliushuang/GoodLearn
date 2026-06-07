@@ -1,0 +1,30 @@
+{
+  "id": "edsr",
+  "title": "EDSR",
+  "problem": "如何在加深网络的同时提升 PSNR，并在 DIV2K 等 benchmark 上取得领先？",
+  "core_idea": [
+    "移除 Batch Normalization 以减少内存并提升 PSNR",
+    "使用更深的残差块堆叠学习 LR→HR 映射",
+    "全局残差连接让网络主要学习细节残差"
+  ],
+  "pipeline": [
+    "输入 LR 图像",
+    "多层 ResBlock 提取特征",
+    "上采样模块输出 HR 图像"
+  ],
+  "advantages": [
+    "PSNR 指标通常优于 ESPCN 等轻量模型",
+    "结构改动（去 BN）具有清晰 ablation 价值"
+  ],
+  "limitations": [
+    "推理耗时与显存/内存占用更高",
+    "对真实世界复杂退化仍需 Real-ESRGAN 等方案"
+  ],
+  "suitable_for": [
+    "理解深度残差超分的设计取舍",
+    "与传统/轻量 CNN 方法对比"
+  ],
+  "code_entry": "knowledge/cv/super_resolution/methods/edsr/model.py → OpenCV dnn_superres",
+  "paper_relation": "Lim et al., CVPR 2017 Workshop — Enhanced Deep Residual Networks for SR",
+  "teaching_notes": "首次运行 EDSR 可能较慢，属于正常现象，可对比 runtime_ms 指标。"
+}

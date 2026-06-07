@@ -36,6 +36,10 @@ def get_runtime_paths() -> dict[str, Path]:
     }
 
 
+def get_experiments_dir() -> Path:
+    return get_project_root() / "backend" / "runtime" / "experiments"
+
+
 def get_external_model_root() -> Path:
     cfg = load_config()
     return Path(cfg["external_model_root"])
@@ -44,3 +48,4 @@ def get_external_model_root() -> Path:
 def ensure_runtime_dirs() -> None:
     for path in get_runtime_paths().values():
         path.mkdir(parents=True, exist_ok=True)
+    get_experiments_dir().mkdir(parents=True, exist_ok=True)

@@ -10,8 +10,9 @@ from typing import Any
 import cv2
 import numpy as np
 
+from core.experiments import save_experiment
 from core.loader import load_process_fn
-from core.metrics import compute_mse, compute_psnr
+from core.metrics import compute_mse, compute_psnr, compute_ssim
 from core.model_checker import check_method
 from core.tree import get_method_dir, load_node_metadata
 from core.utils import ensure_runtime_dirs, get_external_model_root, get_runtime_paths
@@ -99,10 +100,12 @@ def run_model(
 
     mse = compute_mse(reference, output)
     psnr = compute_psnr(reference, output)
+    ssim = compute_ssim(reference, output)
 
     base_url = f"/runtime/outputs/{run_id}"
+    timestamp = datetime.now().isoformat(timespec="seconds")
 
-    return {
+    result = {
         "run_id": run_id,
         "input_url": f"{base_url}/input.png",
         "output_url": f"{base_url}/output.png",
@@ -110,7 +113,25 @@ def run_model(
         "metrics": {
             "mse": round(mse, 4),
             "psnr": round(psnr, 4) if psnr != float("inf") else 999.99,
+            "ssim": round(ssim, 4) if ssim is not None else None,
             "runtime_ms": round(elapsed_ms, 2),
         },
         "node_type": node_meta.get("type", node_id),
     }
+
+    save_experiment({
+        "run_id": run_id,
+        "timestamp": timestamp,
+        "domain": domain_id,
+        "node": node_id,
+        "method": method_id,
+        "input_path": str(input_path),
+        "output_path": str(output_path),
+        "comparison_path": str(comparison_path),
+        "input_url": result["input_url"],
+        "output_url": result["output_url"],
+        "comparison_url": result["comparison_url"],
+        "metrics": result["metrics"],
+    })
+
+    return result

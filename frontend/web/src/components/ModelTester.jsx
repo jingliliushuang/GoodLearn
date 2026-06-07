@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { runModel } from '../api/client';
 import ResultCompare from './ResultCompare';
 
-export default function ModelTester({ domainId, nodeId, methods, selectedMethod }) {
+export default function ModelTester({ domainId, nodeId, methods, selectedMethod, onRunComplete }) {
   const fileRef = useRef(null);
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -33,6 +33,7 @@ export default function ModelTester({ domainId, nodeId, methods, selectedMethod 
     try {
       const data = await runModel(domainId, nodeId, selectedMethod, file);
       setResult(data);
+      onRunComplete?.(data);
     } catch (err) {
       const msg = err.response?.data?.detail || err.message || '运行失败';
       setError(typeof msg === 'string' ? msg : JSON.stringify(msg));

@@ -8,6 +8,7 @@ import MethodSelector from '../components/MethodSelector';
 import ModelTester from '../components/ModelTester';
 import TimerCalculator from '../components/demos/TimerCalculator';
 import RoundRobinDemo from '../components/demos/RoundRobinDemo';
+import SuperResolutionNodePage from './SuperResolutionNodePage';
 
 export default function NodePage() {
   const { domainId, nodeId } = useParams();
@@ -35,6 +36,12 @@ export default function NodePage() {
   if (loading) return <div className="loading">加载中...</div>;
   if (error) return <div className="error">加载失败：{error}</div>;
   if (!node) return null;
+
+  const isSuperResolution = domainId === 'cv' && nodeId === 'super_resolution';
+
+  if (isSuperResolution) {
+    return <SuperResolutionNodePage node={node} domainId={domainId} nodeId={nodeId} />;
+  }
 
   const methods = node.methods || [];
   const hasPapers = node.papers && node.papers.length > 0;

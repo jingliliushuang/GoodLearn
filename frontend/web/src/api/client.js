@@ -43,4 +43,14 @@ export async function runRoundRobinDemo(payload) {
   return data;
 }
 
+export async function fetchExperiments(domain, node, method) {
+  const params = new URLSearchParams();
+  if (domain) params.set('domain', domain);
+  if (node) params.set('node', node);
+  if (method) params.set('method', method);
+  const qs = params.toString();
+  const { data } = await client.get(`/api/experiments${qs ? `?${qs}` : ''}`);
+  return data;
+}
+
 export default client;

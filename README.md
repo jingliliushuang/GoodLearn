@@ -58,6 +58,17 @@ E:\A_Exp_ML\GoodLearnApp\stop_dev.bat
 | Operating System | 进程调度、内存分页、死锁、文件系统 |
 | Computer Graphics | 渲染管线、变换矩阵、光栅化、光照 |
 
+## 图像超分课程页（CV → 图像超分）
+
+该节点已升级为完整教学课程页，包含：
+
+| 功能 | 说明 |
+|------|------|
+| 学习路线 | 9 步推荐路径（插值 → CNN → Transformer） |
+| 方法详情 | 6 个可运行方法的 problem / pipeline / 优缺点 |
+| 模型测试 | Nearest / Bilinear / Bicubic / Lanczos / ESPCN / EDSR |
+| 实验记录 | 每次运行自动保存，页面展示最近 20 条 |
+
 ## 可交互 Demo
 
 | Demo | 位置 | 接口 |

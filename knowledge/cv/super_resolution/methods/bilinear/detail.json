@@ -1,0 +1,30 @@
+{
+  "id": "bilinear",
+  "title": "Bilinear 双线性插值",
+  "problem": "在比最近邻更平滑的前提下，如何用较低成本完成图像放大？",
+  "core_idea": [
+    "在 2×2 邻域内对四个像素做双线性加权",
+    "沿 x、y 两个方向分别做一维线性插值",
+    "比最近邻更平滑，但仍属于局部插值，无法凭空创造细节"
+  ],
+  "pipeline": [
+    "将 HR 像素坐标映射到 LR 连续坐标",
+    "找到周围 2×2 四个 LR 像素",
+    "按距离权重加权求和得到 HR 像素值"
+  ],
+  "advantages": [
+    "比最近邻更平滑，伪影较轻",
+    "OpenCV 一行 API 即可调用，适合基线对比"
+  ],
+  "limitations": [
+    "细节仍会模糊，纹理恢复能力有限",
+    "放大倍数较高时边缘不够锐利"
+  ],
+  "suitable_for": [
+    "传统超分基线对比实验",
+    "理解局部插值与全局先验的区别"
+  ],
+  "code_entry": "knowledge/cv/super_resolution/methods/bilinear/model.py → process()",
+  "paper_relation": "经典数值插值方法，常作为深度学习超分的对照组",
+  "teaching_notes": "运行实验时可与 Nearest 对比 PSNR，观察平滑性提升。"
+}

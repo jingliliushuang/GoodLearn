@@ -1,0 +1,30 @@
+{
+  "id": "lanczos",
+  "title": "Lanczos 插值",
+  "problem": "如何在传统插值中尽量保留边缘锐度，同时控制计算复杂度？",
+  "core_idea": [
+    "使用 Lanczos 核（sinc 函数的截断版本）进行卷积重采样",
+    "对高频细节保留优于 Bilinear/Bicubic",
+    "可能引入振铃（ringing）伪影，尤其在强边缘附近"
+  ],
+  "pipeline": [
+    "构造 Lanczos 插值核",
+    "对 LR 图像按目标尺度重采样",
+    "输出 HR 图像用于视觉与指标对比"
+  ],
+  "advantages": [
+    "传统方法中边缘往往更锐利",
+    "无需训练，部署简单"
+  ],
+  "limitations": [
+    "振铃伪影在部分图像上较明显",
+    "计算量比 Bilinear/Bicubic 更高"
+  ],
+  "suitable_for": [
+    "高质量传统上采样对照",
+    "观察插值核形状对伪影的影响"
+  ],
+  "code_entry": "knowledge/cv/super_resolution/methods/lanczos/model.py → process()",
+  "paper_relation": "信号处理经典重采样方法",
+  "teaching_notes": "建议与 Bicubic 对比同一测试图，观察边缘与振铃差异。"
+}
