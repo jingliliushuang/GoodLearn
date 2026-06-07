@@ -9,7 +9,11 @@
       "description": "从含噪图像中恢复干净图像",
       "status": "ready",
       "section": "basic",
-      "order": 1
+      "order": 1,
+      "card_badges": [
+        "可学习",
+        "可实验"
+      ]
     },
     {
       "id": "super_resolution",
@@ -17,7 +21,47 @@
       "description": "从低分辨率图像恢复高分辨率图像",
       "status": "ready",
       "section": "basic",
-      "order": 2
+      "order": 2,
+      "card_badges": [
+        "可学习",
+        "可实验"
+      ]
+    },
+    {
+      "id": "feature_matching",
+      "title": "特征匹配",
+      "description": "SIFT、ORB、RANSAC 等经典方法，双图匹配实验",
+      "status": "ready",
+      "section": "basic",
+      "order": 3,
+      "card_badges": [
+        "可学习",
+        "可实验"
+      ]
+    },
+    {
+      "id": "image_classification",
+      "title": "图像分类",
+      "description": "CNN 分类与迁移学习",
+      "status": "ready",
+      "section": "intermediate",
+      "order": 10,
+      "card_badges": [
+        "可学习"
+      ],
+      "card_hint": "教学内容已补齐，模型推理待接入"
+    },
+    {
+      "id": "object_detection",
+      "title": "目标检测",
+      "description": "YOLO、Faster R-CNN、DETR 等检测框架",
+      "status": "ready",
+      "section": "intermediate",
+      "order": 11,
+      "card_badges": [
+        "可学习"
+      ],
+      "card_hint": "教学内容已补齐，模型推理待接入"
     },
     {
       "id": "pipeline_builder",
@@ -26,31 +70,10 @@
       "status": "ready",
       "section": "advanced",
       "order": 30,
-      "link_type": "pipeline"
-    },
-    {
-      "id": "feature_matching",
-      "title": "特征匹配",
-      "description": "SIFT、ORB、RANSAC 等经典方法",
-      "status": "planned",
-      "section": "planned",
-      "order": 100
-    },
-    {
-      "id": "classification",
-      "title": "图像分类",
-      "description": "CNN 分类与迁移学习",
-      "status": "planned",
-      "section": "planned",
-      "order": 101
-    },
-    {
-      "id": "detection",
-      "title": "目标检测",
-      "description": "YOLO、Faster R-CNN 等检测框架",
-      "status": "planned",
-      "section": "planned",
-      "order": 102
+      "link_type": "pipeline",
+      "card_badges": [
+        "进阶实验"
+      ]
     }
   ]
 }

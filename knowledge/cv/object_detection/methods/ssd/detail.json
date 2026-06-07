@@ -1,0 +1,13 @@
+{
+  "id": "ssd",
+  "title": "SSD",
+  "problem": "",
+  "core_idea": [],
+  "pipeline": [],
+  "advantages": [],
+  "limitations": [],
+  "suitable_for": [],
+  "code_entry": "knowledge/cv/object_detection/methods/ssd/model.py → process() (planned)",
+  "paper_relation": "ssd",
+  "teaching_notes": "教学内容已补齐，模型推理待接入。"
+}

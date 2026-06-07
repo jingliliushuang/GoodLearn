@@ -1,0 +1,74 @@
+[
+  {
+    "id": "lenet",
+    "title": "Gradient-Based Learning Applied to Document Recognition",
+    "year": 1998,
+    "method": "LeNet",
+    "type": "traditional"
+  },
+  {
+    "id": "alexnet",
+    "title": "ImageNet Classification with Deep Convolutional Neural Networks",
+    "year": 2012,
+    "method": "AlexNet",
+    "type": "deep_learning"
+  },
+  {
+    "id": "vgg",
+    "title": "Very Deep Convolutional Networks for Large-Scale Image Recognition",
+    "year": 2014,
+    "method": "VGG",
+    "type": "deep_learning"
+  },
+  {
+    "id": "inception",
+    "title": "Going Deeper with Convolutions",
+    "year": 2015,
+    "method": "GoogLeNet",
+    "type": "deep_learning"
+  },
+  {
+    "id": "resnet",
+    "title": "Deep Residual Learning for Image Recognition",
+    "year": 2015,
+    "method": "ResNet",
+    "type": "deep_learning"
+  },
+  {
+    "id": "densenet",
+    "title": "Densely Connected Convolutional Networks",
+    "year": 2017,
+    "method": "DenseNet",
+    "type": "deep_learning"
+  },
+  {
+    "id": "mobilenet",
+    "title": "MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications",
+    "year": 2017,
+    "method": "MobileNet",
+    "type": "deep_learning"
+  },
+  {
+    "id": "efficientnet",
+    "title": "EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks",
+    "year": 2019,
+    "method": "EfficientNet",
+    "type": "deep_learning"
+  },
+  {
+    "id": "vit",
+    "title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+    "year": 2020,
+    "method": "ViT",
+    "type": "deep_learning",
+    "note": "扩展阅读"
+  },
+  {
+    "id": "clip",
+    "title": "Learning Transferable Visual Models From Natural Language Supervision",
+    "year": 2021,
+    "method": "CLIP",
+    "type": "deep_learning",
+    "note": "扩展阅读"
+  }
+]

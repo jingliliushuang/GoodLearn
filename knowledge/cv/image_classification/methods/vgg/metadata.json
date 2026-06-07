@@ -1,0 +1,12 @@
+{
+  "available": false,
+  "reason": "教学内容已补齐，模型权重暂未接入。",
+  "backend": "planned",
+  "inference_enabled": false,
+  "requirements": [],
+  "weights": [],
+  "category": "deep_learning",
+  "id": "vgg",
+  "title": "VGG",
+  "description": "3x3 卷积堆叠"
+}

@@ -4,7 +4,18 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from api import compare, demos, domains, experiments, methods, node_manager, nodes, pipeline, run as run_api
+from api import (
+    compare,
+    demos,
+    domains,
+    experiments,
+    feature_matching,
+    methods,
+    node_manager,
+    nodes,
+    pipeline,
+    run as run_api,
+)
 from core.utils import (
     ensure_runtime_dirs,
     get_comparisons_dir,
@@ -54,6 +65,7 @@ app.include_router(nodes.router)
 app.include_router(methods.router)
 app.include_router(pipeline.router)
 app.include_router(run_api.router)
+app.include_router(feature_matching.router)
 
 
 @app.get("/api/health")

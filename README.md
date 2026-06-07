@@ -74,7 +74,7 @@ E:\A_Exp_ML\GoodLearnApp\stop_dev.bat
 
 | 领域 | 说明 |
 |------|------|
-| Computer Vision | 图像去噪、超分、模型测试 |
+| Computer Vision | 图像去噪、超分、特征匹配、分类/检测教学、模型测试 |
 | Embedded System | GPIO、UART、Timer、中断 |
 | Machine Learning | 线性/逻辑回归、决策树、K-Means |
 | Operating System | 进程调度、内存分页、死锁、文件系统 |
@@ -161,6 +161,38 @@ Pipeline Builder 与模型对比实验暂使用**默认参数**。
 
 前端入口：首页或顶栏 **节点管理**。
 
+## CV 模块扩展（特征匹配 / 分类 / 检测）
+
+CV 模块已从图像恢复扩展到特征匹配、图像分类与目标检测：
+
+| 节点 | 类型 | 说明 |
+|------|------|------|
+| 图像去噪 | 可运行 | 单图输入，4 种传统去噪 |
+| 图像超分 | 可运行 | 6 个模型（含 ESPCN / EDSR） |
+| **特征匹配** | 可运行 | 双图上传，SIFT / ORB / RANSAC Homography |
+| **图像分类** | 理论学习 | CNN 发展史 + 迁移学习，模型推理待接入 |
+| **目标检测** | 理论学习 | 两阶段 / 一阶段 / DETR，模型推理待接入 |
+| 组合实验流水线 | 进阶实验 | Pipeline Builder |
+
+### 特征匹配实验
+
+1. 进入 **CV → 特征匹配**
+2. 上传 Image A 与 Image B
+3. 选择 SIFT、ORB 或 RANSAC Homography，点击运行
+4. 查看匹配可视化、keypoints / matches / inliers 等指标
+
+> SIFT 需要 `opencv-contrib-python`（与 ESPCN/EDSR 相同依赖）。若不可用，页面会显示明确原因；ORB 与 RANSAC 使用标准 OpenCV。
+
+API：`POST /api/feature-matching/run`（multipart：`image_a`、`image_b`、`method`、`params`）
+
+### 学习资料 resources.json
+
+除 `papers.json` 外，节点可包含 `resources.json`，用于教程、课程、文档、代码仓库、数据集等非论文资源。前端在节点页「学习资料」区域展示。
+
+分类与检测节点第一版以**教学内容 + 论文 + 学习资料 + 方法详情**为主；无权重时不报错，显示「教学内容已补齐，模型推理待接入」。
+
+> 当前仍为**开发阶段**，使用 `start_dev.bat` 启动，**不要** build / 打包 exe。
+
 ## 当前可运行模型
 
 ### 图像超分 (super_resolution)
@@ -184,6 +216,14 @@ Pipeline Builder 与模型对比实验暂使用**默认参数**。
 | median_filter | 中值滤波 |
 | bilateral_filter | 双边滤波 |
 | nlm_denoise | 非局部均值 |
+
+### 特征匹配 (feature_matching)
+
+| 方法 | 说明 | 依赖 |
+|------|------|------|
+| sift | SIFT + BFMatcher + ratio test | opencv-contrib-python |
+| orb | ORB + Hamming 匹配 | OpenCV |
+| ransac_homography | 特征匹配 + RANSAC 单应矩阵 | OpenCV（SIFT 可用时优先 SIFT） |
 
 ## 深度学习模型依赖说明
 
@@ -267,6 +307,7 @@ E:\A_Exp_ML\GoodLearnApp\.conda\goodlearnapp-backend\python.exe -m pip install o
 | GET | /api/domains | 领域列表 |
 | GET | /api/nodes/{domain}/{node} | 节点详情（含方法可用性检测） |
 | POST | /api/run | 运行单方法（支持 params JSON 参数） |
+| POST | /api/feature-matching/run | 双图特征匹配实验 |
 | POST | /api/run-pipeline | 运行 cascade 组合流水线 |
 | POST | /api/compare-methods | 多方法同图对比实验 |
 | POST | /api/node-manager/create-template | 生成节点模板 |

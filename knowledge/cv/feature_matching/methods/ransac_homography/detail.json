@@ -1,0 +1,32 @@
+{
+  "id": "ransac_homography",
+  "title": "RANSAC Homography",
+  "problem": "如何从含外点的匹配中估计可靠的平面单应关系？",
+  "core_idea": [
+    "先用 SIFT/ORB 获得候选匹配",
+    "RANSAC 随机采样估计 H",
+    "保留内点匹配"
+  ],
+  "pipeline": [
+    "特征检测与匹配",
+    "Ratio test",
+    "findHomography(RANSAC)",
+    "绘制内点匹配"
+  ],
+  "advantages": [
+    "显著减少误匹配",
+    "输出可解释的几何矩阵"
+  ],
+  "limitations": [
+    "假设场景近似平面",
+    "需要足够数量的 good matches"
+  ],
+  "suitable_for": [
+    "图像拼接",
+    "文档扫描对齐",
+    "平面目标跟踪"
+  ],
+  "code_entry": "knowledge/cv/feature_matching/methods/ransac_homography/model.py → process()",
+  "paper_relation": "ransac",
+  "teaching_notes": "观察 inliers 数量与 good_matches 的差异。"
+}

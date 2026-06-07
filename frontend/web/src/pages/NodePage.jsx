@@ -9,6 +9,8 @@ import ModelTester from '../components/ModelTester';
 import TimerCalculator from '../components/demos/TimerCalculator';
 import RoundRobinDemo from '../components/demos/RoundRobinDemo';
 import SuperResolutionNodePage from './SuperResolutionNodePage';
+import FeatureMatchingNodePage from './FeatureMatchingNodePage';
+import TheoryNodePage from './TheoryNodePage';
 
 export default function NodePage() {
   const { domainId, nodeId } = useParams();
@@ -38,9 +40,19 @@ export default function NodePage() {
   if (!node) return null;
 
   const isSuperResolution = domainId === 'cv' && nodeId === 'super_resolution';
+  const isFeatureMatching = domainId === 'cv' && nodeId === 'feature_matching';
+  const isTheoryNode = domainId === 'cv' && (nodeId === 'image_classification' || nodeId === 'object_detection');
 
   if (isSuperResolution) {
     return <SuperResolutionNodePage node={node} domainId={domainId} nodeId={nodeId} />;
+  }
+
+  if (isFeatureMatching) {
+    return <FeatureMatchingNodePage node={node} domainId={domainId} nodeId={nodeId} />;
+  }
+
+  if (isTheoryNode || node.mode === 'theory_first') {
+    return <TheoryNodePage node={node} domainId={domainId} nodeId={nodeId} />;
   }
 
   const methods = node.methods || [];

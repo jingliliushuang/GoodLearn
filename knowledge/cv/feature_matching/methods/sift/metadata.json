@@ -1,0 +1,22 @@
+{
+  "id": "sift",
+  "title": "SIFT",
+  "description": "尺度不变特征变换，经典局部特征",
+  "category": "traditional",
+  "backend": "opencv_sift",
+  "inference_enabled": true,
+  "requirements": [],
+  "weights": [],
+  "params_schema": [
+    {
+      "name": "ratio",
+      "label": "Lowe Ratio",
+      "type": "number",
+      "default": 0.75,
+      "min": 0.5,
+      "max": 0.95,
+      "step": 0.05,
+      "description": "Ratio test 阈值，越小匹配越严格。"
+    }
+  ]
+}

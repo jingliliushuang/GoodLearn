@@ -1,0 +1,75 @@
+[
+  {
+    "id": "rcnn",
+    "title": "Rich feature hierarchies for accurate object detection and semantic segmentation",
+    "year": 2014,
+    "method": "R-CNN",
+    "type": "deep_learning"
+  },
+  {
+    "id": "fast_rcnn",
+    "title": "Fast R-CNN",
+    "year": 2015,
+    "method": "Fast R-CNN",
+    "type": "deep_learning"
+  },
+  {
+    "id": "faster_rcnn",
+    "title": "Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks",
+    "year": 2015,
+    "method": "Faster R-CNN",
+    "type": "deep_learning"
+  },
+  {
+    "id": "ssd",
+    "title": "SSD: Single Shot MultiBox Detector",
+    "year": 2016,
+    "method": "SSD",
+    "type": "deep_learning"
+  },
+  {
+    "id": "yolo",
+    "title": "You Only Look Once: Unified, Real-Time Object Detection",
+    "year": 2016,
+    "method": "YOLO",
+    "type": "deep_learning"
+  },
+  {
+    "id": "yolov3",
+    "title": "YOLOv3: An Incremental Improvement",
+    "year": 2018,
+    "method": "YOLOv3",
+    "type": "deep_learning",
+    "note": "可选"
+  },
+  {
+    "id": "retinanet",
+    "title": "Focal Loss for Dense Object Detection",
+    "year": 2017,
+    "method": "RetinaNet",
+    "type": "deep_learning"
+  },
+  {
+    "id": "detr",
+    "title": "End-to-End Object Detection with Transformers",
+    "year": 2020,
+    "method": "DETR",
+    "type": "deep_learning"
+  },
+  {
+    "id": "efficientdet",
+    "title": "EfficientDet: Scalable and Efficient Object Detection",
+    "year": 2020,
+    "method": "EfficientDet",
+    "type": "deep_learning",
+    "note": "可选"
+  },
+  {
+    "id": "mask_rcnn",
+    "title": "Mask R-CNN",
+    "year": 2017,
+    "method": "Mask R-CNN",
+    "type": "deep_learning",
+    "note": "扩展"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "lenet",
+    "title": "LeNet-5",
+    "description": "早期 CNN 代表",
+    "status": "theory"
+  },
+  {
+    "id": "alexnet",
+    "title": "AlexNet",
+    "description": "ImageNet 2012 冠军",
+    "status": "theory"
+  },
+  {
+    "id": "vgg",
+    "title": "VGG",
+    "description": "3x3 卷积堆叠",
+    "status": "theory"
+  },
+  {
+    "id": "resnet",
+    "title": "ResNet",
+    "description": "残差网络",
+    "status": "theory"
+  },
+  {
+    "id": "mobilenet",
+    "title": "MobileNet",
+    "description": "移动端高效网络",
+    "status": "theory"
+  },
+  {
+    "id": "efficientnet",
+    "title": "EfficientNet",
+    "description": "复合缩放",
+    "status": "theory"
+  }
+]

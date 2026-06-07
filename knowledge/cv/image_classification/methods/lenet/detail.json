@@ -1,0 +1,15 @@
+{
+  "id": "lenet",
+  "title": "LeNet-5",
+  "problem": "如何用 CNN 识别手写字符？",
+  "core_idea": [
+    "卷积+池化+全连接"
+  ],
+  "pipeline": [],
+  "advantages": [],
+  "limitations": [],
+  "suitable_for": [],
+  "code_entry": "knowledge/cv/image_classification/methods/lenet/model.py → process() (planned)",
+  "paper_relation": "lenet",
+  "teaching_notes": "教学内容已补齐，模型推理待接入。"
+}

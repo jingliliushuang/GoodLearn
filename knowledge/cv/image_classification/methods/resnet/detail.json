@@ -1,0 +1,16 @@
+{
+  "id": "resnet",
+  "title": "ResNet",
+  "problem": "深层网络为何难以训练？",
+  "core_idea": [
+    "跳跃连接",
+    "残差学习"
+  ],
+  "pipeline": [],
+  "advantages": [],
+  "limitations": [],
+  "suitable_for": [],
+  "code_entry": "knowledge/cv/image_classification/methods/resnet/model.py → process() (planned)",
+  "paper_relation": "resnet",
+  "teaching_notes": "教学内容已补齐，模型推理待接入。"
+}

@@ -3,10 +3,11 @@ import { Link, useParams } from 'react-router-dom';
 import { fetchDomain } from '../api/client';
 import NodeCard from '../components/NodeCard';
 
-const SECTION_ORDER = ['basic', 'advanced', 'planned'];
+const SECTION_ORDER = ['basic', 'intermediate', 'advanced', 'planned'];
 
 const SECTION_LABELS = {
   basic: '基础学习',
+  intermediate: '进阶学习',
   advanced: '进阶实验',
   planned: '预留方向',
 };

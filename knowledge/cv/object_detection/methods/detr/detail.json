@@ -1,0 +1,13 @@
+{
+  "id": "detr",
+  "title": "DETR",
+  "problem": "",
+  "core_idea": [],
+  "pipeline": [],
+  "advantages": [],
+  "limitations": [],
+  "suitable_for": [],
+  "code_entry": "knowledge/cv/object_detection/methods/detr/model.py → process() (planned)",
+  "paper_relation": "detr",
+  "teaching_notes": "教学内容已补齐，模型推理待接入。"
+}

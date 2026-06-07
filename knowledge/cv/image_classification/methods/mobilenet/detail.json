@@ -1,0 +1,15 @@
+{
+  "id": "mobilenet",
+  "title": "MobileNet",
+  "problem": "如何在有限算力下部署分类模型？",
+  "core_idea": [
+    "深度可分离卷积"
+  ],
+  "pipeline": [],
+  "advantages": [],
+  "limitations": [],
+  "suitable_for": [],
+  "code_entry": "knowledge/cv/image_classification/methods/mobilenet/model.py → process() (planned)",
+  "paper_relation": "mobilenet",
+  "teaching_notes": "教学内容已补齐，模型推理待接入。"
+}

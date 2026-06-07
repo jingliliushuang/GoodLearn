@@ -1,0 +1,52 @@
+[
+  {
+    "id": "pytorch_transfer",
+    "title": "PyTorch Transfer Learning Tutorial",
+    "type": "tutorial",
+    "url": "https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html",
+    "summary": "官方迁移学习教程，含训练与验证流程。",
+    "tags": [
+      "pytorch"
+    ]
+  },
+  {
+    "id": "torchvision_models",
+    "title": "TorchVision Models Documentation",
+    "type": "documentation",
+    "url": "https://pytorch.org/vision/stable/models.html",
+    "summary": "预训练模型列表与 API。",
+    "tags": [
+      "torchvision"
+    ]
+  },
+  {
+    "id": "cs231n",
+    "title": "CS231n: Convolutional Neural Networks for Visual Recognition",
+    "type": "course",
+    "url": "https://cs231n.stanford.edu/",
+    "summary": "Stanford 经典 CV 课程，含分类章节。",
+    "tags": [
+      "course"
+    ]
+  },
+  {
+    "id": "imagenet",
+    "title": "ImageNet Large Scale Visual Recognition Challenge",
+    "type": "dataset",
+    "url": "https://image-net.org/",
+    "summary": "ImageNet 数据集与 ILSVRC 介绍。",
+    "tags": [
+      "dataset"
+    ]
+  },
+  {
+    "id": "cnn_course",
+    "title": "Stanford CNN for Visual Recognition (notes)",
+    "type": "course",
+    "url": "https://cs231n.github.io/convolutional-networks/",
+    "summary": "卷积网络讲义。",
+    "tags": [
+      "course"
+    ]
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "id": "vgg",
+  "title": "VGG",
+  "problem": "更深的网络如何设计？",
+  "core_idea": [
+    "小卷积核",
+    "结构简单"
+  ],
+  "pipeline": [],
+  "advantages": [],
+  "limitations": [],
+  "suitable_for": [],
+  "code_entry": "knowledge/cv/image_classification/methods/vgg/model.py → process() (planned)",
+  "paper_relation": "vgg",
+  "teaching_notes": "教学内容已补齐，模型推理待接入。"
+}

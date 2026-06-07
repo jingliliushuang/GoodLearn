@@ -1,0 +1,55 @@
+[
+  {
+    "id": "opencv_feature_matching",
+    "title": "OpenCV Feature Matching Tutorials",
+    "type": "documentation",
+    "url": "https://docs.opencv.org/4.x/dc/dc3/tutorial_py_matcher.html",
+    "summary": "OpenCV 官方特征匹配教程，适合学习 BFMatcher、FLANN、Homography。",
+    "tags": [
+      "opencv",
+      "matching"
+    ]
+  },
+  {
+    "id": "opencv_homography",
+    "title": "OpenCV Homography Tutorial",
+    "type": "tutorial",
+    "url": "https://docs.opencv.org/4.x/d1/de0/tutorial_py_feature_homography.html",
+    "summary": "介绍如何使用 findHomography 与 RANSAC 进行图像对齐。",
+    "tags": [
+      "homography",
+      "ransac"
+    ]
+  },
+  {
+    "id": "opencv_sift_orb",
+    "title": "OpenCV SIFT and ORB Documentation",
+    "type": "documentation",
+    "url": "https://docs.opencv.org/4.x/da/df5/tutorial_py_sift_intro.html",
+    "summary": "SIFT 与 ORB 官方文档与示例。",
+    "tags": [
+      "sift",
+      "orb"
+    ]
+  },
+  {
+    "id": "mvg_book",
+    "title": "Multiple View Geometry in Computer Vision",
+    "type": "book",
+    "url": "https://www.robots.ox.ac.uk/~vgg/hzbook/",
+    "summary": " Hartley & Zisserman 经典教材，扩展阅读几何视觉基础。",
+    "tags": [
+      "geometry"
+    ]
+  },
+  {
+    "id": "opencv_python_tutorial",
+    "title": "OpenCV-Python Tutorials",
+    "type": "course",
+    "url": "https://docs.opencv.org/4.x/d9/df8/tutorial_root.html",
+    "summary": "OpenCV Python 教程总览。",
+    "tags": [
+      "opencv"
+    ]
+  }
+]

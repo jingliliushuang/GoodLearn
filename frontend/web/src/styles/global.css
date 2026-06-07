@@ -1563,4 +1563,205 @@ a:hover {
   .compare-images {
     grid-template-columns: 1fr;
   }
+
+  .fm-upload-row {
+    grid-template-columns: 1fr;
+  }
+
+  .fm-vis-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Node mode badges */
+.node-mode-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.card-hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0.35rem 0 0.5rem;
+  line-height: 1.4;
+}
+
+/* Learning resources */
+.resource-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.resource-card {
+  padding: 1rem;
+}
+
+.resource-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.resource-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.badge-resource {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent);
+  font-size: 0.7rem;
+}
+
+.resource-summary {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0 0 0.5rem;
+  line-height: 1.5;
+}
+
+.resource-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.resource-tag {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: var(--bg-hover);
+  color: var(--text-muted);
+}
+
+.resource-link {
+  font-size: 0.82rem;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.resource-link:hover {
+  text-decoration: underline;
+}
+
+.resource-link-muted {
+  color: var(--text-muted);
+  cursor: default;
+}
+
+/* Feature matching tester */
+.feature-matching-tester {
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.fm-upload-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.fm-upload-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fm-upload-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.fm-preview {
+  max-width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.fm-actions {
+  margin-top: 1rem;
+}
+
+.fm-results {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.fm-vis-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.fm-result-img {
+  max-width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.fm-vis-wide {
+  grid-column: 1 / -1;
+}
+
+.metrics-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.metrics-table td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.metrics-table td:first-child {
+  color: var(--text-muted);
+  width: 40%;
+}
+
+.fm-homography {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+}
+
+.fm-homography pre {
+  overflow-x: auto;
+  padding: 0.75rem;
+  background: var(--bg-hover);
+  border-radius: 6px;
+}
+
+/* Theory node */
+.info-box {
+  padding: 1rem 1.25rem;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: var(--radius);
+  line-height: 1.6;
+}
+
+.theory-pending-box p {
+  margin: 0 0 0.5rem;
+}
+
+.theory-method-note {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.method-status.status-theory {
+  background: rgba(234, 179, 8, 0.15);
+  color: #eab308;
 }

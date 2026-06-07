@@ -1,0 +1,32 @@
+{
+  "id": "orb",
+  "title": "ORB",
+  "problem": "如何在保持较好匹配效果的同时显著降低特征提取与匹配耗时？",
+  "core_idea": [
+    "FAST 角点检测",
+    "BRIEF 二进制描述子",
+    "方向不变性"
+  ],
+  "pipeline": [
+    "ORB 检测与描述",
+    "Hamming 距离匹配",
+    "Ratio test 筛选"
+  ],
+  "advantages": [
+    "速度快",
+    "无专利限制",
+    "OpenCV 内置"
+  ],
+  "limitations": [
+    "描述子区分度通常低于 SIFT",
+    "对极端尺度变化较敏感"
+  ],
+  "suitable_for": [
+    "实时 SLAM",
+    "移动端视觉",
+    "工程快速原型"
+  ],
+  "code_entry": "knowledge/cv/feature_matching/methods/orb/model.py → process()",
+  "paper_relation": "orb",
+  "teaching_notes": "与 SIFT 使用相同图像对对比 keypoints 与 good_matches。"
+}

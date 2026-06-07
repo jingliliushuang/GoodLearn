@@ -1,0 +1,15 @@
+{
+  "id": "image_classification",
+  "title": "图像分类",
+  "type": "leaf",
+  "domain": "cv",
+  "description": "学习 CNN 图像分类、经典网络结构与迁移学习思想。",
+  "status": "ready",
+  "input_type": "single_image",
+  "mode": "theory_first",
+  "tags": [
+    "classification",
+    "cnn",
+    "transfer learning"
+  ]
+}

@@ -1,0 +1,29 @@
+[
+  {
+    "id": "sift",
+    "title": "Distinctive Image Features from Scale-Invariant Keypoints",
+    "authors": "Lowe",
+    "year": 2004,
+    "type": "traditional",
+    "method": "SIFT",
+    "url": "https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf"
+  },
+  {
+    "id": "orb",
+    "title": "ORB: An efficient alternative to SIFT or SURF",
+    "authors": "Rublee et al.",
+    "year": 2011,
+    "type": "traditional",
+    "method": "ORB",
+    "url": "https://www.wilhelm-research.com/static/251/ORB.pdf"
+  },
+  {
+    "id": "ransac",
+    "title": "Random Sample Consensus: A Paradigm for Model Fitting with Applications to Image Analysis and Automated Cartography",
+    "authors": "Fischler & Bolles",
+    "year": 1981,
+    "type": "traditional",
+    "method": "RANSAC",
+    "url": ""
+  }
+]

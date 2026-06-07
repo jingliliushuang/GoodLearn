@@ -12,10 +12,23 @@
 
 | 类别 | 结论 |
 |------|------|
-| **已实现** | 知识树（`knowledge/`）、叶子节点（denoise / super_resolution）、`methods/` 方法目录、`model.py` 统一 `process()`、动态加载（`loader.py`）、统一运行（`runner.py` + `POST /api/run`）、前端 React、Electron 壳、`config.yaml`、实验记录 |
+| **已实现** | 知识树（`knowledge/`）、叶子节点（denoise / super_resolution / feature_matching / image_classification / object_detection）、`methods/` 方法目录、`model.py` 统一 `process()`、动态加载（`loader.py`）、统一运行（`runner.py` + `POST /api/run`）、双图特征匹配（`POST /api/feature-matching/run`）、前端 React、Electron 壳、`config.yaml`、实验记录 |
 | **部分符合** | `dataset.py` / 节点级 `metrics.py`（已补齐文件，denoise 已接入 runner；super_resolution 的 dataset 暂未接入 runner）、指标仍保留全局 `backend/core/metrics.py` 作为回退 |
 | **偏离** | 原设计 `nodes/` → 现用 `knowledge/`；原设计 `history/` → 现用 `methods/`；超分评测未走完整「HR→LR→SR→HR」流水线（ESPCN/EDSR 在 `model.py` 内自行下采样）；无节点级 `tests/`、无 `report.json` |
-| **未实现** | 组合节点完整流程、`combiner` 运行 API、`packer` 导入导出、CLI 层、`outputs/exports` |
+| **未实现** | parallel/fusion 组合、CLI 层、分类/检测模型权重推理 |
+
+### CV 模块节点状态（2026-06）
+
+| 节点 | 状态 | 说明 |
+|------|------|------|
+| denoise | 可运行 | 单图输入，4 种传统去噪 |
+| super_resolution | 可运行 | 6 个模型全部可运行 |
+| feature_matching | 可运行 | 双图输入，SIFT / ORB / RANSAC |
+| image_classification | 教学已补齐 | 理论 + 论文 + resources.json，模型推理待接入 |
+| object_detection | 教学已补齐 | 理论 + 论文 + resources.json，模型推理待接入 |
+| pipeline_builder | 可运行 | cascade 组合实验 |
+
+**本次 CV 扩展**：新增 `feature_matching`、`image_classification`、`object_detection` 知识节点；`resources.json` 学习资料；`POST /api/feature-matching/run`；前端 `LearningResources`、`FeatureMatchingTester`、`TheoryNodePage`。
 
 **本次小范围补齐**：denoise / super_resolution 的 `dataset.py`、`metrics.py`；`knowledge/cv/combined/` 占位 README；`backend/core/combiner.py`、`packer.py` 占位；runner 优先调用节点 `dataset.degrade()`（denoise）与 `metrics.evaluate()`。
 
@@ -26,7 +39,7 @@
 | 原始设计项 | 当前实现位置 | 状态 | 说明 | 建议 |
 |-----------|-------------|------|------|------|
 | 知识树 | `knowledge/` + `knowledge/domains.json` | 符合 | 5 个领域，CV 含可运行节点 | 在 README 中说明 `knowledge/` ≡ 原 `nodes/` |
-| 叶子节点 | `knowledge/cv/denoise/`, `super_resolution/` | 部分符合 | 有 metadata、content、methods；缺 tests/、节点 README | P1 补节点 README；P2 补 tests/ |
+| 叶子节点 | `knowledge/cv/denoise/`, `super_resolution/`, `feature_matching/`, `image_classification/`, `object_detection/` | 部分符合 | 恢复类可运行；分类/检测为 theory_first | 后续接入 TorchVision 权重 |
 | 组合节点 | `knowledge/cv/combined/` + Pipeline Builder | 部分实现 | 可视化 cascade 流水线已可用；parallel/fusion 与 packer 未实现 | 见 Pipeline Builder 页面 |
 | 方法目录 | `methods/{method_name}/` | 符合 | 对应原 `history/` | README 说明映射，不强制改名 |
 | dataset.py | `knowledge/cv/*/dataset.py` | 部分符合 | 已补齐；denoise runner 已调用；超分暂未接入 runner | P1 统一超分退化策略时需协调 ESPCN/EDSR |

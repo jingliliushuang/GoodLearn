@@ -11,6 +11,7 @@ from core.tree import (
     load_node_metadata,
     load_node_papers,
     load_node_references,
+    load_node_resources,
 )
 
 router = APIRouter(prefix="/api/nodes", tags=["nodes"])
@@ -23,6 +24,7 @@ def get_node(domain_id: str, node_id: str):
         content = load_node_content(domain_id, node_id)
         papers = load_node_papers(domain_id, node_id)
         references = load_node_references(domain_id, node_id)
+        resources = load_node_resources(domain_id, node_id)
         methods = check_node_methods(domain_id, node_id)
         learning_path = load_learning_path(domain_id, node_id)
         method_details = load_all_method_details(domain_id, node_id)
@@ -40,7 +42,10 @@ def get_node(domain_id: str, node_id: str):
         "content_markdown": content,
         "papers": papers,
         "references": references,
+        "resources": resources,
         "methods": methods,
+        "input_type": meta.get("input_type", "single_image"),
+        "mode": meta.get("mode", "runnable"),
         "learning_path": learning_path,
         "method_details": method_details,
         "has_demos": meta.get("has_demos", False),

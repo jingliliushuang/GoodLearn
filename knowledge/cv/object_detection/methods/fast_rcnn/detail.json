@@ -1,0 +1,13 @@
+{
+  "id": "fast_rcnn",
+  "title": "Fast R-CNN",
+  "problem": "",
+  "core_idea": [],
+  "pipeline": [],
+  "advantages": [],
+  "limitations": [],
+  "suitable_for": [],
+  "code_entry": "knowledge/cv/object_detection/methods/fast_rcnn/model.py → process() (planned)",
+  "paper_relation": "fast_rcnn",
+  "teaching_notes": "教学内容已补齐，模型推理待接入。"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "alexnet",
+  "title": "AlexNet",
+  "problem": "如何在大规模图像分类上训练深层 CNN？",
+  "core_idea": [
+    "ReLU",
+    "Dropout",
+    "Data augmentation"
+  ],
+  "pipeline": [],
+  "advantages": [],
+  "limitations": [],
+  "suitable_for": [],
+  "code_entry": "knowledge/cv/image_classification/methods/alexnet/model.py → process() (planned)",
+  "paper_relation": "alexnet",
+  "teaching_notes": "教学内容已补齐，模型推理待接入。"
+}

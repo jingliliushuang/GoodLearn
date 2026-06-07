@@ -28,6 +28,15 @@ def _has_dnn_superres() -> bool:
         return False
 
 
+def _has_sift() -> bool:
+    try:
+        import cv2
+
+        return hasattr(cv2, "SIFT_create")
+    except ImportError:
+        return False
+
+
 def _has_process_function(model_path: Path) -> bool:
     if not model_path.exists():
         return False
@@ -84,6 +93,10 @@ def _infer_requirements(meta: dict[str, Any], weight_names: list[str]) -> list[s
         if not _has_dnn_superres():
             requirements.add("opencv-contrib-python")
 
+    if backend == "opencv_sift":
+        if not _has_sift():
+            requirements.add("opencv-contrib-python")
+
     for weight_name in weight_names:
         suffix = Path(weight_name).suffix.lower()
         if suffix == ".onnx":
@@ -101,7 +114,7 @@ def _check_requirements(requirements: list[str]) -> list[str]:
     missing: list[str] = []
     for dep in requirements:
         if dep == "opencv-contrib-python":
-            if not _has_dnn_superres():
+            if not _has_dnn_superres() and not _has_sift():
                 missing.append(dep)
         elif not _can_import(dep):
             missing.append(dep)
@@ -128,6 +141,14 @@ def check_method(domain_id: str, node_id: str, method_id: str) -> dict[str, Any]
 
     with open(meta_path, encoding="utf-8") as f:
         meta = json.load(f)
+
+    if meta.get("available") is False:
+        return _build_status(
+            meta, method_id, False,
+            meta.get("reason", "不可用"),
+            meta.get("requirements", []),
+            _collect_weight_names(meta), [], [], [],
+        )
 
     weight_names = _collect_weight_names(meta)
     requirements = _infer_requirements(meta, weight_names)

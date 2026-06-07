@@ -1,0 +1,16 @@
+{
+  "id": "object_detection",
+  "title": "目标检测",
+  "type": "leaf",
+  "domain": "cv",
+  "description": "学习目标检测任务、两阶段检测器、一阶段检测器、YOLO、Faster R-CNN 和 DETR 等框架。",
+  "status": "ready",
+  "input_type": "single_image",
+  "mode": "theory_first",
+  "tags": [
+    "object detection",
+    "yolo",
+    "faster r-cnn",
+    "detr"
+  ]
+}

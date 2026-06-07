@@ -80,7 +80,10 @@ def validate_node(node_path: Path) -> dict[str, Any]:
     if not methods_dir.is_dir():
         errors.append("缺少 methods/ 目录")
     else:
-        method_dirs = [d for d in methods_dir.iterdir() if d.is_dir()]
+        method_dirs = [
+            d for d in methods_dir.iterdir()
+            if d.is_dir() and d.name not in EXCLUDE_DIR_NAMES and not d.name.startswith("_")
+        ]
         if not method_dirs:
             errors.append("methods/ 下至少需要一个方法")
         for method_dir in method_dirs:

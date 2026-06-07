@@ -34,6 +34,22 @@ export async function runModel(domain, node, method, imageFile, params = {}) {
   return data;
 }
 
+export async function runFeatureMatching(domain, node, method, imageA, imageB, params = {}) {
+  const form = new FormData();
+  form.append('domain', domain);
+  form.append('node', node);
+  form.append('method', method);
+  form.append('image_a', imageA);
+  form.append('image_b', imageB);
+  form.append('params', JSON.stringify(params || {}));
+
+  const { data } = await client.post('/api/feature-matching/run', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 120000,
+  });
+  return data;
+}
+
 export async function runPipeline(imageFile, pipeline) {
   const form = new FormData();
   form.append('image', imageFile);

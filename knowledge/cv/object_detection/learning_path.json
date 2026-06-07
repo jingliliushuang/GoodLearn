@@ -1,0 +1,44 @@
+[
+  {
+    "id": "rcnn",
+    "title": "R-CNN",
+    "description": "区域 CNN 检测开端",
+    "status": "theory"
+  },
+  {
+    "id": "fast_rcnn",
+    "title": "Fast R-CNN",
+    "description": "RoI Pooling 加速",
+    "status": "theory"
+  },
+  {
+    "id": "faster_rcnn",
+    "title": "Faster R-CNN",
+    "description": "RPN 端到端候选",
+    "status": "theory"
+  },
+  {
+    "id": "ssd",
+    "title": "SSD",
+    "description": "单阶段多框检测",
+    "status": "theory"
+  },
+  {
+    "id": "yolo",
+    "title": "YOLO",
+    "description": "实时单阶段检测",
+    "status": "theory"
+  },
+  {
+    "id": "retinanet",
+    "title": "RetinaNet",
+    "description": "Focal Loss 一阶段",
+    "status": "theory"
+  },
+  {
+    "id": "detr",
+    "title": "DETR",
+    "description": "Transformer 检测",
+    "status": "theory"
+  }
+]

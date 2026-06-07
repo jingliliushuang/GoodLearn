@@ -1,0 +1,13 @@
+{
+  "id": "rcnn",
+  "title": "R-CNN",
+  "problem": "如何将 CNN 用于目标检测？",
+  "core_idea": [],
+  "pipeline": [],
+  "advantages": [],
+  "limitations": [],
+  "suitable_for": [],
+  "code_entry": "knowledge/cv/object_detection/methods/rcnn/model.py → process() (planned)",
+  "paper_relation": "rcnn",
+  "teaching_notes": "教学内容已补齐，模型推理待接入。"
+}

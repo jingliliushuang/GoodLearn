@@ -1,0 +1,33 @@
+{
+  "id": "sift",
+  "title": "SIFT",
+  "problem": "如何在尺度、旋转变化下稳定检测并描述局部特征？",
+  "core_idea": [
+    "尺度空间 DoG 极值检测",
+    "关键点方向分配",
+    "128 维梯度直方图描述子"
+  ],
+  "pipeline": [
+    "构建高斯金字塔",
+    "DoG 检测极值",
+    "精确定位与过滤",
+    "计算描述子",
+    "BFMatcher + ratio test"
+  ],
+  "advantages": [
+    "尺度与旋转不变性较好",
+    "经典 baseline，教学价值高"
+  ],
+  "limitations": [
+    "计算较慢",
+    "需 opencv-contrib-python"
+  ],
+  "suitable_for": [
+    "图像拼接",
+    "物体识别",
+    "三维重建入门"
+  ],
+  "code_entry": "knowledge/cv/feature_matching/methods/sift/model.py → process()",
+  "paper_relation": "sift",
+  "teaching_notes": "对比 ORB 观察速度与匹配数量差异。"
+}

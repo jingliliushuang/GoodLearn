@@ -1,0 +1,17 @@
+{
+  "id": "feature_matching",
+  "title": "特征匹配",
+  "type": "leaf",
+  "domain": "cv",
+  "description": "学习 SIFT、ORB、RANSAC 等经典局部特征匹配方法，并通过两张图片进行匹配实验。",
+  "status": "ready",
+  "input_type": "two_images",
+  "mode": "runnable",
+  "tags": [
+    "computer vision",
+    "feature matching",
+    "sift",
+    "orb",
+    "ransac"
+  ]
+}

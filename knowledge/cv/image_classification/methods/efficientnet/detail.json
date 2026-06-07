@@ -1,0 +1,15 @@
+{
+  "id": "efficientnet",
+  "title": "EfficientNet",
+  "problem": "如何平衡深度、宽度与分辨率？",
+  "core_idea": [
+    "复合系数缩放"
+  ],
+  "pipeline": [],
+  "advantages": [],
+  "limitations": [],
+  "suitable_for": [],
+  "code_entry": "knowledge/cv/image_classification/methods/efficientnet/model.py → process() (planned)",
+  "paper_relation": "efficientnet",
+  "teaching_notes": "教学内容已补齐，模型推理待接入。"
+}

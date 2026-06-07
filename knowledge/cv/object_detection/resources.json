@@ -1,0 +1,62 @@
+[
+  {
+    "id": "coco",
+    "title": "COCO Dataset",
+    "type": "dataset",
+    "url": "https://cocodataset.org/",
+    "summary": "Common Objects in Context 检测基准数据集。",
+    "tags": [
+      "dataset"
+    ]
+  },
+  {
+    "id": "ultralytics",
+    "title": "Ultralytics YOLO Docs",
+    "type": "documentation",
+    "url": "https://docs.ultralytics.com/",
+    "summary": "YOLO 系列官方学习资料。",
+    "tags": [
+      "yolo"
+    ]
+  },
+  {
+    "id": "torchvision_detection",
+    "title": "TorchVision Detection Finetuning Tutorial",
+    "type": "tutorial",
+    "url": "https://pytorch.org/tutorials/intermediate/torchvision_tutorial.html",
+    "summary": "使用 TorchVision 微调检测模型。",
+    "tags": [
+      "pytorch"
+    ]
+  },
+  {
+    "id": "mmdet",
+    "title": "MMDetection Documentation",
+    "type": "documentation",
+    "url": "https://mmdetection.readthedocs.io/",
+    "summary": "OpenMMLab 检测工具箱文档。",
+    "tags": [
+      "mmdet"
+    ]
+  },
+  {
+    "id": "detectron2",
+    "title": "Detectron2 Documentation",
+    "type": "documentation",
+    "url": "https://detectron2.readthedocs.io/",
+    "summary": "Facebook Detectron2 框架。",
+    "tags": [
+      "detectron2"
+    ]
+  },
+  {
+    "id": "pwc_detection",
+    "title": "Papers with Code - Object Detection",
+    "type": "benchmark",
+    "url": "https://paperswithcode.com/task/object-detection",
+    "summary": "检测任务 SOTA 榜单与代码链接。",
+    "tags": [
+      "benchmark"
+    ]
+  }
+]

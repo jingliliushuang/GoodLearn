@@ -1,0 +1,12 @@
+{
+  "available": false,
+  "reason": "教学内容已补齐，模型权重暂未接入。",
+  "backend": "planned",
+  "inference_enabled": false,
+  "requirements": [],
+  "weights": [],
+  "category": "deep_learning",
+  "id": "alexnet",
+  "title": "AlexNet",
+  "description": "ImageNet 2012 冠军"
+}
