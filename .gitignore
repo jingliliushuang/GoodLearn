@@ -14,6 +14,7 @@ backend/runtime/uploads/
 backend/runtime/outputs/
 backend/runtime/temp/
 backend/runtime/experiments/
+backend/runtime/pipelines/
 backend/logs/
 
 # Node

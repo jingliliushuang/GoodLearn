@@ -27,14 +27,14 @@
 |-----------|-------------|------|------|------|
 | 知识树 | `knowledge/` + `knowledge/domains.json` | 符合 | 5 个领域，CV 含可运行节点 | 在 README 中说明 `knowledge/` ≡ 原 `nodes/` |
 | 叶子节点 | `knowledge/cv/denoise/`, `super_resolution/` | 部分符合 | 有 metadata、content、methods；缺 tests/、节点 README | P1 补节点 README；P2 补 tests/ |
-| 组合节点 | `knowledge/cv/combined/`（占位） | 未实现 | 仅有 README，无示例节点 | P2 实现 denoise_super_resolution 示例 |
+| 组合节点 | `knowledge/cv/combined/` + Pipeline Builder | 部分实现 | 可视化 cascade 流水线已可用；parallel/fusion 与 packer 未实现 | 见 Pipeline Builder 页面 |
 | 方法目录 | `methods/{method_name}/` | 符合 | 对应原 `history/` | README 说明映射，不强制改名 |
 | dataset.py | `knowledge/cv/*/dataset.py` | 部分符合 | 已补齐；denoise runner 已调用；超分暂未接入 runner | P1 统一超分退化策略时需协调 ESPCN/EDSR |
 | metrics.py | 节点 + `backend/core/metrics.py` | 部分符合 | 节点 evaluate 已接入 runner，全局为回退 | 保持双轨，节点可覆盖 |
 | model.py | `methods/*/model.py` | 符合 | 10 个方法均有 `process()` | 保持 |
 | 动态加载器 | `backend/core/loader.py` | 符合 | 动态 import model/dataset/metrics | 保持 |
 | 统一运行器 | `backend/core/runner.py` | 部分符合 | 完整流程缺 report.json；超分未用 dataset | P2 补 report.json |
-| 组合节点生成器 | `backend/core/combiner.py` | 未实现 | 占位 + TODO | P2 |
+| 组合节点生成器 | `backend/core/combiner.py` | 部分实现 | `run_pipeline()` 支持 cascade；`create_combined_node()` 未实现 | P2 持久化组合节点 |
 | 导入导出模块 | `backend/core/packer.py` | 未实现 | 占位 + validate 接口 | P2 |
 | 前端层 | `frontend/web/` | 符合 | React + Vite | 保持 |
 | Electron 桌面壳 | `desktop/` | 符合 | 加载 Vite dev URL | 保持 |
@@ -131,7 +131,7 @@ GoodLearnApp/
 | runtime/combiner.py | ❌ |
 | backend/core/combiner.py | ⚠️ 占位，未接入 API |
 
-**结论**：未实现，属于架构预留功能。
+**结论**：未实现完整组合节点目录生成，但 **已支持可视化 cascade Pipeline Builder**（`POST /api/run-pipeline` + `PipelinePage`）。parallel / fusion 与 packer / CLI 尚未实现。
 
 ---
 
@@ -181,7 +181,7 @@ GoodLearnApp/
 2. **`history/` vs `methods/`** — 现用 `methods/` 存放算法实现；与 `history/` 等价，文档说明即可。
 3. **`dataset.py`** — 原先缺失，denoise 退化逻辑硬编码在 `runner.py`；现已补齐并接入 denoise。
 4. **`metrics.py` 节点化** — 原先仅 `backend/core/metrics.py`；现已双轨，节点可覆盖。
-5. **`combined`** — 缺失完整实现，已补占位目录与 combiner 占位。
+5. **`combined`** — 已部分实现：Pipeline Builder + `run_pipeline()`；完整组合节点目录生成仍缺失。
 6. **`packer`** — 缺失，已补占位。
 7. **`CLI`** — 缺失，开发阶段用 `start_dev.bat` 替代，非必须项。
 

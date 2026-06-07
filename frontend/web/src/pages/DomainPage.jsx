@@ -3,6 +3,18 @@ import { Link, useParams } from 'react-router-dom';
 import { fetchDomain } from '../api/client';
 import NodeCard from '../components/NodeCard';
 
+function PipelineEntryCard({ domainId }) {
+  return (
+    <Link to={`/domain/${domainId}/pipeline`} className="card pipeline-entry-card">
+      <div className="card-title">组合实验流水线</div>
+      <div className="card-desc">
+        自由拖拽去噪 / 超分节点，组成顺序流水线。按 Step 1 → Step 4 依次执行 cascade 组合实验。
+      </div>
+      <span className="badge badge-ready">Pipeline Builder</span>
+    </Link>
+  );
+}
+
 export default function DomainPage() {
   const { domainId } = useParams();
   const [domain, setDomain] = useState(null);
@@ -32,11 +44,18 @@ export default function DomainPage() {
           <div className="card-desc">敬请期待后续版本更新。</div>
         </div>
       ) : (
-        <div className="card-grid">
-          {domain.nodes.map((node) => (
-            <NodeCard key={node.id} domainId={domainId} node={node} />
-          ))}
-        </div>
+        <>
+          {domainId === 'cv' && (
+            <div className="card-grid pipeline-entry-grid">
+              <PipelineEntryCard domainId={domainId} />
+            </div>
+          )}
+          <div className="card-grid">
+            {domain.nodes.map((node) => (
+              <NodeCard key={node.id} domainId={domainId} node={node} />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

@@ -1,0 +1,12 @@
+{
+  "id": "pipeline_builder",
+  "title": "自由组合实验流水线",
+  "type": "combined",
+  "domain": "cv",
+  "strategy": "cascade",
+  "parents": [
+    "cv/denoise",
+    "cv/super_resolution"
+  ],
+  "description": "通过拖拽方式将去噪和超分节点放入有序流水线中，按顺序执行组合实验。"
+}

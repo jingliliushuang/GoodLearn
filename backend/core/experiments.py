@@ -14,9 +14,12 @@ def save_experiment(record: dict[str, Any]) -> Path:
     experiments_dir = get_experiments_dir()
     experiments_dir.mkdir(parents=True, exist_ok=True)
 
-    method = record.get("method", "unknown")
     run_id = record.get("run_id", datetime.now().strftime("%Y%m%d_%H%M%S"))
-    filename = f"{run_id}_{method}.json"
+    if record.get("type") == "pipeline":
+        filename = f"{run_id}_pipeline.json"
+    else:
+        method = record.get("method", "unknown")
+        filename = f"{run_id}_{method}.json"
     path = experiments_dir / filename
 
     with open(path, "w", encoding="utf-8") as f:
@@ -42,8 +45,14 @@ def list_experiments(
                 record = json.load(f)
             if domain and record.get("domain") != domain:
                 continue
-            if node and record.get("node") != node:
-                continue
+            if node:
+                record_node = record.get("node")
+                if record.get("type") == "pipeline":
+                    step_nodes = [s.get("node") for s in record.get("steps", [])]
+                    if record_node != node and node not in step_nodes:
+                        continue
+                elif record_node != node:
+                    continue
             if method and record.get("method") != method:
                 continue
             records.append(record)

@@ -33,6 +33,18 @@ export async function runModel(domain, node, method, imageFile) {
   return data;
 }
 
+export async function runPipeline(imageFile, pipeline) {
+  const form = new FormData();
+  form.append('image', imageFile);
+  form.append('pipeline', JSON.stringify(pipeline));
+
+  const { data } = await client.post('/api/run-pipeline', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 180000,
+  });
+  return data;
+}
+
 export async function runTimerDemo(payload) {
   const { data } = await client.post('/api/demos/embedded/timer', payload);
   return data;

@@ -98,8 +98,28 @@ E:\A_Exp_ML\GoodLearnApp\stop_dev.bat
 | Demo | 位置 | 接口 |
 |------|------|------|
 | CV 图像模型测试 | CV 节点 | `POST /api/run` |
+| **组合实验流水线** | CV → 组合实验流水线 | `POST /api/run-pipeline` |
 | Timer 周期计算器 | Embedded → Timer | `POST /api/demos/embedded/timer` |
 | Round Robin 调度模拟 | OS → Process Scheduling | `POST /api/demos/os/round_robin` |
+
+## 组合实验流水线（Pipeline Builder）
+
+支持**可视化 cascade 顺序组合**，用户可自由拖拽任务节点：
+
+1. 进入 **Computer Vision → 组合实验流水线**
+2. 从左侧拖入「图像去噪」或「图像超分」到 Step 1–4
+3. 为每个 Step 选择 `available=true` 的方法
+4. 上传图片，点击「运行流水线」
+
+系统按 Step 顺序依次调用各方法的 `model.process()`，展示每一步中间结果与最终输出。
+
+| 能力 | 状态 |
+|------|------|
+| cascade 顺序组合 | ✅ 已实现 |
+| parallel / fusion | ❌ 尚未实现 |
+| 保存为永久组合节点 | ❌ 第一版不支持 |
+
+> 当前仍为**开发阶段**，使用 `start_dev.bat` 启动，**不要** build / 打包 exe。
 
 ## 当前可运行模型
 
@@ -206,7 +226,8 @@ E:\A_Exp_ML\GoodLearnApp\.conda\goodlearnapp-backend\python.exe -m pip install o
 |------|------|------|
 | GET | /api/domains | 领域列表 |
 | GET | /api/nodes/{domain}/{node} | 节点详情（含方法可用性检测） |
-| POST | /api/run | 运行模型（仅 available=true） |
+| POST | /api/run | 运行单方法（仅 available=true） |
+| POST | /api/run-pipeline | 运行 cascade 组合流水线 |
 
 ## 版本
 

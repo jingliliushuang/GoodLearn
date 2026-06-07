@@ -1033,7 +1033,242 @@ a:hover {
   white-space: nowrap;
 }
 
+.pipeline-entry-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+.pipeline-entry-grid {
+  margin-bottom: 1.25rem;
+}
+
+.pipeline-page .pipeline-hint {
+  margin-bottom: 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.pipeline-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.pipeline-palette {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.pipeline-palette-list {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+}
+
+.pipeline-palette-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: grab;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.pipeline-palette-item:hover {
+  border-color: var(--accent);
+}
+
+.pipeline-palette-item:active {
+  cursor: grabbing;
+}
+
+.pipeline-palette-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.pipeline-palette-id {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.pipeline-canvas {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.pipeline-steps-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.25rem;
+  min-width: min-content;
+  padding: 0.5rem 0;
+}
+
+.pipeline-step-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.pipeline-arrow {
+  color: var(--text-muted);
+  font-size: 1.25rem;
+  padding: 0 0.35rem;
+  user-select: none;
+}
+
+.pipeline-step {
+  width: 180px;
+  min-height: 140px;
+  padding: 0.75rem;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.pipeline-step.filled {
+  border-style: solid;
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+.pipeline-step.drag-over {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.pipeline-step-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.pipeline-step-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.pipeline-step-actions {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.7rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-link-danger {
+  color: #f87171;
+}
+
+.pipeline-step-node {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.pipeline-step-placeholder {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.pipeline-method-select {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-hover);
+  color: inherit;
+  font-size: 0.8rem;
+}
+
+.pipeline-run-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+
+.pipeline-run-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.pipeline-error {
+  margin-top: 1rem;
+}
+
+.pipeline-results {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+
+.pipeline-result-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.pipeline-result-item {
+  flex: 0 0 auto;
+  max-width: 220px;
+}
+
+.pipeline-result-item img {
+  max-width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.pipeline-result-final {
+  border-left: 2px solid var(--success);
+  padding-left: 0.75rem;
+}
+
+.pipeline-runtime {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: normal;
+  margin-top: 0.15rem;
+}
+
 @media (max-width: 768px) {
+  .pipeline-layout {
+    grid-template-columns: 1fr;
+  }
+
   .app-main {
     padding: 1rem;
   }

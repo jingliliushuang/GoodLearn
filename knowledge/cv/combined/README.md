@@ -20,9 +20,10 @@ combined/
 
 ## 当前状态
 
-- **未实现**：尚无组合节点示例与运行 API
-- **后端占位**：`backend/core/combiner.py` 已预留接口与 TODO
-- **不影响现有功能**：denoise / super_resolution 叶子节点可独立运行
+- **已实现**：Pipeline Builder 页面（拖拽 denoise / super_resolution → Step 1–4 → `POST /api/run-pipeline`）
+- **已实现**：`backend/core/combiner.run_pipeline()` cascade 顺序执行
+- **未实现**：parallel / fusion、永久组合节点保存、`runtime/combiner.py` 自动生成
+- **不影响现有功能**：单节点 denoise / super_resolution 测试独立运行
 
 ## 设计原则
 
