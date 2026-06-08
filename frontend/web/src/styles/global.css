@@ -226,12 +226,28 @@ a:hover {
 }
 
 .manager-form-grid input,
-.manager-form-grid select {
+.manager-form-grid select,
+.manager-form-grid textarea {
   padding: 0.4rem 0.5rem;
   border-radius: 6px;
   border: 1px solid var(--border);
   background: var(--input-bg);
   color: inherit;
+  font-family: inherit;
+}
+
+.manager-intro {
+  margin-bottom: 1.5rem;
+}
+
+.manager-intro p {
+  margin: 0 0 0.5rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.manager-intro p:last-child {
+  margin-bottom: 0;
 }
 
 .manager-form-grid .span-2 {

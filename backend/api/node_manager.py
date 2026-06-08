@@ -1,7 +1,7 @@
 from fastapi import APIRouter, File, Form, HTTPException, Query, UploadFile
 from pydantic import BaseModel
 
-from core.node_generator import create_node_template, list_domain_nodes
+from core.node_generator import create_method_template, create_node_template, list_domain_nodes
 from core.packer import export_node, import_node, validate_node
 from core.tree import get_node_dir
 
@@ -20,6 +20,17 @@ class ExportNodeRequest(BaseModel):
     domain: str
     node_id: str
     include_weights: bool = False
+
+
+class CreateMethodTemplateRequest(BaseModel):
+    domain: str = "cv"
+    node_id: str
+    method_id: str
+    method_title: str
+    description: str = ""
+    category: str = "traditional"
+    backend: str = "custom"
+    available: bool = False
 
 
 @router.get("/nodes")
@@ -44,6 +55,27 @@ def create_template(body: CreateTemplateRequest):
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
     return result
+
+
+@router.post("/create-method-template")
+def create_method_template_api(body: CreateMethodTemplateRequest):
+    try:
+        return create_method_template(
+            domain=body.domain,
+            node_id=body.node_id,
+            method_id=body.method_id,
+            method_title=body.method_title,
+            description=body.description,
+            category=body.category,
+            backend=body.backend,
+            available=body.available,
+        )
+    except FileExistsError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    except (ValueError, FileNotFoundError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 
 @router.post("/validate")

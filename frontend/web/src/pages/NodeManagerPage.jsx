@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
+  createMethodTemplate,
   createNodeTemplate,
   exportNode,
   fetchDomains,
@@ -23,6 +24,14 @@ function ValidationBox({ validation }) {
   );
 }
 
+const METHOD_CATEGORIES = [
+  'traditional', 'cnn', 'gan', 'transformer', 'detector', 'classifier', 'feature', 'other',
+];
+
+const METHOD_BACKENDS = [
+  'custom', 'opencv', 'opencv_dnn_superres', 'opencv_sift', 'torch', 'onnxruntime', 'planned',
+];
+
 export default function NodeManagerPage() {
   const [domains, setDomains] = useState([]);
   const [domain, setDomain] = useState('cv');
@@ -33,6 +42,14 @@ export default function NodeManagerPage() {
   const [description, setDescription] = useState('');
   const [nodeType, setNodeType] = useState('leaf');
 
+  const [methodNodeId, setMethodNodeId] = useState('');
+  const [methodId, setMethodId] = useState('');
+  const [methodTitle, setMethodTitle] = useState('');
+  const [methodDescription, setMethodDescription] = useState('');
+  const [methodCategory, setMethodCategory] = useState('traditional');
+  const [methodBackend, setMethodBackend] = useState('planned');
+  const [methodAvailable, setMethodAvailable] = useState(false);
+
   const [exportNodeId, setExportNodeId] = useState('');
   const [importFile, setImportFile] = useState(null);
   const [importDomain, setImportDomain] = useState('cv');
@@ -41,19 +58,28 @@ export default function NodeManagerPage() {
   const [loading, setLoading] = useState('');
   const [error, setError] = useState(null);
   const [createResult, setCreateResult] = useState(null);
+  const [methodResult, setMethodResult] = useState(null);
   const [exportResult, setExportResult] = useState(null);
   const [importResult, setImportResult] = useState(null);
+
+  const leafNodes = useMemo(
+    () => nodes.filter((n) => n.type === 'leaf'),
+    [nodes],
+  );
 
   const loadNodes = useCallback(() => {
     fetchManagerNodes(domain)
       .then((data) => {
-        setNodes(data.nodes || []);
-        if (data.nodes?.length && !exportNodeId) {
-          setExportNodeId(data.nodes[0].id);
+        const list = data.nodes || [];
+        setNodes(list);
+        const leaves = list.filter((n) => n.type === 'leaf');
+        if (leaves.length) {
+          setExportNodeId((prev) => (prev && leaves.some((n) => n.id === prev) ? prev : leaves[0].id));
+          setMethodNodeId((prev) => (prev && leaves.some((n) => n.id === prev) ? prev : leaves[0].id));
         }
       })
       .catch(() => setNodes([]));
-  }, [domain, exportNodeId]);
+  }, [domain]);
 
   useEffect(() => {
     fetchDomains().then(setDomains).catch(() => setDomains([]));
@@ -77,6 +103,29 @@ export default function NodeManagerPage() {
       });
       setCreateResult(result);
       loadNodes();
+    } catch (err) {
+      setError(err.response?.data?.detail || err.message);
+    } finally {
+      setLoading('');
+    }
+  };
+
+  const handleCreateMethod = async () => {
+    setLoading('method');
+    setError(null);
+    setMethodResult(null);
+    try {
+      const result = await createMethodTemplate({
+        domain,
+        node_id: methodNodeId,
+        method_id: methodId.trim(),
+        method_title: methodTitle.trim(),
+        description: methodDescription.trim(),
+        category: methodCategory,
+        backend: methodBackend,
+        available: methodAvailable,
+      });
+      setMethodResult(result);
     } catch (err) {
       setError(err.response?.data?.detail || err.message);
     } finally {
@@ -126,9 +175,12 @@ export default function NodeManagerPage() {
     <div className="node-manager-page">
       <Link to="/" className="back-link">← 返回首页</Link>
       <h1 className="page-title">节点管理</h1>
-      <p className="page-desc">
-        自动生成标准节点模板、导出 zip、导入并校验结构。默认不导出模型权重。
-      </p>
+      <div className="info-box manager-intro">
+        <p><strong>节点模板：</strong>用于创建新的任务节点，例如图像去模糊、边缘检测。</p>
+        <p><strong>方法模板：</strong>在已有节点下创建算法方法，例如在图像超分下创建 SRCNN / ESPCN，在图像去噪下创建 DnCNN。</p>
+        <p><strong>导出节点：</strong>将整个任务节点打包为 zip，默认不导出模型权重。</p>
+        <p><strong>导入节点：</strong>导入标准节点 zip 并校验结构，不会执行其中代码。</p>
+      </div>
 
       {error && <div className="error manager-error">{error}</div>}
 
@@ -181,6 +233,92 @@ export default function NodeManagerPage() {
       </section>
 
       <section className="manager-section card">
+        <h2 className="section-title">新建方法模板</h2>
+        <div className="manager-form-grid">
+          <label>
+            领域
+            <select value={domain} onChange={(e) => setDomain(e.target.value)}>
+              {domainOptions.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            所属节点
+            <select value={methodNodeId} onChange={(e) => setMethodNodeId(e.target.value)}>
+              {leafNodes.map((n) => (
+                <option key={n.id} value={n.id}>{n.title} ({n.id})</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            方法 ID
+            <input
+              value={methodId}
+              onChange={(e) => setMethodId(e.target.value)}
+              placeholder="espcn / edsr / dncnn / yolo"
+            />
+          </label>
+          <label>
+            方法名称
+            <input
+              value={methodTitle}
+              onChange={(e) => setMethodTitle(e.target.value)}
+              placeholder="ESPCN / EDSR / DnCNN"
+            />
+          </label>
+          <label>
+            方法类别
+            <select value={methodCategory} onChange={(e) => setMethodCategory(e.target.value)}>
+              {METHOD_CATEGORIES.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            后端类型
+            <select value={methodBackend} onChange={(e) => setMethodBackend(e.target.value)}>
+              {METHOD_BACKENDS.map((b) => (
+                <option key={b} value={b}>{b}</option>
+              ))}
+            </select>
+          </label>
+          <label className="span-2">
+            描述
+            <textarea
+              rows={2}
+              value={methodDescription}
+              onChange={(e) => setMethodDescription(e.target.value)}
+              placeholder="方法简介"
+            />
+          </label>
+          <label className="manager-checkbox">
+            <input
+              type="checkbox"
+              checked={methodAvailable}
+              onChange={(e) => setMethodAvailable(e.target.checked)}
+            />
+            立即可运行 (available)
+          </label>
+        </div>
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={loading === 'method' || !methodNodeId || !methodId.trim() || !methodTitle.trim()}
+          onClick={handleCreateMethod}
+        >
+          {loading === 'method' ? '生成中...' : '生成方法模板'}
+        </button>
+        {methodResult && (
+          <div className="manager-result">
+            <p>{methodResult.message}</p>
+            <p>路径：<code>{methodResult.method_path}</code></p>
+            <p className="card-desc">刷新对应节点页面后可看到新方法。</p>
+          </div>
+        )}
+      </section>
+
+      <section className="manager-section card">
         <h2 className="section-title">导出节点</h2>
         <div className="manager-form-grid">
           <label>
@@ -194,7 +332,7 @@ export default function NodeManagerPage() {
           <label>
             节点
             <select value={exportNodeId} onChange={(e) => setExportNodeId(e.target.value)}>
-              {nodes.map((n) => (
+              {leafNodes.map((n) => (
                 <option key={n.id} value={n.id}>{n.title} ({n.id})</option>
               ))}
             </select>

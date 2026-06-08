@@ -54,7 +54,7 @@
 | 动态加载器 | `backend/core/loader.py` | 符合 | 动态 import model/dataset/metrics | 保持 |
 | 统一运行器 | `backend/core/runner.py` | 部分符合 | 完整流程缺 report.json；超分未用 dataset | P2 补 report.json |
 | 组合节点生成器 | `backend/core/combiner.py` | 部分实现 | `run_pipeline()` 支持 cascade；`create_combined_node()` 未实现 | P2 持久化组合节点 |
-| 导入导出模块 | `backend/core/packer.py` + `node_generator.py` | 部分实现 | 模板生成、导出 zip、导入校验；权重导出暂不支持 | 见节点管理页 |
+| 导入导出模块 | `backend/core/packer.py` + `node_generator.py` | 部分实现 | 节点/方法模板、导出 zip、导入校验；`validate_node` 支持 domain 路径推断 | 见节点管理页 |
 | 前端层 | `frontend/web/` | 符合 | React + Vite | 保持 |
 | Electron 桌面壳 | `desktop/` | 符合 | 加载 Vite dev URL | 保持 |
 | CLI 层 | — | 未实现 | 无 `frontend/cli/` | 非当前阶段必须项 |
@@ -202,7 +202,8 @@ GoodLearnApp/
 3. **`dataset.py`** — 原先缺失，denoise 退化逻辑硬编码在 `runner.py`；现已补齐并接入 denoise。
 4. **`metrics.py` 节点化** — 原先仅 `backend/core/metrics.py`；现已双轨，节点可覆盖。
 5. **`combined`** — 已部分实现：Pipeline Builder + `run_pipeline()`；完整组合节点目录生成仍缺失。
-6. **`packer`** — 已部分实现：节点模板生成、导出、导入与 `validate_node()`；权重导出暂不支持。
+6. **`packer`** — 已实现：节点/方法模板、导出、导入与 `validate_node()`；`patch_node_metadata()` 自动补齐 domain；权重导出暂不支持。
+7. **`node_generator`** — 支持 `create_node_template()`（leaf 节点）与 `create_method_template()`（`methods/{method}/`）。
 7. **`CLI`** — 缺失，开发阶段用 `start_dev.bat` 替代，非必须项。
 
 ---

@@ -106,6 +106,11 @@ export async function createNodeTemplate(payload) {
   return data;
 }
 
+export async function createMethodTemplate(payload) {
+  const { data } = await client.post('/api/node-manager/create-method-template', payload);
+  return data;
+}
+
 export async function exportNode(payload) {
   const { data } = await client.post('/api/node-manager/export', payload);
   return data;

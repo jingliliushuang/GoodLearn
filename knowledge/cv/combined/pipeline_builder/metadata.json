@@ -8,5 +8,6 @@
     "cv/denoise",
     "cv/super_resolution"
   ],
-  "description": "通过拖拽方式将去噪和超分节点放入有序流水线中，按顺序执行组合实验。"
+  "description": "通过拖拽方式将去噪和超分节点放入有序流水线中，按顺序执行组合实验。",
+  "status": "ready"
 }

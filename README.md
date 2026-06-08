@@ -151,13 +151,18 @@ Pipeline Builder 与模型对比实验暂使用**默认参数**。
 
 ## 节点管理
 
-支持扩展知识树节点（开发阶段功能）：
+支持扩展知识树（开发阶段功能），包含**两类模板**：
 
-| 功能 | API | 说明 |
-|------|-----|------|
-| 生成模板 | `POST /api/node-manager/create-template` | 标准 metadata / dataset / metrics / methods/baseline |
-| 导出 zip | `POST /api/node-manager/export` | 输出到 `outputs/exports/`，**不含模型权重** |
-| 导入 zip | `POST /api/node-manager/import` | 结构校验 + zip slip 防护，不执行导入代码 |
+| 类型 | 用途 | API |
+|------|------|-----|
+| **节点模板** | 创建新任务节点（如 `knowledge/cv/deblur/`） | `POST /api/node-manager/create-template` |
+| **方法模板** | 在已有 leaf 节点下创建算法（如 `methods/srcnn/`） | `POST /api/node-manager/create-method-template` |
+| 导出 zip | 打包整个节点 | `POST /api/node-manager/export` |
+| 导入 zip | 结构校验 + 导入 | `POST /api/node-manager/import` |
+
+导出前会校验 `metadata.json`、`dataset.py`、`metrics.py`、`methods/` 结构。若老节点 `metadata.json` 缺少 `domain`，系统会从路径推断并**自动写回**后再导出。
+
+方法模板默认 `available=false`，显示「方法模板已创建，模型实现或权重暂未接入」，不影响其他可运行方法。
 
 前端入口：首页或顶栏 **节点管理**。
 

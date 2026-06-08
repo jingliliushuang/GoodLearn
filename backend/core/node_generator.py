@@ -104,6 +104,136 @@ def _validate_node_id(node_id: str) -> None:
         )
 
 
+METHOD_ID_PATTERN = NODE_ID_PATTERN
+
+METHOD_MODEL_PY = '''import numpy as np
+
+
+def process(degraded_image: np.ndarray, **kwargs) -> np.ndarray:
+    """
+    TODO: 在这里实现方法逻辑。
+    当前模板默认直接返回输入图像。
+    """
+    return degraded_image
+'''
+
+METHOD_README = """# {title}
+
+该方法是 GoodLearnApp 节点管理器自动生成的模板，待补充：
+
+- 数学原理与算法流程
+- 论文引用与创新点
+- 参数说明与使用示例
+"""
+
+METHOD_DETAIL = {
+    "problem": "该方法用于解决当前节点对应的任务。",
+    "core_idea": [
+        "TODO：补充方法核心思想。",
+        "TODO：补充算法流程。",
+        "TODO：补充与其他方法的区别。",
+    ],
+    "pipeline": [
+        "输入 degraded image",
+        "执行方法处理",
+        "输出 recovered image",
+    ],
+    "advantages": ["TODO：补充优点。"],
+    "limitations": ["TODO：补充局限。"],
+    "suitable_for": ["TODO：补充适用场景。"],
+    "code_entry": "model.py",
+    "paper_relation": "",
+    "teaching_notes": "这是自动生成的方法模板，后续可补充论文、代码和实验说明。",
+}
+
+
+def _validate_method_id(method_id: str) -> None:
+    if not METHOD_ID_PATTERN.match(method_id):
+        raise ValueError(
+            "method_id 非法：仅允许小写字母、数字、下划线，且必须以字母开头"
+        )
+
+
+def _is_leaf_node(domain: str, node_id: str) -> bool:
+    meta_path = get_node_dir(domain, node_id) / "metadata.json"
+    if not meta_path.exists():
+        return False
+    with open(meta_path, encoding="utf-8") as f:
+        meta = json.load(f)
+    node_type = meta.get("type", "leaf")
+    return node_type == "leaf"
+
+
+def create_method_template(
+    domain: str,
+    node_id: str,
+    method_id: str,
+    method_title: str,
+    description: str = "",
+    category: str = "traditional",
+    backend: str = "custom",
+    available: bool = False,
+) -> dict[str, Any]:
+    _validate_method_id(method_id)
+
+    node_dir = get_node_dir(domain, node_id)
+    if not node_dir.exists():
+        raise FileNotFoundError(f"节点不存在: {domain}/{node_id}")
+
+    if not _is_leaf_node(domain, node_id):
+        raise ValueError(f"节点 {node_id} 不是 leaf 节点，无法创建方法模板")
+
+    method_dir = node_dir / "methods" / method_id
+    if method_dir.exists():
+        raise FileExistsError(f"方法目录已存在: {method_dir}")
+
+    method_dir.mkdir(parents=True)
+
+    reason = "方法模板已创建，模型实现或权重暂未接入。"
+    metadata = {
+        "id": method_id,
+        "title": method_title,
+        "category": category,
+        "description": description,
+        "backend": backend,
+        "available": available,
+        "reason": reason if not available else "",
+        "inference_enabled": available,
+        "params_schema": [],
+        "requirements": [],
+        "weights": [],
+    }
+    (method_dir / "metadata.json").write_text(
+        json.dumps(metadata, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    detail = {
+        "id": method_id,
+        "title": method_title,
+        **METHOD_DETAIL,
+    }
+    (method_dir / "detail.json").write_text(
+        json.dumps(detail, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    (method_dir / "README.md").write_text(
+        METHOD_README.format(title=method_title),
+        encoding="utf-8",
+    )
+    (method_dir / "model.py").write_text(METHOD_MODEL_PY, encoding="utf-8")
+
+    rel_path = f"knowledge/{domain}/{node_id}/methods/{method_id}"
+    return {
+        "success": True,
+        "method_path": rel_path,
+        "message": "方法模板创建成功",
+        "domain": domain,
+        "node_id": node_id,
+        "method_id": method_id,
+    }
+
+
 def register_node_in_domain(domain_id: str, node_entry: dict[str, Any]) -> None:
     meta_path = get_knowledge_root() / domain_id / "metadata.json"
     if not meta_path.exists():
@@ -234,6 +364,7 @@ def list_domain_nodes(domain: str) -> list[dict[str, Any]]:
                 "title": meta.get("title", item.name),
                 "description": meta.get("description", ""),
                 "status": meta.get("status", "draft"),
+                "type": meta.get("type", "leaf"),
                 "path": str(item),
             }
         )

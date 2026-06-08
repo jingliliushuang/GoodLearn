@@ -2,5 +2,7 @@
   "id": "denoise",
   "title": "图像去噪",
   "description": "从含噪图像中恢复干净图像",
-  "type": "denoise"
+  "type": "leaf",
+  "domain": "cv",
+  "status": "ready"
 }

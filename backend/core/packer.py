@@ -39,7 +39,61 @@ def _has_function(source: str, name: str) -> bool:
     return bool(re.search(pattern, source))
 
 
-def validate_node(node_path: Path) -> dict[str, Any]:
+def _infer_domain_from_path(node_path: Path) -> str | None:
+    root = get_knowledge_root().resolve()
+    try:
+        rel = node_path.resolve().relative_to(root)
+        if rel.parts:
+            return rel.parts[0]
+    except ValueError:
+        pass
+    return None
+
+
+def patch_node_metadata(
+    node_path: Path,
+    domain_hint: str | None = None,
+) -> list[str]:
+    """Fill missing metadata fields in place. Returns warnings."""
+    warnings: list[str] = []
+    meta_path = node_path / "metadata.json"
+    if not meta_path.exists():
+        return warnings
+
+    with open(meta_path, encoding="utf-8") as f:
+        meta = json.load(f)
+
+    changed = False
+    folder_name = node_path.name
+
+    if not meta.get("id"):
+        meta["id"] = folder_name
+        warnings.append(f"metadata.json 缺少 id，已从文件夹名推断为 {folder_name} 并已写回")
+        changed = True
+
+    if not meta.get("domain"):
+        inferred = domain_hint or _infer_domain_from_path(node_path)
+        if inferred:
+            meta["domain"] = inferred
+            warnings.append(
+                f"metadata.json 缺少 domain，已从路径推断为 {inferred} 并已写回"
+            )
+            changed = True
+
+    if not meta.get("status"):
+        meta["status"] = "draft"
+        warnings.append("metadata.json 缺少 status，已补为 draft")
+        changed = True
+
+    if changed:
+        with open(meta_path, "w", encoding="utf-8") as f:
+            json.dump(meta, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+
+    return warnings
+
+
+def validate_node(node_path: Path, domain_hint: str | None = None) -> dict[str, Any]:
     """Validate node folder structure without executing Python code."""
     errors: list[str] = []
     warnings: list[str] = []
@@ -57,9 +111,27 @@ def validate_node(node_path: Path) -> dict[str, Any]:
         errors.append("metadata.json 不是合法 JSON")
         meta = {}
 
-    for key in ("id", "title", "type", "domain"):
+    for key in ("id", "title", "type"):
         if not meta.get(key):
-            errors.append(f"metadata.json 缺少字段: {key}")
+            if key == "id":
+                inferred_id = node_path.name
+                if inferred_id:
+                    warnings.append(
+                        f"metadata.json 缺少 id，可从文件夹名推断为 {inferred_id}（导出前将自动补齐）"
+                    )
+                else:
+                    errors.append("metadata.json 缺少字段: id")
+            else:
+                errors.append(f"metadata.json 缺少字段: {key}")
+
+    if not meta.get("domain"):
+        inferred = domain_hint or _infer_domain_from_path(node_path)
+        if inferred:
+            warnings.append(
+                f"metadata.json 缺少 domain，可从路径推断为 {inferred}（导出前将自动补齐）"
+            )
+        else:
+            errors.append("metadata.json 缺少字段: domain")
 
     if not (node_path / "content.md").exists() and not (node_path / "README.md").exists():
         warnings.append("缺少 content.md 或 README.md")
@@ -134,7 +206,9 @@ def export_node(
     if not node_dir.exists():
         raise FileNotFoundError(f"节点不存在: {domain_id}/{node_id}")
 
-    validation = validate_node(node_dir)
+    patch_warnings = patch_node_metadata(node_dir, domain_hint=domain_id)
+    validation = validate_node(node_dir, domain_hint=domain_id)
+    validation["warnings"] = patch_warnings + validation.get("warnings", [])
     if not validation["valid"]:
         raise ValueError("节点结构校验失败: " + "; ".join(validation["errors"]))
 

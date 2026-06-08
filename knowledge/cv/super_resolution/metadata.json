@@ -2,5 +2,7 @@
   "id": "super_resolution",
   "title": "图像超分辨率",
   "description": "从低分辨率图像恢复高分辨率图像",
-  "type": "super_resolution"
+  "type": "leaf",
+  "domain": "cv",
+  "status": "ready"
 }
