@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import {
   createMethodTemplate,
   createNodeTemplate,
+  deleteMethod,
+  deleteNode,
   exportNode,
   fetchDomains,
   fetchManagerNodes,
@@ -62,9 +64,40 @@ export default function NodeManagerPage() {
   const [exportResult, setExportResult] = useState(null);
   const [importResult, setImportResult] = useState(null);
 
+  const [deleteNodeId, setDeleteNodeId] = useState('');
+  const [deleteNodeReason, setDeleteNodeReason] = useState('');
+  const [deleteNodeConfirmText, setDeleteNodeConfirmText] = useState('');
+  const [deleteNodeResult, setDeleteNodeResult] = useState(null);
+
+  const [deleteMethodNodeId, setDeleteMethodNodeId] = useState('');
+  const [deleteMethodId, setDeleteMethodId] = useState('');
+  const [deleteMethodReason, setDeleteMethodReason] = useState('');
+  const [deleteMethodConfirmText, setDeleteMethodConfirmText] = useState('');
+  const [deleteMethodResult, setDeleteMethodResult] = useState(null);
+
   const leafNodes = useMemo(
     () => nodes.filter((n) => n.type === 'leaf'),
     [nodes],
+  );
+
+  const deleteTargetNode = useMemo(
+    () => nodes.find((n) => n.id === deleteNodeId),
+    [nodes, deleteNodeId],
+  );
+
+  const deleteMethodTargetNode = useMemo(
+    () => nodes.find((n) => n.id === deleteMethodNodeId),
+    [nodes, deleteMethodNodeId],
+  );
+
+  const deletableMethods = useMemo(
+    () => deleteMethodTargetNode?.methods || [],
+    [deleteMethodTargetNode],
+  );
+
+  const selectedDeleteMethod = useMemo(
+    () => deletableMethods.find((m) => m.id === deleteMethodId),
+    [deletableMethods, deleteMethodId],
   );
 
   const loadNodes = useCallback(() => {
@@ -76,10 +109,19 @@ export default function NodeManagerPage() {
         if (leaves.length) {
           setExportNodeId((prev) => (prev && leaves.some((n) => n.id === prev) ? prev : leaves[0].id));
           setMethodNodeId((prev) => (prev && leaves.some((n) => n.id === prev) ? prev : leaves[0].id));
+          setDeleteNodeId((prev) => (prev && list.some((n) => n.id === prev) ? prev : leaves[0].id));
+          setDeleteMethodNodeId((prev) => (prev && leaves.some((n) => n.id === prev) ? prev : leaves[0].id));
+        }
+        const methodNode = list.find((n) => n.id === deleteMethodNodeId) || leaves[0];
+        const methods = methodNode?.methods || [];
+        if (methods.length) {
+          setDeleteMethodId((prev) => (prev && methods.some((m) => m.id === prev) ? prev : methods[0].id));
+        } else {
+          setDeleteMethodId('');
         }
       })
       .catch(() => setNodes([]));
-  }, [domain]);
+  }, [domain, deleteMethodNodeId]);
 
   useEffect(() => {
     fetchDomains().then(setDomains).catch(() => setDomains([]));
@@ -167,6 +209,55 @@ export default function NodeManagerPage() {
     }
   };
 
+  const handleDeleteNode = async () => {
+    if (deleteNodeConfirmText !== 'DELETE') return;
+    if (!window.confirm('该操作会将节点移动到回收站，是否继续？')) return;
+
+    setLoading('delete-node');
+    setError(null);
+    setDeleteNodeResult(null);
+    try {
+      const result = await deleteNode({
+        domain,
+        node_id: deleteNodeId,
+        confirm: true,
+        reason: deleteNodeReason.trim() || '用户删除节点',
+      });
+      setDeleteNodeResult(result);
+      setDeleteNodeConfirmText('');
+      loadNodes();
+    } catch (err) {
+      setError(err.response?.data?.detail || err.message);
+    } finally {
+      setLoading('');
+    }
+  };
+
+  const handleDeleteMethod = async () => {
+    if (deleteMethodConfirmText !== 'DELETE') return;
+    if (!window.confirm('该操作会将方法移动到回收站，是否继续？')) return;
+
+    setLoading('delete-method');
+    setError(null);
+    setDeleteMethodResult(null);
+    try {
+      const result = await deleteMethod({
+        domain,
+        node_id: deleteMethodNodeId,
+        method_id: deleteMethodId,
+        confirm: true,
+        reason: deleteMethodReason.trim() || '用户删除方法',
+      });
+      setDeleteMethodResult(result);
+      setDeleteMethodConfirmText('');
+      loadNodes();
+    } catch (err) {
+      setError(err.response?.data?.detail || err.message);
+    } finally {
+      setLoading('');
+    }
+  };
+
   const domainOptions = domains.length
     ? domains.filter((d) => d.status === 'ready').map((d) => d.id)
     : ['cv'];
@@ -180,6 +271,7 @@ export default function NodeManagerPage() {
         <p><strong>方法模板：</strong>在已有节点下创建算法方法，例如在图像超分下创建 SRCNN / ESPCN，在图像去噪下创建 DnCNN。</p>
         <p><strong>导出节点：</strong>将整个任务节点打包为 zip，默认不导出模型权重。</p>
         <p><strong>导入节点：</strong>导入标准节点 zip 并校验结构，不会执行其中代码。</p>
+        <p><strong>删除节点 / 方法：</strong>软删除到 <code>backend/runtime/trash/</code>，核心节点与方法受保护。第一版无 UI 恢复，可手动从 trash 复制回 knowledge/。</p>
       </div>
 
       {error && <div className="error manager-error">{error}</div>}
@@ -404,6 +496,155 @@ export default function NodeManagerPage() {
             <p>已导入：{importResult.domain}/{importResult.node_id}</p>
             <p><code>{importResult.node_path}</code></p>
             <ValidationBox validation={importResult.validation} />
+          </div>
+        )}
+      </section>
+
+      <section className="manager-section card manager-delete-section">
+        <h2 className="section-title">删除节点</h2>
+        <p className="card-desc manager-risk">删除为软删除，目录将移动到 backend/runtime/trash/。</p>
+        <div className="manager-form-grid">
+          <label>
+            领域
+            <select value={domain} onChange={(e) => setDomain(e.target.value)}>
+              {domainOptions.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            节点
+            <select value={deleteNodeId} onChange={(e) => setDeleteNodeId(e.target.value)}>
+              {nodes.map((n) => (
+                <option key={n.id} value={n.id}>
+                  {n.title} ({n.id}) {n.protected ? '[保护]' : ''}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="span-2">
+            删除原因（可选）
+            <input
+              value={deleteNodeReason}
+              onChange={(e) => setDeleteNodeReason(e.target.value)}
+              placeholder="例如：测试节点清理"
+            />
+          </label>
+          <label className="span-2">
+            确认输入 DELETE
+            <input
+              value={deleteNodeConfirmText}
+              onChange={(e) => setDeleteNodeConfirmText(e.target.value)}
+              placeholder="输入 DELETE 以启用删除"
+            />
+          </label>
+        </div>
+        {deleteTargetNode?.protected && (
+          <p className="manager-blocked">系统核心节点，禁止删除。</p>
+        )}
+        {deleteTargetNode && !deleteTargetNode.deletable && !deleteTargetNode.protected && (
+          <p className="manager-blocked">{deleteTargetNode.delete_blocked_reason}</p>
+        )}
+        <button
+          type="button"
+          className="btn btn-danger"
+          disabled={
+            loading === 'delete-node'
+            || deleteNodeConfirmText !== 'DELETE'
+            || !deleteNodeId
+            || deleteTargetNode?.protected
+            || (deleteTargetNode && !deleteTargetNode.deletable)
+          }
+          onClick={handleDeleteNode}
+        >
+          {loading === 'delete-node' ? '删除中...' : '删除节点'}
+        </button>
+        {deleteNodeResult && (
+          <div className="manager-result">
+            <p>{deleteNodeResult.message}</p>
+            <p><code>{deleteNodeResult.trash_path}</code></p>
+            <p className="card-desc">已移动到回收站，可在 backend/runtime/trash 中找回。</p>
+          </div>
+        )}
+      </section>
+
+      <section className="manager-section card manager-delete-section">
+        <h2 className="section-title">删除方法</h2>
+        <div className="manager-form-grid">
+          <label>
+            领域
+            <select value={domain} onChange={(e) => setDomain(e.target.value)}>
+              {domainOptions.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            所属节点
+            <select
+              value={deleteMethodNodeId}
+              onChange={(e) => {
+                setDeleteMethodNodeId(e.target.value);
+                const node = nodes.find((n) => n.id === e.target.value);
+                setDeleteMethodId(node?.methods?.[0]?.id || '');
+              }}
+            >
+              {leafNodes.map((n) => (
+                <option key={n.id} value={n.id}>{n.title} ({n.id})</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            方法
+            <select value={deleteMethodId} onChange={(e) => setDeleteMethodId(e.target.value)}>
+              {deletableMethods.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.title} ({m.id}) {m.protected ? '[保护]' : ''}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="span-2">
+            删除原因（可选）
+            <input
+              value={deleteMethodReason}
+              onChange={(e) => setDeleteMethodReason(e.target.value)}
+            />
+          </label>
+          <label className="span-2">
+            确认输入 DELETE
+            <input
+              value={deleteMethodConfirmText}
+              onChange={(e) => setDeleteMethodConfirmText(e.target.value)}
+              placeholder="输入 DELETE 以启用删除"
+            />
+          </label>
+        </div>
+        {selectedDeleteMethod?.protected && (
+          <p className="manager-blocked">核心方法，禁止删除。</p>
+        )}
+        {selectedDeleteMethod && !selectedDeleteMethod.deletable && !selectedDeleteMethod.protected && (
+          <p className="manager-blocked">{selectedDeleteMethod.delete_blocked_reason}</p>
+        )}
+        <button
+          type="button"
+          className="btn btn-danger"
+          disabled={
+            loading === 'delete-method'
+            || deleteMethodConfirmText !== 'DELETE'
+            || !deleteMethodId
+            || selectedDeleteMethod?.protected
+            || (selectedDeleteMethod && !selectedDeleteMethod.deletable)
+          }
+          onClick={handleDeleteMethod}
+        >
+          {loading === 'delete-method' ? '删除中...' : '删除方法'}
+        </button>
+        {deleteMethodResult && (
+          <div className="manager-result">
+            <p>{deleteMethodResult.message}</p>
+            <p><code>{deleteMethodResult.trash_path}</code></p>
+            <p className="card-desc">已移动到回收站，可在 backend/runtime/trash 中找回。</p>
           </div>
         )}
       </section>

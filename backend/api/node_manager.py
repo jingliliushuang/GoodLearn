@@ -1,7 +1,8 @@
 from fastapi import APIRouter, File, Form, HTTPException, Query, UploadFile
 from pydantic import BaseModel
 
-from core.node_generator import create_method_template, create_node_template, list_domain_nodes
+from core.delete_manager import list_domain_nodes_detail, safe_delete_method, safe_delete_node
+from core.node_generator import create_method_template, create_node_template
 from core.packer import export_node, import_node, validate_node
 from core.tree import get_node_dir
 
@@ -33,9 +34,24 @@ class CreateMethodTemplateRequest(BaseModel):
     available: bool = False
 
 
+class DeleteNodeRequest(BaseModel):
+    domain: str
+    node_id: str
+    confirm: bool = False
+    reason: str = ""
+
+
+class DeleteMethodRequest(BaseModel):
+    domain: str
+    node_id: str
+    method_id: str
+    confirm: bool = False
+    reason: str = ""
+
+
 @router.get("/nodes")
 def get_nodes(domain: str = Query("cv")):
-    return {"domain": domain, "nodes": list_domain_nodes(domain)}
+    return {"domain": domain, "nodes": list_domain_nodes_detail(domain)}
 
 
 @router.post("/create-template")
@@ -76,6 +92,49 @@ def create_method_template_api(body: CreateMethodTemplateRequest):
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@router.delete("/node")
+def delete_node_api(body: DeleteNodeRequest):
+    try:
+        result = safe_delete_node(
+            body.domain,
+            body.node_id,
+            confirm=body.confirm,
+            reason=body.reason,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+    if not result.get("success"):
+        raise HTTPException(status_code=403, detail=result.get("message", "删除被拒绝"))
+    return result
+
+
+@router.delete("/method")
+def delete_method_api(body: DeleteMethodRequest):
+    try:
+        result = safe_delete_method(
+            body.domain,
+            body.node_id,
+            body.method_id,
+            confirm=body.confirm,
+            reason=body.reason,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+    if not result.get("success"):
+        raise HTTPException(status_code=403, detail=result.get("message", "删除被拒绝"))
+    return result
 
 
 @router.post("/validate")

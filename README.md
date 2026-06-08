@@ -164,6 +164,12 @@ Pipeline Builder 与模型对比实验暂使用**默认参数**。
 
 方法模板默认 `available=false`，显示「方法模板已创建，模型实现或权重暂未接入」，不影响其他可运行方法。
 
+**删除（软删除）：**
+- `DELETE /api/node-manager/node` — 将节点移动到 `backend/runtime/trash/`
+- `DELETE /api/node-manager/method` — 将方法移动到回收站
+- 系统核心节点（denoise、super_resolution 等）与核心方法（espcn、edsr 等）受保护，不可删除
+- draft / 模板方法可删除；第一版无 UI 恢复，可手动从 trash 复制回 `knowledge/`
+
 前端入口：首页或顶栏 **节点管理**。
 
 ## CV 模块扩展（特征匹配 / 分类 / 检测）

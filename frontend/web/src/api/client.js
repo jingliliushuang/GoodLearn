@@ -111,6 +111,16 @@ export async function createMethodTemplate(payload) {
   return data;
 }
 
+export async function deleteNode(payload) {
+  const { data } = await client.delete('/api/node-manager/node', { data: payload });
+  return data;
+}
+
+export async function deleteMethod(payload) {
+  const { data } = await client.delete('/api/node-manager/method', { data: payload });
+  return data;
+}
+
 export async function exportNode(payload) {
   const { data } = await client.post('/api/node-manager/export', payload);
   return data;

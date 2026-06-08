@@ -16,6 +16,7 @@ backend/runtime/temp/
 backend/runtime/experiments/
 backend/runtime/pipelines/
 backend/runtime/comparisons/
+backend/runtime/trash/
 backend/logs/
 
 # Node

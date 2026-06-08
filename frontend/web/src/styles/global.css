@@ -250,6 +250,31 @@ a:hover {
   margin-bottom: 0;
 }
 
+.btn-danger {
+  background: var(--danger);
+  color: var(--btn-primary-text);
+  border: none;
+}
+
+.btn-danger:hover:not(:disabled) {
+  filter: brightness(0.92);
+}
+
+.btn-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.manager-delete-section {
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.manager-blocked {
+  color: var(--warning);
+  font-size: 0.85rem;
+  margin: 0.5rem 0;
+}
+
 .manager-form-grid .span-2 {
   grid-column: span 2;
 }
