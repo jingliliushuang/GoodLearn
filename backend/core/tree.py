@@ -60,6 +60,14 @@ def load_node_resources(domain_id: str, node_id: str) -> list[dict[str, Any]]:
         return json.load(f)
 
 
+def load_node_experiment_config(domain_id: str, node_id: str) -> dict[str, Any] | None:
+    path = get_node_dir(domain_id, node_id) / "experiment.json"
+    if not path.exists():
+        return None
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
 def list_node_methods(domain_id: str, node_id: str) -> list[dict[str, Any]]:
     methods_dir = get_node_dir(domain_id, node_id) / "methods"
     if not methods_dir.exists():

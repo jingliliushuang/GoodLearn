@@ -212,6 +212,25 @@ GoodLearnApp/
 
 ---
 
+## 标准实验后端
+
+节点实验结构已从单次模型测试升级为**标准三阶段实验**：
+
+| 组件 | 职责 |
+|------|------|
+| `experiment.json` | 实验配置入口（退化方法、评价指标） |
+| `dataset.py` | 测试集生成 / 数据退化 |
+| `methods/{method}/model.py` | 模型推理 / 预测 |
+| `metrics.py` | 结果评价（MSE / PSNR / SSIM） |
+| `backend/core/standard_experiment.py` | 统一三阶段执行器 |
+| `POST /api/experiments/run-standard` | 标准实验 API |
+
+**已实现**：`denoise`、`super_resolution` 的 `experiment.json` + 前端 `StandardExperimentPanel`。
+
+**暂未接入标准流程**：`feature_matching`（双图输入，专用实验面板）；`image_classification` / `object_detection`（theory_first，模型推理待接入）。
+
+---
+
 ## 9. 最小整改方案
 
 ### P0：必须立即修复

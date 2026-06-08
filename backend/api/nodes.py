@@ -8,6 +8,7 @@ from core.tree import (
     load_all_method_details,
     load_learning_path,
     load_node_content,
+    load_node_experiment_config,
     load_node_metadata,
     load_node_papers,
     load_node_references,
@@ -25,6 +26,7 @@ def get_node(domain_id: str, node_id: str):
         papers = load_node_papers(domain_id, node_id)
         references = load_node_references(domain_id, node_id)
         resources = load_node_resources(domain_id, node_id)
+        experiment_config = load_node_experiment_config(domain_id, node_id)
         methods = check_node_methods(domain_id, node_id)
         learning_path = load_learning_path(domain_id, node_id)
         method_details = load_all_method_details(domain_id, node_id)
@@ -48,6 +50,7 @@ def get_node(domain_id: str, node_id: str):
         "mode": meta.get("mode", "runnable"),
         "learning_path": learning_path,
         "method_details": method_details,
+        "experiment_config": experiment_config,
         "has_demos": meta.get("has_demos", False),
         "demo_type": meta.get("demo_type", ""),
     }

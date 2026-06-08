@@ -52,6 +52,15 @@ runtime_comparisons = get_comparisons_dir()
 runtime_comparisons.mkdir(parents=True, exist_ok=True)
 app.mount("/runtime/comparisons", StaticFiles(directory=str(runtime_comparisons)), name="runtime_comparisons")
 
+backend_runtime = Path(__file__).resolve().parent / "runtime"
+standard_experiments_dir = backend_runtime / "standard_experiments"
+standard_experiments_dir.mkdir(parents=True, exist_ok=True)
+app.mount(
+    "/runtime/standard_experiments",
+    StaticFiles(directory=str(standard_experiments_dir)),
+    name="runtime_standard_experiments",
+)
+
 exports_dir = get_exports_dir()
 exports_dir.mkdir(parents=True, exist_ok=True)
 app.mount("/outputs/exports", StaticFiles(directory=str(exports_dir)), name="exports")

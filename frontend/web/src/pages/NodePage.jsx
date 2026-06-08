@@ -7,6 +7,8 @@ import LearningResources from '../components/LearningResources';
 import ReferenceList from '../components/ReferenceList';
 import MethodSelector from '../components/MethodSelector';
 import ModelTester from '../components/ModelTester';
+import StandardExperimentPanel from '../components/StandardExperimentPanel';
+import ExperimentHistory from '../components/ExperimentHistory';
 import TimerCalculator from '../components/demos/TimerCalculator';
 import RoundRobinDemo from '../components/demos/RoundRobinDemo';
 import SuperResolutionNodePage from './SuperResolutionNodePage';
@@ -17,6 +19,7 @@ export default function NodePage() {
   const { domainId, nodeId } = useParams();
   const [node, setNode] = useState(null);
   const [selectedMethod, setSelectedMethod] = useState(null);
+  const [experimentRefresh, setExperimentRefresh] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -64,6 +67,9 @@ export default function NodePage() {
   const showTimerDemo = domainId === 'embedded' && nodeId === 'timer';
   const showRoundRobinDemo = domainId === 'operating_system' && nodeId === 'process_scheduling';
 
+  const hasExperiment = Boolean(node.experiment_config);
+  const learningTitle = hasExperiment ? '学习板块' : '教学内容';
+
   return (
     <div>
       <Link to={`/domain/${domainId}`} className="back-link">← 返回领域</Link>
@@ -73,29 +79,29 @@ export default function NodePage() {
         <span className={`badge badge-diff badge-diff-${node.difficulty}`}>{node.difficulty}</span>
       )}
 
-      <section className="section">
-        <h2 className="section-title">教学内容</h2>
+      <section className={`section ${hasExperiment ? 'learning-section' : ''}`}>
+        <h2 className="section-title">{learningTitle}</h2>
         <div className="card">
           <MarkdownViewer content={node.content_markdown} />
         </div>
       </section>
 
       {hasPapers && (
-        <section className="section">
+        <section className={`section ${hasExperiment ? 'learning-section' : ''}`}>
           <h2 className="section-title">相关论文与方法</h2>
           <PaperList papers={node.papers} />
         </section>
       )}
 
       {hasResources && (
-        <section className="section">
+        <section className={`section ${hasExperiment ? 'learning-section' : ''}`}>
           <h2 className="section-title">学习资料</h2>
           <LearningResources resources={node.resources} />
         </section>
       )}
 
       {hasReferences && (
-        <section className="section">
+        <section className={`section ${hasExperiment ? 'learning-section' : ''}`}>
           <h2 className="section-title">参考资料</h2>
           <ReferenceList references={node.references} />
         </section>
@@ -115,7 +121,53 @@ export default function NodePage() {
         </section>
       )}
 
-      {hasMethods && (
+      {hasExperiment && (
+        <section className="section experiment-section">
+          <h2 className="section-title">实验板块</h2>
+
+          <StandardExperimentPanel
+            domain={domainId}
+            node={nodeId}
+            nodeData={node}
+            onRunComplete={() => setExperimentRefresh((k) => k + 1)}
+          />
+
+          {hasMethods && (
+            <>
+              <section className="section">
+                <h3 className="subsection-title">模型选择</h3>
+                <MethodSelector
+                  methods={methods}
+                  selected={selectedMethod}
+                  onSelect={setSelectedMethod}
+                />
+              </section>
+
+              <section className="section">
+                <h3 className="subsection-title">单模型测试</h3>
+                <ModelTester
+                  domainId={domainId}
+                  nodeId={nodeId}
+                  methods={methods}
+                  selectedMethod={selectedMethod}
+                  onRunComplete={() => setExperimentRefresh((k) => k + 1)}
+                />
+              </section>
+
+              <section className="section">
+                <h3 className="subsection-title">最近实验记录</h3>
+                <ExperimentHistory
+                  domainId={domainId}
+                  nodeId={nodeId}
+                  refreshKey={experimentRefresh}
+                />
+              </section>
+            </>
+          )}
+        </section>
+      )}
+
+      {!hasExperiment && hasMethods && (
         <section className="section">
           <h2 className="section-title">模型选择</h2>
           <MethodSelector
@@ -126,7 +178,7 @@ export default function NodePage() {
         </section>
       )}
 
-      {hasMethods && (
+      {!hasExperiment && hasMethods && (
         <section className="section">
           <h2 className="section-title">模型测试</h2>
           <ModelTester
@@ -138,7 +190,7 @@ export default function NodePage() {
         </section>
       )}
 
-      {!hasMethods && !showTimerDemo && !showRoundRobinDemo && (
+      {!hasMethods && !showTimerDemo && !showRoundRobinDemo && !hasExperiment && (
         <section className="section">
           <div className="warn-box">该节点暂无可运行实验，请阅读教学内容与参考资料。</div>
         </section>

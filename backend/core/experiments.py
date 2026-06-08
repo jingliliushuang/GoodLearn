@@ -19,6 +19,8 @@ def save_experiment(record: dict[str, Any]) -> Path:
         filename = f"{run_id}_pipeline.json"
     elif record.get("type") == "comparison":
         filename = f"{run_id}_comparison.json"
+    elif record.get("type") == "standard_experiment":
+        filename = f"{run_id}_standard.json"
     else:
         method = record.get("method", "unknown")
         filename = f"{run_id}_{method}.json"
@@ -62,6 +64,9 @@ def list_experiments(
             if method:
                 if record.get("type") == "comparison":
                     if method not in record.get("methods", []):
+                        continue
+                elif record.get("type") == "standard_experiment":
+                    if record.get("method", {}).get("id") != method:
                         continue
                 elif record.get("method") != method:
                     continue

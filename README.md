@@ -128,6 +128,31 @@ E:\A_Exp_ML\GoodLearnApp\stop_dev.bat
 
 > 当前仍为**开发阶段**，使用 `start_dev.bat` 启动，**不要** build / 打包 exe。
 
+## 标准三阶段实验
+
+GoodLearnApp 的专业节点现在分为**学习板块**和**实验板块**。
+
+学习板块包括：
+
+- `content.md`：教学内容
+- `papers.json`：论文资料
+- `resources.json`：学习资料
+- `methods/{method}/detail.json`：方法详情
+
+实验板块统一抽象为三个阶段：
+
+1. **测试集生成**：由 `dataset.py` 提供退化方法，例如高斯噪声、Bicubic 下采样
+2. **模型推理**：由 `methods/{method}/model.py` 提供 `process()`
+3. **结果评价**：由 `metrics.py` 提供 `evaluate()`，支持 MSE、PSNR、SSIM、Runtime 等指标
+
+`denoise` 和 `super_resolution` 已配置 `experiment.json` 并支持标准三阶段实验 UI（`StandardExperimentPanel`）。
+
+API：`POST /api/experiments/run-standard`（multipart：image、domain、node、degradation、method、degradation_params、method_params、metrics）
+
+输出保存至 `backend/runtime/standard_experiments/{id}/`，并写入 `runtime/experiments/` 实验记录（`type: standard_experiment`）。
+
+原有单模型测试、模型对比实验、Pipeline Builder 保持不变。
+
 ## 模型对比实验（Model Comparison Lab）
 
 图像超分节点支持**多方法同图对比**：

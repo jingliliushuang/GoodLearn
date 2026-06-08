@@ -1,0 +1,128 @@
+{
+  "id": "super_resolution_standard_experiment",
+  "title": "图像超分标准实验",
+  "description": "通过生成低分辨率图像、执行超分方法、计算评价指标，完成标准图像超分实验。",
+  "input_type": "single_image",
+  "stages": {
+    "dataset_generation": {
+      "enabled": true,
+      "title": "测试集生成",
+      "description": "从高分辨率图像生成低分辨率测试图像。",
+      "methods": [
+        {
+          "id": "bicubic_downsample",
+          "title": "Bicubic 下采样",
+          "description": "使用双三次插值生成低分辨率图像，是超分常见退化方式。",
+          "params_schema": [
+            {
+              "name": "scale",
+              "label": "下采样倍率",
+              "type": "select",
+              "default": 2,
+              "options": [2, 3, 4],
+              "description": "scale=2 表示宽高各缩小 2 倍。"
+            }
+          ]
+        },
+        {
+          "id": "bilinear_downsample",
+          "title": "Bilinear 下采样",
+          "description": "使用双线性插值生成低分辨率图像。",
+          "params_schema": [
+            {
+              "name": "scale",
+              "label": "下采样倍率",
+              "type": "select",
+              "default": 2,
+              "options": [2, 3, 4],
+              "description": "scale=2 表示宽高各缩小 2 倍。"
+            }
+          ]
+        },
+        {
+          "id": "blur_downsample",
+          "title": "模糊 + 下采样",
+          "description": "先进行高斯模糊，再下采样，更接近真实退化。",
+          "params_schema": [
+            {
+              "name": "scale",
+              "label": "下采样倍率",
+              "type": "select",
+              "default": 2,
+              "options": [2, 3, 4],
+              "description": "scale=2 表示宽高各缩小 2 倍。"
+            },
+            {
+              "name": "sigma",
+              "label": "模糊强度",
+              "type": "number",
+              "default": 1.2,
+              "min": 0.1,
+              "max": 5.0,
+              "step": 0.1,
+              "description": "sigma 越大，退化图越模糊。"
+            }
+          ]
+        },
+        {
+          "id": "noise_downsample",
+          "title": "噪声 + 下采样",
+          "description": "在下采样前加入轻微噪声，用于模拟真实采集过程。",
+          "params_schema": [
+            {
+              "name": "scale",
+              "label": "下采样倍率",
+              "type": "select",
+              "default": 2,
+              "options": [2],
+              "description": "当前 ESPCN / EDSR 权重主要支持 x2，因此推荐 scale=2。"
+            },
+            {
+              "name": "sigma",
+              "label": "噪声标准差",
+              "type": "number",
+              "default": 5,
+              "min": 1,
+              "max": 30,
+              "step": 1,
+              "description": "噪声越大，重建越困难。"
+            }
+          ]
+        }
+      ]
+    },
+    "inference": {
+      "enabled": true,
+      "title": "模型推理",
+      "description": "选择当前超分节点下的可运行方法进行恢复。",
+      "methods_from": "methods"
+    },
+    "evaluation": {
+      "enabled": true,
+      "title": "结果评价",
+      "description": "比较 clean 图像和 recovered 图像，计算评价指标。",
+      "metrics": [
+        {
+          "id": "mse",
+          "title": "MSE",
+          "description": "均方误差，越低越好。"
+        },
+        {
+          "id": "psnr",
+          "title": "PSNR",
+          "description": "峰值信噪比，越高越好。"
+        },
+        {
+          "id": "ssim",
+          "title": "SSIM",
+          "description": "结构相似性，越接近 1 越好。"
+        },
+        {
+          "id": "runtime_ms",
+          "title": "运行时间",
+          "description": "模型推理耗时。"
+        }
+      ]
+    }
+  }
+}

@@ -25,6 +25,14 @@ def _add_noise(image: np.ndarray, sigma: float = 25.0) -> np.ndarray:
     return noisy
 
 
+def _extract_degraded(degrade_result: Any) -> np.ndarray:
+    if isinstance(degrade_result, dict):
+        degraded = degrade_result.get("degraded")
+        if degraded is not None:
+            return degraded
+    return degrade_result
+
+
 def _prepare_input(
     image: np.ndarray,
     domain_id: str,
@@ -38,8 +46,11 @@ def _prepare_input(
     """
     degrade_fn = load_degrade_fn(domain_id, node_id)
     if degrade_fn is not None and node_id != "super_resolution":
-        degraded = degrade_fn(image)
-        return degraded, image
+        if node_id == "denoise":
+            result = degrade_fn(image, degradation="gaussian_noise", sigma=25)
+        else:
+            result = degrade_fn(image)
+        return _extract_degraded(result), image
 
     if node_id == "denoise":
         noisy = _add_noise(image)

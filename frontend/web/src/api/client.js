@@ -34,6 +34,33 @@ export async function runModel(domain, node, method, imageFile, params = {}) {
   return data;
 }
 
+export async function runStandardExperiment({
+  image,
+  domain,
+  node,
+  degradation,
+  method,
+  degradationParams = {},
+  methodParams = {},
+  metrics = [],
+}) {
+  const form = new FormData();
+  form.append('image', image);
+  form.append('domain', domain);
+  form.append('node', node);
+  form.append('degradation', degradation);
+  form.append('method', method);
+  form.append('degradation_params', JSON.stringify(degradationParams));
+  form.append('method_params', JSON.stringify(methodParams));
+  form.append('metrics', JSON.stringify(metrics));
+
+  const { data } = await client.post('/api/experiments/run-standard', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 120000,
+  });
+  return data;
+}
+
 export async function runFeatureMatching(domain, node, method, imageA, imageB, params = {}) {
   const form = new FormData();
   form.append('domain', domain);
