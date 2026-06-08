@@ -2164,3 +2164,18 @@ a:hover {
     grid-template-columns: 1fr;
   }
 }
+
+.error-boundary {
+  margin: 40px;
+  padding: 24px;
+  border-radius: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--danger);
+  color: var(--text-main);
+}
+
+.error-boundary pre {
+  white-space: pre-wrap;
+  color: var(--danger);
+  margin: 1rem 0;
+}

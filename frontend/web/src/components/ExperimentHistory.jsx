@@ -11,7 +11,12 @@ function formatMethodCell(rec) {
   if (rec.type === 'pipeline') {
     return `流水线 (${rec.steps?.length || 0} 步)`;
   }
-  const base = rec.method || '-';
+  if (rec.type === 'standard_experiment') {
+    const methodId = typeof rec.method === 'object' ? rec.method?.id : rec.method;
+    const deg = rec.degradation?.id;
+    return deg ? `标准实验: ${deg} → ${methodId || '-'}` : `标准实验: ${methodId || '-'}`;
+  }
+  const base = typeof rec.method === 'object' ? rec.method?.id : (rec.method || '-');
   const paramsStr = formatParamsBrief(rec.params);
   return paramsStr ? `${base} / ${paramsStr}` : base;
 }
@@ -24,7 +29,7 @@ export default function ExperimentHistory({ domainId, nodeId, refreshKey }) {
   const load = useCallback(() => {
     setLoading(true);
     fetchExperiments(domainId, nodeId)
-      .then(setRecords)
+      .then((data) => setRecords(Array.isArray(data) ? data : []))
       .catch(() => setRecords([]))
       .finally(() => setLoading(false));
   }, [domainId, nodeId]);

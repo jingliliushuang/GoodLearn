@@ -15,6 +15,23 @@ import SuperResolutionNodePage from './SuperResolutionNodePage';
 import FeatureMatchingNodePage from './FeatureMatchingNodePage';
 import TheoryNodePage from './TheoryNodePage';
 
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function normalizeNodeData(data) {
+  if (!data || typeof data !== 'object') return null;
+  return {
+    ...data,
+    methods: asArray(data.methods),
+    papers: asArray(data.papers),
+    resources: asArray(data.resources),
+    references: asArray(data.references),
+    content_markdown: data.content_markdown || '',
+    experiment_config: data.experiment_config || null,
+  };
+}
+
 export default function NodePage() {
   const { domainId, nodeId } = useParams();
   const [node, setNode] = useState(null);
@@ -24,24 +41,39 @@ export default function NodePage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    setLoading(true);
+    setError(null);
+    setNode(null);
+
     fetchNode(domainId, nodeId)
       .then((data) => {
-        setNode(data);
-        const methods = data.methods || [];
-        const firstAvailable = methods.find((m) => m.available);
+        const normalized = normalizeNodeData(data);
+        if (!normalized) {
+          throw new Error('节点数据为空');
+        }
+        setNode(normalized);
+        const methods = normalized.methods;
+        const firstAvailable = methods.find((m) => m?.available);
         if (firstAvailable) {
           setSelectedMethod(firstAvailable.id);
         } else if (methods.length > 0) {
           setSelectedMethod(methods[0].id);
+        } else {
+          setSelectedMethod(null);
         }
       })
-      .catch((err) => setError(err.message))
+      .catch((err) => {
+        setError(err.response?.data?.detail || err.message || '加载失败');
+        setNode(null);
+      })
       .finally(() => setLoading(false));
   }, [domainId, nodeId]);
 
   if (loading) return <div className="loading">加载中...</div>;
   if (error) return <div className="error">加载失败：{error}</div>;
-  if (!node) return null;
+  if (!node) {
+    return <div className="error">节点数据不可用，请返回重试。</div>;
+  }
 
   const isSuperResolution = domainId === 'cv' && nodeId === 'super_resolution';
   const isFeatureMatching = domainId === 'cv' && nodeId === 'feature_matching';
@@ -59,22 +91,35 @@ export default function NodePage() {
     return <TheoryNodePage node={node} domainId={domainId} nodeId={nodeId} />;
   }
 
-  const methods = node.methods || [];
-  const hasPapers = node.papers && node.papers.length > 0;
-  const hasResources = node.resources && node.resources.length > 0;
-  const hasReferences = node.references && node.references.length > 0;
+  const methods = node.methods;
+  const papers = node.papers;
+  const resources = node.resources;
+  const references = node.references;
+  const experimentConfig = node.experiment_config;
+
+  const hasPapers = papers.length > 0;
+  const hasResources = resources.length > 0;
+  const hasReferences = references.length > 0;
   const hasMethods = methods.length > 0;
   const showTimerDemo = domainId === 'embedded' && nodeId === 'timer';
   const showRoundRobinDemo = domainId === 'operating_system' && nodeId === 'process_scheduling';
 
-  const hasExperiment = Boolean(node.experiment_config);
+  const hasExperiment = Boolean(experimentConfig);
   const learningTitle = hasExperiment ? '学习板块' : '教学内容';
+
+  const panelNodeData = {
+    ...node,
+    methods,
+    papers,
+    resources,
+    experiment_config: experimentConfig,
+  };
 
   return (
     <div>
       <Link to={`/domain/${domainId}`} className="back-link">← 返回领域</Link>
-      <h1 className="page-title">{node.title}</h1>
-      <p className="page-desc">{node.description}</p>
+      <h1 className="page-title">{node.title || nodeId}</h1>
+      <p className="page-desc">{node.description || ''}</p>
       {node.difficulty && (
         <span className={`badge badge-diff badge-diff-${node.difficulty}`}>{node.difficulty}</span>
       )}
@@ -89,21 +134,21 @@ export default function NodePage() {
       {hasPapers && (
         <section className={`section ${hasExperiment ? 'learning-section' : ''}`}>
           <h2 className="section-title">相关论文与方法</h2>
-          <PaperList papers={node.papers} />
+          <PaperList papers={papers} />
         </section>
       )}
 
       {hasResources && (
         <section className={`section ${hasExperiment ? 'learning-section' : ''}`}>
           <h2 className="section-title">学习资料</h2>
-          <LearningResources resources={node.resources} />
+          <LearningResources resources={resources} />
         </section>
       )}
 
       {hasReferences && (
         <section className={`section ${hasExperiment ? 'learning-section' : ''}`}>
           <h2 className="section-title">参考资料</h2>
-          <ReferenceList references={node.references} />
+          <ReferenceList references={references} />
         </section>
       )}
 
@@ -128,7 +173,7 @@ export default function NodePage() {
           <StandardExperimentPanel
             domain={domainId}
             node={nodeId}
-            nodeData={node}
+            nodeData={panelNodeData}
             onRunComplete={() => setExperimentRefresh((k) => k + 1)}
           />
 
@@ -168,26 +213,26 @@ export default function NodePage() {
       )}
 
       {!hasExperiment && hasMethods && (
-        <section className="section">
-          <h2 className="section-title">模型选择</h2>
-          <MethodSelector
-            methods={methods}
-            selected={selectedMethod}
-            onSelect={setSelectedMethod}
-          />
-        </section>
-      )}
+        <>
+          <section className="section">
+            <h2 className="section-title">模型选择</h2>
+            <MethodSelector
+              methods={methods}
+              selected={selectedMethod}
+              onSelect={setSelectedMethod}
+            />
+          </section>
 
-      {!hasExperiment && hasMethods && (
-        <section className="section">
-          <h2 className="section-title">模型测试</h2>
-          <ModelTester
-            domainId={domainId}
-            nodeId={nodeId}
-            methods={methods}
-            selectedMethod={selectedMethod}
-          />
-        </section>
+          <section className="section">
+            <h2 className="section-title">模型测试</h2>
+            <ModelTester
+              domainId={domainId}
+              nodeId={nodeId}
+              methods={methods}
+              selectedMethod={selectedMethod}
+            />
+          </section>
+        </>
       )}
 
       {!hasMethods && !showTimerDemo && !showRoundRobinDemo && !hasExperiment && (

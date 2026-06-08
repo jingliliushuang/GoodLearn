@@ -68,12 +68,13 @@ export default function MethodDetailPanel({
   );
 
   const ListSection = ({ title, items }) => {
-    if (!items || items.length === 0) return null;
+    const list = Array.isArray(items) ? items : (items ? [items] : []);
+    if (list.length === 0) return null;
     return (
       <div className="detail-section">
         <h4 className="detail-heading">{title}</h4>
         <ul className="detail-list">
-          {items.map((item) => (
+          {list.map((item) => (
             <li key={item}>{item}</li>
           ))}
         </ul>

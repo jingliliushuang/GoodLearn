@@ -4,6 +4,7 @@ import DomainPage from './pages/DomainPage';
 import NodePage from './pages/NodePage';
 import PipelinePage from './pages/PipelinePage';
 import NodeManagerPage from './pages/NodeManagerPage';
+import ErrorBoundary from './components/ErrorBoundary';
 import ThemeToggle from './components/ThemeToggle';
 import { useTheme } from './context/ThemeContext';
 
@@ -27,13 +28,15 @@ export default function App() {
         <span className="tagline">本地计算机知识树教学桌面应用</span>
       </header>
       <main className="app-main">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/domain/:domainId" element={<DomainPage />} />
-          <Route path="/domain/:domainId/pipeline" element={<PipelinePage />} />
-          <Route path="/node-manager" element={<NodeManagerPage />} />
-          <Route path="/node/:domainId/:nodeId" element={<NodePage />} />
-        </Routes>
+        <ErrorBoundary>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/domain/:domainId" element={<DomainPage />} />
+            <Route path="/domain/:domainId/pipeline" element={<PipelinePage />} />
+            <Route path="/node-manager" element={<NodeManagerPage />} />
+            <Route path="/node/:domainId/:nodeId" element={<NodePage />} />
+          </Routes>
+        </ErrorBoundary>
       </main>
       <footer className="app-footer">
         GoodLearnApp v0.1 — 本地桌面应用，数据不出本机

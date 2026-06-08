@@ -26,16 +26,17 @@ const FILTER_OPTIONS = [
 const DEFAULT_VISIBLE = 6;
 
 export default function LearningResources({ resources }) {
+  const safeResources = Array.isArray(resources) ? resources : [];
   const [filter, setFilter] = useState('all');
   const [expanded, setExpanded] = useState(false);
 
   const filtered = useMemo(() => {
-    if (!resources?.length) return [];
-    if (filter === 'all') return resources;
-    return resources.filter((item) => item.type === filter);
-  }, [resources, filter]);
+    if (!safeResources.length) return [];
+    if (filter === 'all') return safeResources;
+    return safeResources.filter((item) => item.type === filter);
+  }, [safeResources, filter]);
 
-  if (!resources || resources.length === 0) {
+  if (!safeResources.length) {
     return null;
   }
 

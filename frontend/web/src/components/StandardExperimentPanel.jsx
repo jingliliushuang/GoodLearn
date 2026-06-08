@@ -3,25 +3,34 @@ import { runStandardExperiment } from '../api/client';
 import { buildDefaultParams } from '../utils/methodParams';
 import MethodParamsPanel from './MethodParamsPanel';
 
-function MetricSelector({ metrics = [], selected, onChange }) {
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function MetricSelector({ metrics = [], selected = [], onChange }) {
+  const safeMetrics = asArray(metrics);
+  const safeSelected = asArray(selected);
+
   return (
     <div className="metric-options">
-      {metrics.map((metric) => {
-        const checked = selected.includes(metric.id);
+      {safeMetrics.map((metric) => {
+        if (!metric) return null;
+        const metricId = metric.id;
+        const checked = safeSelected.includes(metricId);
         return (
-          <label key={metric.id} className="metric-chip">
+          <label key={metricId || metric.title} className="metric-chip">
             <input
               type="checkbox"
               checked={checked}
               onChange={() => {
                 if (checked) {
-                  onChange(selected.filter((id) => id !== metric.id));
-                } else {
-                  onChange([...selected, metric.id]);
+                  onChange(safeSelected.filter((id) => id !== metricId));
+                } else if (metricId) {
+                  onChange([...safeSelected, metricId]);
                 }
               }}
             />
-            <span>{metric.title || metric.id}</span>
+            <span>{metric.title || metricId || '指标'}</span>
           </label>
         );
       })}
@@ -38,17 +47,16 @@ const METRIC_LABELS = {
 
 export default function StandardExperimentPanel({ domain, node, nodeData, onRunComplete }) {
   const fileRef = useRef(null);
-  const experimentConfig = nodeData?.experiment_config;
-  const methods = nodeData?.methods || [];
 
-  const degradationMethods =
-    experimentConfig?.stages?.dataset_generation?.methods || [];
-
-  const evaluationMetrics =
-    experimentConfig?.stages?.evaluation?.metrics || [];
-
+  const experimentConfig = nodeData?.experiment_config || null;
+  const stages = experimentConfig?.stages || experimentConfig?.experiment_stages || {};
+  const datasetStage = stages?.dataset_generation || {};
+  const evaluationStage = stages?.evaluation || {};
+  const degradationMethods = asArray(datasetStage?.methods);
+  const evaluationMetrics = asArray(evaluationStage?.metrics);
+  const methods = asArray(nodeData?.methods);
   const availableMethods = useMemo(
-    () => methods.filter((m) => m.available),
+    () => methods.filter((m) => m && m.available),
     [methods],
   );
 
@@ -56,17 +64,19 @@ export default function StandardExperimentPanel({ domain, node, nodeData, onRunC
   const [preview, setPreview] = useState(null);
 
   const [selectedDegradation, setSelectedDegradation] = useState(
-    degradationMethods[0]?.id || '',
+    () => degradationMethods[0]?.id || '',
   );
   const [degradationParams, setDegradationParams] = useState({});
 
   const [selectedMethod, setSelectedMethod] = useState(
-    availableMethods[0]?.id || '',
+    () => availableMethods[0]?.id || '',
   );
   const [methodParams, setMethodParams] = useState({});
 
   const [selectedMetrics, setSelectedMetrics] = useState(
-    evaluationMetrics.map((m) => m.id).filter((id) => id !== 'runtime_ms'),
+    () => evaluationMetrics
+      .map((m) => m?.id)
+      .filter((id) => id && id !== 'runtime_ms'),
   );
 
   const [running, setRunning] = useState(false);
@@ -74,12 +84,12 @@ export default function StandardExperimentPanel({ domain, node, nodeData, onRunC
   const [error, setError] = useState('');
 
   const selectedDegConfig = useMemo(
-    () => degradationMethods.find((m) => m.id === selectedDegradation),
+    () => degradationMethods.find((m) => m?.id === selectedDegradation),
     [degradationMethods, selectedDegradation],
   );
 
   const selectedMethodConfig = useMemo(
-    () => availableMethods.find((m) => m.id === selectedMethod),
+    () => availableMethods.find((m) => m?.id === selectedMethod),
     [availableMethods, selectedMethod],
   );
 
@@ -167,6 +177,10 @@ export default function StandardExperimentPanel({ domain, node, nodeData, onRunC
         </p>
       </div>
 
+      {degradationMethods.length === 0 && (
+        <p className="warning-text">当前节点暂未配置测试集生成方法。</p>
+      )}
+
       <div className="experiment-steps">
         <div className="experiment-step">
           <h4 className="experiment-step-title">Step 1：测试集生成</h4>
@@ -194,6 +208,7 @@ export default function StandardExperimentPanel({ domain, node, nodeData, onRunC
             <select
               value={selectedDegradation}
               onChange={(e) => setSelectedDegradation(e.target.value)}
+              disabled={degradationMethods.length === 0}
             >
               {degradationMethods.map((method) => (
                 <option key={method.id} value={method.id}>
@@ -217,40 +232,42 @@ export default function StandardExperimentPanel({ domain, node, nodeData, onRunC
         <div className="experiment-step">
           <h4 className="experiment-step-title">Step 2：模型推理</h4>
 
-          <label className="form-label">
-            选择方法
-            <select
-              value={selectedMethod}
-              onChange={(e) => setSelectedMethod(e.target.value)}
-            >
-              {availableMethods.map((method) => (
-                <option key={method.id} value={method.id}>
-                  {method.title || method.id}
-                </option>
-              ))}
-            </select>
-          </label>
+          {availableMethods.length === 0 ? (
+            <p className="warning-text">当前节点没有可运行推理方法。</p>
+          ) : (
+            <>
+              <label className="form-label">
+                选择方法
+                <select
+                  value={selectedMethod}
+                  onChange={(e) => setSelectedMethod(e.target.value)}
+                >
+                  {availableMethods.map((method) => (
+                    <option key={method.id} value={method.id}>
+                      {method.title || method.id}
+                    </option>
+                  ))}
+                </select>
+              </label>
 
-          {availableMethods.length === 0 && (
-            <p className="warning-text">当前节点没有可运行方法。</p>
+              {isX2Model && (
+                <p className="muted-text">提示：ESPCN / EDSR 当前权重主要支持 x2，建议退化 scale=2。</p>
+              )}
+
+              <MethodParamsPanel
+                paramsSchema={selectedMethodConfig?.params_schema || []}
+                values={methodParams}
+                onChange={setMethodParams}
+              />
+            </>
           )}
-
-          {isX2Model && (
-            <p className="muted-text">提示：ESPCN / EDSR 当前权重主要支持 x2，建议退化 scale=2。</p>
-          )}
-
-          <MethodParamsPanel
-            paramsSchema={selectedMethodConfig?.params_schema || []}
-            values={methodParams}
-            onChange={setMethodParams}
-          />
         </div>
 
         <div className="experiment-step">
           <h4 className="experiment-step-title">Step 3：结果评价</h4>
 
           <MetricSelector
-            metrics={evaluationMetrics.filter((m) => m.id !== 'runtime_ms')}
+            metrics={evaluationMetrics.filter((m) => m?.id !== 'runtime_ms')}
             selected={selectedMetrics}
             onChange={setSelectedMetrics}
           />
@@ -259,7 +276,7 @@ export default function StandardExperimentPanel({ domain, node, nodeData, onRunC
             type="button"
             className="btn btn-primary"
             onClick={handleRun}
-            disabled={running || !imageFile || !selectedMethod}
+            disabled={running || !imageFile || !selectedMethod || degradationMethods.length === 0}
           >
             {running ? '运行中...' : '运行标准实验'}
           </button>

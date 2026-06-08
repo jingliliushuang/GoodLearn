@@ -13,19 +13,31 @@ import ExperimentHistory from '../components/ExperimentHistory';
 
 const FEATURED_PAPERS = ['srcnn', 'espcn', 'edsr'];
 
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
+}
+
 export default function SuperResolutionNodePage({ node, domainId, nodeId }) {
-  const methods = node.methods || [];
+  const methods = asArray(node?.methods);
+  const papers = asArray(node?.papers);
+  const resources = asArray(node?.resources);
+  const learningPath = asArray(node?.learning_path);
+  const experimentConfig = node?.experiment_config || null;
+  const methodDetails = node?.method_details && typeof node.method_details === 'object'
+    ? node.method_details
+    : {};
+
   const [selectedMethod, setSelectedMethod] = useState(() => {
-    const first = methods.find((m) => m.available);
+    const first = methods.find((m) => m?.available);
     return first ? first.id : methods[0]?.id || null;
   });
   const [experimentRefresh, setExperimentRefresh] = useState(0);
 
-  const hasExperiment = Boolean(node.experiment_config);
+  const hasExperiment = Boolean(experimentConfig);
 
-  const detail = selectedMethod ? node.method_details?.[selectedMethod] : null;
-  const selectedMeta = methods.find((m) => m.id === selectedMethod);
-  const pathItem = node.learning_path?.find((p) => p.id === selectedMethod);
+  const detail = selectedMethod ? methodDetails[selectedMethod] : null;
+  const selectedMeta = methods.find((m) => m?.id === selectedMethod);
+  const pathItem = learningPath.find((p) => p?.id === selectedMethod);
 
   const detailOrFallback = detail || (pathItem ? {
     title: pathItem.title,
@@ -37,23 +49,31 @@ export default function SuperResolutionNodePage({ node, domainId, nodeId }) {
         : '',
   } : null);
 
+  const panelNodeData = {
+    ...node,
+    methods,
+    papers,
+    resources,
+    experiment_config: experimentConfig,
+  };
+
   return (
     <div>
       <Link to={`/domain/${domainId}`} className="back-link">← 返回领域</Link>
-      <h1 className="page-title">{node.title}</h1>
-      <p className="page-desc">{node.description}</p>
+      <h1 className="page-title">{node?.title || nodeId}</h1>
+      <p className="page-desc">{node?.description || ''}</p>
 
       <section className="section section-compact learning-section">
         <h2 className="section-title">学习板块</h2>
         <div className="card card-compact">
-          <MarkdownViewer content={node.content_markdown} />
+          <MarkdownViewer content={node?.content_markdown || ''} />
         </div>
       </section>
 
       <section className="section section-compact learning-section">
         <h2 className="section-title">课程导航</h2>
         <CourseRoadmap
-          learningPath={node.learning_path}
+          learningPath={learningPath}
           selectedMethod={selectedMethod}
           onSelect={setSelectedMethod}
         />
@@ -77,25 +97,25 @@ export default function SuperResolutionNodePage({ node, domainId, nodeId }) {
           detail={detailOrFallback}
           methodTitle={selectedMeta?.title || pathItem?.title}
           methodId={selectedMethod}
-          papers={node.papers}
+          papers={papers}
         />
       </section>
 
-      {node.papers?.length > 0 && (
+      {papers.length > 0 && (
         <section className="section learning-section">
           <h2 className="section-title">论文与资料</h2>
           <PaperList
-            papers={node.papers}
+            papers={papers}
             featuredIds={FEATURED_PAPERS}
             defaultCollapsed
           />
         </section>
       )}
 
-      {node.resources?.length > 0 && (
+      {resources.length > 0 && (
         <section className="section learning-section">
           <h2 className="section-title">学习资料</h2>
-          <LearningResources resources={node.resources} />
+          <LearningResources resources={resources} />
         </section>
       )}
 
@@ -106,7 +126,7 @@ export default function SuperResolutionNodePage({ node, domainId, nodeId }) {
           <StandardExperimentPanel
             domain={domainId}
             node={nodeId}
-            nodeData={node}
+            nodeData={panelNodeData}
             onRunComplete={() => setExperimentRefresh((k) => k + 1)}
           />
         )}

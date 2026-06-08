@@ -120,7 +120,7 @@ export async function fetchExperiments(domain, node, method) {
   if (method) params.set('method', method);
   const qs = params.toString();
   const { data } = await client.get(`/api/experiments${qs ? `?${qs}` : ''}`);
-  return data;
+  return Array.isArray(data) ? data : [];
 }
 
 export async function fetchManagerNodes(domain) {
