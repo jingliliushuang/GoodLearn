@@ -32,6 +32,12 @@ class CreateMethodTemplateRequest(BaseModel):
     category: str = "traditional"
     backend: str = "custom"
     available: bool = False
+    input_kind: str = "single_image"
+    input_count: int = 1
+    input_media_type: str = "image"
+    output_kind: str = "single_image"
+    output_count: int = 1
+    output_media_type: str = "image"
 
 
 class DeleteNodeRequest(BaseModel):
@@ -85,6 +91,12 @@ def create_method_template_api(body: CreateMethodTemplateRequest):
             category=body.category,
             backend=body.backend,
             available=body.available,
+            input_kind=body.input_kind,
+            input_count=body.input_count,
+            input_media_type=body.input_media_type,
+            output_kind=body.output_kind,
+            output_count=body.output_count,
+            output_media_type=body.output_media_type,
         )
     except FileExistsError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc

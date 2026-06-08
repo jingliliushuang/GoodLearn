@@ -37,5 +37,17 @@
       "step": 5,
       "description": "值越大，距离较远的像素也会参与滤波。"
     }
-  ]
+  ],
+  "input_spec": {
+    "kind": "single_image",
+    "count": 1,
+    "media_type": "image",
+    "description": "输入单张图像"
+  },
+  "output_spec": {
+    "kind": "single_image",
+    "count": 1,
+    "media_type": "image",
+    "description": "输出单张图像"
+  }
 }

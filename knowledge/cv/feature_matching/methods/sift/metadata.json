@@ -18,5 +18,17 @@
       "step": 0.05,
       "description": "Ratio test 阈值，越小匹配越严格。"
     }
-  ]
+  ],
+  "input_spec": {
+    "kind": "image_pair",
+    "count": 2,
+    "media_type": "image",
+    "description": "输入两张待匹配图像"
+  },
+  "output_spec": {
+    "kind": "match_visualization",
+    "count": 1,
+    "media_type": "image",
+    "description": "输出带匹配连线的可视化图像和匹配指标"
+  }
 }

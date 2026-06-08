@@ -8,5 +8,17 @@
   "category": "deep_learning",
   "id": "ssd",
   "title": "SSD",
-  "description": "单阶段多框检测"
+  "description": "单阶段多框检测",
+  "input_spec": {
+    "kind": "single_image",
+    "count": 1,
+    "media_type": "image",
+    "description": "输入单张图像"
+  },
+  "output_spec": {
+    "kind": "detection_result",
+    "count": 1,
+    "media_type": "data",
+    "description": "输出检测结果"
+  }
 }

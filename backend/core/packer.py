@@ -10,6 +10,7 @@ from datetime import datetime
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+from core.io_spec import validate_spec_fields
 from core.tree import get_node_dir
 from core.utils import get_exports_dir, get_knowledge_root, get_runtime_paths
 
@@ -169,6 +170,22 @@ def validate_node(node_path: Path, domain_hint: str | None = None) -> dict[str, 
                 errors.append(f"方法 {mid} 缺少 model.py")
             elif not _has_function(_read_text(model_path), "process"):
                 errors.append(f"方法 {mid} 的 model.py 缺少 process()")
+            else:
+                meta_path = method_dir / "metadata.json"
+                if meta_path.exists():
+                    try:
+                        with open(meta_path, encoding="utf-8") as mf:
+                            method_meta = json.load(mf)
+                        for w in validate_spec_fields(method_meta.get("input_spec") or {}, f"方法 {mid} input_spec"):
+                            warnings.append(w if "缺失" in w or "缺少" in w else w)
+                        if not method_meta.get("input_spec"):
+                            warnings.append(f"方法 {mid} 缺少 input_spec")
+                        if not method_meta.get("output_spec"):
+                            warnings.append(f"方法 {mid} 缺少 output_spec")
+                        for w in validate_spec_fields(method_meta.get("output_spec") or {}, f"方法 {mid} output_spec"):
+                            warnings.append(w)
+                    except json.JSONDecodeError:
+                        warnings.append(f"方法 {mid} metadata.json 不是合法 JSON")
 
     return {
         "valid": len(errors) == 0,

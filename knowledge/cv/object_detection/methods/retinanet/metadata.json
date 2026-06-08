@@ -8,5 +8,17 @@
   "category": "deep_learning",
   "id": "retinanet",
   "title": "RetinaNet",
-  "description": "Focal Loss 一阶段"
+  "description": "Focal Loss 一阶段",
+  "input_spec": {
+    "kind": "single_image",
+    "count": 1,
+    "media_type": "image",
+    "description": "输入单张图像"
+  },
+  "output_spec": {
+    "kind": "detection_result",
+    "count": 1,
+    "media_type": "data",
+    "description": "输出检测结果"
+  }
 }

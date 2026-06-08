@@ -106,20 +106,25 @@ E:\A_Exp_ML\GoodLearnApp\stop_dev.bat
 
 ## 组合实验流水线（Pipeline Builder）
 
-支持**可视化 cascade 顺序组合**，用户可自由拖拽任务节点：
+支持**类型安全的 cascade 顺序组合**。每个方法在 `metadata.json` 中声明 `input_spec` / `output_spec`，Pipeline Builder 根据输入输出类型判断方法是否能串联。
 
 1. 进入 **Computer Vision → 组合实验流水线**
-2. 从左侧拖入「图像去噪」或「图像超分」到 Step 1–4
-3. 为每个 Step 选择 `available=true` 的方法
-4. 上传图片，点击「运行流水线」
+2. 从左侧拖入任务节点（去噪、超分、特征匹配、分类、检测）到 Step 1–4
+3. 为每个 Step 选择具体方法；下拉显示 `输入类型 → 输出类型` 与可运行状态
+4. 上传单张图片（默认 Pipeline 输入为 `single_image`），点击「运行流水线」
 
-系统按 Step 顺序依次调用各方法的 `model.process()`，展示每一步中间结果与最终输出。
+系统按 Step 顺序依次调用各方法的 `model.process()`，展示每一步中间结果与最终输出。前后步骤必须满足 `上一阶段 output_spec.kind == 下一阶段 input_spec.kind` 且 media_type 兼容。
 
 | 能力 | 状态 |
 |------|------|
 | cascade 顺序组合 | ✅ 已实现 |
+| 类型安全校验（前端 + 后端） | ✅ 已实现 |
+| single_image → single_image 串联 | ✅ 去噪 ↔ 超分可自由组合 |
+| image_pair → match_visualization | ⚠️ 特征匹配不参与默认单图 Pipeline |
 | parallel / fusion | ❌ 尚未实现 |
 | 保存为永久组合节点 | ❌ 第一版不支持 |
+
+新建方法模板时需在节点管理中选择输入/输出类型，写入 `input_spec` / `output_spec`。
 
 > 当前仍为**开发阶段**，使用 `start_dev.bat` 启动，**不要** build / 打包 exe。
 
@@ -163,6 +168,8 @@ Pipeline Builder 与模型对比实验暂使用**默认参数**。
 导出前会校验 `metadata.json`、`dataset.py`、`metrics.py`、`methods/` 结构。若老节点 `metadata.json` 缺少 `domain`，系统会从路径推断并**自动写回**后再导出。
 
 方法模板默认 `available=false`，显示「方法模板已创建，模型实现或权重暂未接入」，不影响其他可运行方法。
+
+创建方法模板时需选择 **input_spec / output_spec**（kind、count、media_type），供 Pipeline Builder 类型校验使用。
 
 **删除（软删除）：**
 - `DELETE /api/node-manager/node` — 将节点移动到 `backend/runtime/trash/`

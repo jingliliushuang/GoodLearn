@@ -12,8 +12,24 @@
       "label": "放大倍率",
       "type": "select",
       "default": 2,
-      "options": [2, 3, 4],
+      "options": [
+        2,
+        3,
+        4
+      ],
       "description": "传统插值方法支持不同放大倍率。"
     }
-  ]
+  ],
+  "input_spec": {
+    "kind": "single_image",
+    "count": 1,
+    "media_type": "image",
+    "description": "输入单张图像"
+  },
+  "output_spec": {
+    "kind": "single_image",
+    "count": 1,
+    "media_type": "image",
+    "description": "输出单张图像"
+  }
 }

@@ -10,6 +10,12 @@ import {
   fetchManagerNodes,
   importNode,
 } from '../api/client';
+import {
+  INPUT_KIND_OPTIONS,
+  MEDIA_TYPE_OPTIONS,
+  OUTPUT_KIND_OPTIONS,
+  formatIoArrow,
+} from '../utils/ioSpec';
 
 function ValidationBox({ validation }) {
   if (!validation) return null;
@@ -51,6 +57,12 @@ export default function NodeManagerPage() {
   const [methodCategory, setMethodCategory] = useState('traditional');
   const [methodBackend, setMethodBackend] = useState('planned');
   const [methodAvailable, setMethodAvailable] = useState(false);
+  const [inputKind, setInputKind] = useState('single_image');
+  const [inputCount, setInputCount] = useState(1);
+  const [inputMediaType, setInputMediaType] = useState('image');
+  const [outputKind, setOutputKind] = useState('single_image');
+  const [outputCount, setOutputCount] = useState(1);
+  const [outputMediaType, setOutputMediaType] = useState('image');
 
   const [exportNodeId, setExportNodeId] = useState('');
   const [importFile, setImportFile] = useState(null);
@@ -166,6 +178,12 @@ export default function NodeManagerPage() {
         category: methodCategory,
         backend: methodBackend,
         available: methodAvailable,
+        input_kind: inputKind,
+        input_count: Number(inputCount) || 1,
+        input_media_type: inputMediaType,
+        output_kind: outputKind,
+        output_count: Number(outputCount) || 1,
+        output_media_type: outputMediaType,
       });
       setMethodResult(result);
     } catch (err) {
@@ -269,6 +287,7 @@ export default function NodeManagerPage() {
       <div className="info-box manager-intro">
         <p><strong>节点模板：</strong>用于创建新的任务节点，例如图像去模糊、边缘检测。</p>
         <p><strong>方法模板：</strong>在已有节点下创建算法方法，例如在图像超分下创建 SRCNN / ESPCN，在图像去噪下创建 DnCNN。</p>
+        <p><strong>输入输出类型：</strong>方法模板创建时需要声明 input_spec / output_spec。Pipeline Builder 会根据这些类型判断方法是否能和前后步骤组合。例如，图像去噪和图像超分都是 single_image → single_image，因此可以串联；特征匹配是 image_pair → match_visualization，不能直接接在单图流水线后面。</p>
         <p><strong>导出节点：</strong>将整个任务节点打包为 zip，默认不导出模型权重。</p>
         <p><strong>导入节点：</strong>导入标准节点 zip 并校验结构，不会执行其中代码。</p>
         <p><strong>删除节点 / 方法：</strong>软删除到 <code>backend/runtime/trash/</code>，核心节点与方法受保护。第一版无 UI 恢复，可手动从 trash 复制回 knowledge/。</p>
@@ -392,6 +411,59 @@ export default function NodeManagerPage() {
             />
             立即可运行 (available)
           </label>
+          <label>
+            输入类型 (kind)
+            <select value={inputKind} onChange={(e) => setInputKind(e.target.value)}>
+              {INPUT_KIND_OPTIONS.map((k) => (
+                <option key={k} value={k}>{k}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            输入数量
+            <input
+              type="number"
+              min={1}
+              value={inputCount}
+              onChange={(e) => setInputCount(e.target.value)}
+            />
+          </label>
+          <label>
+            输入媒体 (media_type)
+            <select value={inputMediaType} onChange={(e) => setInputMediaType(e.target.value)}>
+              {MEDIA_TYPE_OPTIONS.map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            输出类型 (kind)
+            <select value={outputKind} onChange={(e) => setOutputKind(e.target.value)}>
+              {OUTPUT_KIND_OPTIONS.map((k) => (
+                <option key={k} value={k}>{k}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            输出数量
+            <input
+              type="number"
+              min={1}
+              value={outputCount}
+              onChange={(e) => setOutputCount(e.target.value)}
+            />
+          </label>
+          <label>
+            输出媒体 (media_type)
+            <select value={outputMediaType} onChange={(e) => setOutputMediaType(e.target.value)}>
+              {MEDIA_TYPE_OPTIONS.map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+            </select>
+          </label>
+          <p className="card-desc span-2">
+            预览：{formatIoArrow({ kind: inputKind }, { kind: outputKind })}
+          </p>
         </div>
         <button
           type="button"

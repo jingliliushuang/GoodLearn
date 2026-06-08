@@ -1388,8 +1388,8 @@ a:hover {
 }
 
 .pipeline-step {
-  width: 180px;
-  min-height: 140px;
+  width: 210px;
+  min-height: 160px;
   padding: 0.75rem;
   border: 2px dashed var(--border);
   border-radius: var(--radius);
@@ -1409,9 +1409,37 @@ a:hover {
 
 .pipeline-step-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 0.25rem;
   margin-bottom: 0.5rem;
+}
+
+.pipeline-io-tag {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  background: rgba(59, 130, 246, 0.12);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  flex: 1 1 100%;
+}
+
+.pipeline-method-io {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin: 0.35rem 0 0;
+  line-height: 1.4;
+}
+
+.pipeline-incompat-reason {
+  color: #f87171;
+}
+
+.pipeline-step-io-badge {
+  font-size: 0.7rem;
+  color: var(--accent);
+  font-weight: normal;
 }
 
 .pipeline-step-label {

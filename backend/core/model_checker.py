@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from core.io_spec import get_method_io_specs
 from core.tree import get_knowledge_root, get_method_dir
 from core.utils import get_external_model_root
 
@@ -126,6 +127,8 @@ def check_method(domain_id: str, node_id: str, method_id: str) -> dict[str, Any]
     meta_path = method_dir / "metadata.json"
 
     if not meta_path.exists():
+        from core.io_spec import infer_default_specs
+        inp, out = infer_default_specs(node_id)
         return {
             "id": method_id,
             "title": method_id,
@@ -137,6 +140,8 @@ def check_method(domain_id: str, node_id: str, method_id: str) -> dict[str, Any]
             "missing_dependencies": [],
             "missing_weights": [],
             "detected_weights": [],
+            "input_spec": inp,
+            "output_spec": out,
         }
 
     with open(meta_path, encoding="utf-8") as f:
@@ -144,7 +149,7 @@ def check_method(domain_id: str, node_id: str, method_id: str) -> dict[str, Any]
 
     if meta.get("available") is False:
         return _build_status(
-            meta, method_id, False,
+            meta, node_id, method_id, False,
             meta.get("reason", "不可用"),
             meta.get("requirements", []),
             _collect_weight_names(meta), [], [], [],
@@ -158,11 +163,11 @@ def check_method(domain_id: str, node_id: str, method_id: str) -> dict[str, Any]
 
     model_path = method_dir / "model.py"
     if not model_path.exists():
-        return _build_status(meta, method_id, False, "缺少 model.py", requirements, weight_names,
+        return _build_status(meta, node_id, method_id, False, "缺少 model.py", requirements, weight_names,
                            missing_dependencies, missing_weights, detected_weights)
 
     if not _has_process_function(model_path):
-        return _build_status(meta, method_id, False, "model.py 未实现 process()", requirements,
+        return _build_status(meta, node_id, method_id, False, "model.py 未实现 process()", requirements,
                            weight_names, missing_dependencies, missing_weights, detected_weights)
 
     for weight_name in weight_names:
@@ -180,24 +185,25 @@ def check_method(domain_id: str, node_id: str, method_id: str) -> dict[str, Any]
             reason = f"缺少 opencv-contrib-python，请在项目内后端环境安装 opencv-contrib-python"
         else:
             reason = f"缺少依赖: {dep_msg}"
-        return _build_status(meta, method_id, False, reason, requirements, weight_names,
+        return _build_status(meta, node_id, method_id, False, reason, requirements, weight_names,
                            missing_dependencies, missing_weights, detected_weights)
 
     if missing_weights:
         reason = f"缺少权重: {', '.join(missing_weights)}"
-        return _build_status(meta, method_id, False, reason, requirements, weight_names,
+        return _build_status(meta, node_id, method_id, False, reason, requirements, weight_names,
                            missing_dependencies, missing_weights, detected_weights)
 
     if not meta.get("inference_enabled", True):
-        return _build_status(meta, method_id, False, "推理接口尚未接入", requirements, weight_names,
+        return _build_status(meta, node_id, method_id, False, "推理接口尚未接入", requirements, weight_names,
                            missing_dependencies, missing_weights, detected_weights)
 
-    return _build_status(meta, method_id, True, "", requirements, weight_names,
+    return _build_status(meta, node_id, method_id, True, "", requirements, weight_names,
                        missing_dependencies, missing_weights, detected_weights)
 
 
 def _build_status(
     meta: dict[str, Any],
+    node_id: str,
     method_id: str,
     available: bool,
     reason: str,
@@ -207,7 +213,8 @@ def _build_status(
     missing_weights: list[str],
     detected_weights: list[str],
 ) -> dict[str, Any]:
-    return {
+    input_spec, output_spec, io_inferred = get_method_io_specs(meta, node_id)
+    result = {
         "id": meta.get("id", method_id),
         "title": meta.get("title", method_id),
         "category": meta.get("category", "traditional"),
@@ -221,7 +228,12 @@ def _build_status(
         "missing_weights": missing_weights,
         "detected_weights": detected_weights,
         "params_schema": meta.get("params_schema", []) if isinstance(meta.get("params_schema"), list) else [],
+        "input_spec": input_spec,
+        "output_spec": output_spec,
     }
+    if io_inferred:
+        result["io_spec_inferred"] = True
+    return result
 
 
 def check_node_methods(domain_id: str, node_id: str) -> list[dict[str, Any]]:

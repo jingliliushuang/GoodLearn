@@ -8,5 +8,17 @@
   "category": "deep_learning",
   "id": "vgg",
   "title": "VGG",
-  "description": "3x3 卷积堆叠"
+  "description": "3x3 卷积堆叠",
+  "input_spec": {
+    "kind": "single_image",
+    "count": 1,
+    "media_type": "image",
+    "description": "输入单张图像"
+  },
+  "output_spec": {
+    "kind": "classification_result",
+    "count": 1,
+    "media_type": "data",
+    "description": "输出分类结果"
+  }
 }

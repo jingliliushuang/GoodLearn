@@ -1,6 +1,7 @@
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 
 from core.combiner import run_pipeline
+from core.io_spec import PipelineTypeError
 
 router = APIRouter(prefix="/api", tags=["pipeline"])
 
@@ -39,10 +40,21 @@ async def run_pipeline_api(
     context = {
         "domain": pipeline_data.get("domain", "cv"),
         "strategy": pipeline_data.get("strategy", "cascade"),
+        "pipeline_input_kind": pipeline_data.get("pipeline_input_kind", "single_image"),
+        "pipeline_input_media": pipeline_data.get("pipeline_input_media", "image"),
     }
 
     try:
         result = run_pipeline(img, steps, context)
+    except PipelineTypeError as exc:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "success": False,
+                "message": "Pipeline 类型不兼容",
+                "errors": exc.errors,
+            },
+        ) from exc
     except (ValueError, FileNotFoundError) as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except RuntimeError as exc:

@@ -12,8 +12,25 @@
       "label": "滤波核大小",
       "type": "select",
       "default": 5,
-      "options": [3, 5, 7, 9],
+      "options": [
+        3,
+        5,
+        7,
+        9
+      ],
       "description": "对椒盐噪声有效，核越大去噪越强，但细节损失越明显。必须为奇数。"
     }
-  ]
+  ],
+  "input_spec": {
+    "kind": "single_image",
+    "count": 1,
+    "media_type": "image",
+    "description": "输入单张图像"
+  },
+  "output_spec": {
+    "kind": "single_image",
+    "count": 1,
+    "media_type": "image",
+    "description": "输出单张图像"
+  }
 }

@@ -150,7 +150,7 @@ GoodLearnApp/
 | runtime/combiner.py | ❌ |
 | backend/core/combiner.py | ⚠️ 占位，未接入 API |
 
-**结论**：未实现完整组合节点目录生成，但 **已支持可视化 cascade Pipeline Builder**（`POST /api/run-pipeline` + `PipelinePage`）。parallel / fusion 与 packer / CLI 尚未实现。
+**结论**：未实现完整组合节点目录生成，但 **已支持类型安全的 cascade Pipeline Builder**（`POST /api/run-pipeline` + `PipelinePage`）。前后步骤按 `input_spec` / `output_spec` 校验；parallel / fusion 与 packer / CLI 尚未实现。
 
 ---
 
@@ -201,11 +201,12 @@ GoodLearnApp/
 2. **`history/` vs `methods/`** — 现用 `methods/` 存放算法实现；与 `history/` 等价，文档说明即可。
 3. **`dataset.py`** — 原先缺失，denoise 退化逻辑硬编码在 `runner.py`；现已补齐并接入 denoise。
 4. **`metrics.py` 节点化** — 原先仅 `backend/core/metrics.py`；现已双轨，节点可覆盖。
-5. **`combined`** — 已部分实现：Pipeline Builder + `run_pipeline()`；完整组合节点目录生成仍缺失。
-6. **`packer`** — 已实现：节点/方法模板、导出、导入与 `validate_node()`；`patch_node_metadata()` 自动补齐 domain；权重导出暂不支持。
-7. **`node_generator`** — 支持 `create_node_template()`（leaf 节点）与 `create_method_template()`（`methods/{method}/`）。
-8. **`delete_manager`** — 软删除至 `backend/runtime/trash/`；`protected_nodes` / `protected_methods`；node_manager 支持 create / import / export / validate / delete。
-7. **`CLI`** — 缺失，开发阶段用 `start_dev.bat` 替代，非必须项。
+5. **`combined`** — 已部分实现：类型安全 Pipeline Builder + `run_pipeline()`；完整组合节点目录生成仍缺失。
+6. **方法 IO 类型** — 每个 `methods/{method}/metadata.json` 支持 `input_spec` / `output_spec`；`io_spec.py` 提供校验与默认推断；Pipeline 前后步骤按 kind / media_type 链式匹配。
+7. **`packer`** — 已实现：节点/方法模板、导出、导入与 `validate_node()`；`validate_node()` 对缺失 IO spec 给出 warning；`patch_node_metadata()` 自动补齐 domain；权重导出暂不支持。
+8. **`node_generator`** — 支持 `create_node_template()`（leaf 节点）与 `create_method_template()`（含 IO 类型参数）。
+9. **`delete_manager`** — 软删除至 `backend/runtime/trash/`；`protected_nodes` / `protected_methods`；node_manager 支持 create / import / export / validate / delete。
+10. **`CLI`** — 缺失，开发阶段用 `start_dev.bat` 替代，非必须项。
 
 ---
 

@@ -6,8 +6,12 @@
   "backend": "opencv_dnn_superres",
   "algorithm": "edsr",
   "scale": 2,
-  "weights": ["EDSR_x2.pb"],
-  "requirements": ["opencv-contrib-python"],
+  "weights": [
+    "EDSR_x2.pb"
+  ],
+  "requirements": [
+    "opencv-contrib-python"
+  ],
   "inference_enabled": true,
   "params_schema": [
     {
@@ -17,5 +21,17 @@
       "default": 2,
       "description": "当前权重仅支持 x2。"
     }
-  ]
+  ],
+  "input_spec": {
+    "kind": "single_image",
+    "count": 1,
+    "media_type": "image",
+    "description": "输入单张图像"
+  },
+  "output_spec": {
+    "kind": "single_image",
+    "count": 1,
+    "media_type": "image",
+    "description": "输出单张图像"
+  }
 }

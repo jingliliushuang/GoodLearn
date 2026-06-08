@@ -26,5 +26,17 @@
       "max": 5000,
       "step": 100
     }
-  ]
+  ],
+  "input_spec": {
+    "kind": "image_pair",
+    "count": 2,
+    "media_type": "image",
+    "description": "输入两张待匹配图像"
+  },
+  "output_spec": {
+    "kind": "match_visualization",
+    "count": 1,
+    "media_type": "image",
+    "description": "输出带匹配连线的可视化图像和匹配指标"
+  }
 }

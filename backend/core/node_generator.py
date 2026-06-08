@@ -8,6 +8,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from core.io_spec import build_spec, infer_default_specs
 from core.packer import validate_node
 from core.tree import get_node_dir, load_domain_metadata
 from core.utils import get_knowledge_root
@@ -173,6 +174,12 @@ def create_method_template(
     category: str = "traditional",
     backend: str = "custom",
     available: bool = False,
+    input_kind: str = "single_image",
+    input_count: int = 1,
+    input_media_type: str = "image",
+    output_kind: str = "single_image",
+    output_count: int = 1,
+    output_media_type: str = "image",
 ) -> dict[str, Any]:
     _validate_method_id(method_id)
 
@@ -190,6 +197,19 @@ def create_method_template(
     method_dir.mkdir(parents=True)
 
     reason = "方法模板已创建，模型实现或权重暂未接入。"
+    default_in, default_out = infer_default_specs(node_id)
+    input_spec = build_spec(
+        input_kind,
+        input_count,
+        input_media_type,
+        default_in.get("description", "输入"),
+    )
+    output_spec = build_spec(
+        output_kind,
+        output_count,
+        output_media_type,
+        default_out.get("description", "输出"),
+    )
     metadata = {
         "id": method_id,
         "title": method_title,
@@ -202,6 +222,8 @@ def create_method_template(
         "params_schema": [],
         "requirements": [],
         "weights": [],
+        "input_spec": input_spec,
+        "output_spec": output_spec,
     }
     (method_dir / "metadata.json").write_text(
         json.dumps(metadata, ensure_ascii=False, indent=2) + "\n",
@@ -307,6 +329,8 @@ def create_node_template(
                 "description": "自动生成的占位方法，待替换",
                 "category": "baseline",
                 "inference_enabled": True,
+                "input_spec": build_spec("single_image", 1, "image", "输入单张图像"),
+                "output_spec": build_spec("single_image", 1, "image", "输出单张图像"),
             },
             ensure_ascii=False,
             indent=2,

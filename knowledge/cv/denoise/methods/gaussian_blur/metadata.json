@@ -12,8 +12,26 @@
       "label": "卷积核大小",
       "type": "select",
       "default": 5,
-      "options": [3, 5, 7, 9, 11],
+      "options": [
+        3,
+        5,
+        7,
+        9,
+        11
+      ],
       "description": "核越大，平滑越强，但图像越模糊。必须为奇数。"
     }
-  ]
+  ],
+  "input_spec": {
+    "kind": "single_image",
+    "count": 1,
+    "media_type": "image",
+    "description": "输入单张图像"
+  },
+  "output_spec": {
+    "kind": "single_image",
+    "count": 1,
+    "media_type": "image",
+    "description": "输出单张图像"
+  }
 }

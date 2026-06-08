@@ -12,6 +12,7 @@ import cv2
 import numpy as np
 
 from core.experiments import save_experiment
+from core.io_spec import PipelineTypeError, validate_pipeline_steps
 from core.loader import load_process_fn
 from core.model_checker import check_method
 from core.params import merge_process_kwargs, validate_method_params
@@ -81,6 +82,13 @@ def run_pipeline(
     if not steps:
         raise ValueError("Pipeline steps cannot be empty")
 
+    validate_pipeline_steps(
+        steps,
+        pipeline_input_kind=context.get("pipeline_input_kind", "single_image"),
+        pipeline_input_media=context.get("pipeline_input_media", "image"),
+        domain=default_domain,
+    )
+
     ensure_runtime_dirs()
     sorted_steps = sorted(steps, key=lambda s: int(s.get("index", 0)))
 
@@ -133,11 +141,16 @@ def run_pipeline(
         step_path = pipeline_dir / step_filename
         cv2.imwrite(str(step_path), output)
 
+        input_spec = status.get("input_spec") or {}
+        output_spec = status.get("output_spec") or {}
+
         step_results.append({
             "index": step_index,
             "domain": step_domain,
             "node": node_id,
             "method": method_id,
+            "input_spec": input_spec,
+            "output_spec": output_spec,
             "output_url": f"{base_url}/{step_filename}",
             "output_path": str(step_path),
             "runtime_ms": round(elapsed_ms, 2),
@@ -166,6 +179,8 @@ def run_pipeline(
                     (st.get("params") or {} for st in sorted_steps if int(st.get("index", 0)) == s["index"]),
                     {},
                 ),
+                "input_spec": s.get("input_spec"),
+                "output_spec": s.get("output_spec"),
             }
             for s in step_results
         ],
@@ -192,6 +207,8 @@ def run_pipeline(
                 "node": s["node"],
                 "method": s["method"],
                 "runtime_ms": s["runtime_ms"],
+                "input_spec": s.get("input_spec"),
+                "output_spec": s.get("output_spec"),
             }
             for s in step_results
         ],
