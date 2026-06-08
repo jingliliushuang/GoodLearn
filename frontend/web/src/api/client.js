@@ -138,4 +138,29 @@ export async function importNode(file, targetDomain, overwrite) {
   return data;
 }
 
+export async function importNodeTemplate(file, targetDomain, overwrite) {
+  const form = new FormData();
+  form.append('file', file);
+  form.append('target_domain', targetDomain);
+  form.append('overwrite', overwrite ? 'true' : 'false');
+  const { data } = await client.post('/api/node-manager/import-node-template', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 120000,
+  });
+  return data;
+}
+
+export async function importMethodTemplate(file, targetDomain, targetNodeId, overwrite) {
+  const form = new FormData();
+  form.append('file', file);
+  form.append('target_domain', targetDomain);
+  form.append('target_node_id', targetNodeId);
+  form.append('overwrite', overwrite ? 'true' : 'false');
+  const { data } = await client.post('/api/node-manager/import-method-template', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 120000,
+  });
+  return data;
+}
+
 export default client;

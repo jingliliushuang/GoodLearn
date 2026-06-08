@@ -12,7 +12,13 @@ from typing import Any
 
 from core.io_spec import validate_spec_fields
 from core.tree import get_node_dir
-from core.utils import get_exports_dir, get_knowledge_root, get_runtime_paths
+from core.utils import get_exports_dir, get_knowledge_root, get_project_root, get_runtime_paths
+from core.zip_import import (
+    assert_zip_size,
+    cleanup_temp_dir,
+    create_import_temp_dir,
+    validate_and_extract_zip,
+)
 
 WEIGHT_SUFFIXES = {".pth", ".pt", ".onnx", ".pb", ".ckpt", ".safetensors", ".h5"}
 BLOCKED_SUFFIXES = {".exe", ".bat", ".cmd", ".ps1", ".sh", ".dll", ".msi"}
@@ -254,71 +260,56 @@ def export_node(
     }
 
 
-def _is_safe_zip_member(name: str, dest_dir: Path) -> bool:
-    target = (dest_dir / name).resolve()
-    return str(target).startswith(str(dest_dir.resolve()))
+def _rel_knowledge_path(full_path: Path) -> str:
+    root = get_project_root()
+    try:
+        return full_path.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError:
+        return str(full_path)
 
 
-def _reject_dangerous_file(name: str) -> bool:
-    suffix = Path(name).suffix.lower()
-    return suffix in BLOCKED_SUFFIXES or suffix in WEIGHT_SUFFIXES
-
-
-def _find_node_root(extract_dir: Path) -> Path | None:
-    if (extract_dir / "metadata.json").exists():
-        return extract_dir
-
-    candidates: list[Path] = []
-    for meta in extract_dir.rglob("metadata.json"):
-        parent = meta.parent
-        if (parent / "methods").is_dir():
-            candidates.append(parent)
-
-    if not candidates:
-        return None
-    if len(candidates) == 1:
-        return candidates[0]
-
-    candidates.sort(key=lambda p: len(p.parts))
-    return candidates[0]
-
-
-def import_node(
+def import_node_template(
     archive_path: Path,
     target_domain: str,
     overwrite: bool = False,
 ) -> dict[str, Any]:
-    runtime = get_runtime_paths()
-    temp_root = runtime["temp"] / f"import_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
-    temp_root.mkdir(parents=True, exist_ok=True)
+    temp_root = create_import_temp_dir()
+    import_warnings: list[str] = []
 
     try:
-        with zipfile.ZipFile(archive_path, "r") as zf:
-            for member in zf.infolist():
-                if member.is_dir():
-                    continue
-                name = member.filename.replace("\\", "/")
-                if not _is_safe_zip_member(name, temp_root):
-                    raise ValueError(f"非法 zip 路径（zip slip）: {name}")
-                if _reject_dangerous_file(name):
-                    raise ValueError(f"拒绝导入的文件类型: {name}")
-
-            zf.extractall(temp_root)
+        validate_and_extract_zip(archive_path, temp_root)
 
         node_root = _find_node_root(temp_root)
         if node_root is None:
             raise ValueError("无法在 zip 中找到有效节点根目录（需含 metadata.json 与 methods/）")
 
-        validation = validate_node(node_root)
+        validation = validate_node(node_root, domain_hint=target_domain)
         if not validation["valid"]:
             raise ValueError("节点结构校验失败: " + "; ".join(validation["errors"]))
 
-        with open(node_root / "metadata.json", encoding="utf-8") as f:
+        meta_path = node_root / "metadata.json"
+        with open(meta_path, encoding="utf-8") as f:
             meta = json.load(f)
 
-        node_id = meta.get("id")
+        node_id = meta.get("id") or node_root.name
         if not node_id:
             raise ValueError("metadata.json 缺少 id")
+
+        meta_domain = meta.get("domain")
+        if meta_domain and meta_domain != target_domain:
+            import_warnings.append(
+                f"metadata.domain 为 {meta_domain}，已自动 patch 为 {target_domain}"
+            )
+            meta["domain"] = target_domain
+            with open(meta_path, "w", encoding="utf-8") as f:
+                json.dump(meta, f, ensure_ascii=False, indent=2)
+                f.write("\n")
+        elif not meta_domain:
+            meta["domain"] = target_domain
+            with open(meta_path, "w", encoding="utf-8") as f:
+                json.dump(meta, f, ensure_ascii=False, indent=2)
+                f.write("\n")
+            import_warnings.append(f"metadata.json 缺少 domain，已补为 {target_domain}")
 
         target_dir = get_node_dir(target_domain, node_id)
         if target_dir.exists():
@@ -359,16 +350,52 @@ def import_node(
             domain_meta["nodes"] = nodes
             with open(domain_meta_path, "w", encoding="utf-8") as f:
                 json.dump(domain_meta, f, ensure_ascii=False, indent=2)
+                f.write("\n")
 
+        all_warnings = import_warnings + validation.get("warnings", [])
         return {
             "success": True,
+            "type": "node",
             "domain": target_domain,
             "node_id": node_id,
+            "target_path": _rel_knowledge_path(target_dir),
             "node_path": str(target_dir),
-            "validation": validation,
+            "validation": {
+                "valid": validation["valid"],
+                "errors": validation.get("errors", []),
+                "warnings": all_warnings,
+            },
         }
     finally:
-        shutil.rmtree(temp_root, ignore_errors=True)
+        cleanup_temp_dir(temp_root)
+
+
+def import_node(
+    archive_path: Path,
+    target_domain: str,
+    overwrite: bool = False,
+) -> dict[str, Any]:
+    """Backward-compatible alias for import_node_template."""
+    return import_node_template(archive_path, target_domain, overwrite=overwrite)
+
+
+def _find_node_root(extract_dir: Path) -> Path | None:
+    if (extract_dir / "metadata.json").exists():
+        return extract_dir
+
+    candidates: list[Path] = []
+    for meta in extract_dir.rglob("metadata.json"):
+        parent = meta.parent
+        if (parent / "methods").is_dir():
+            candidates.append(parent)
+
+    if not candidates:
+        return None
+    if len(candidates) == 1:
+        return candidates[0]
+
+    candidates.sort(key=lambda p: len(p.parts))
+    return candidates[0]
 
 
 def validate_node_interfaces(node_dir: Path) -> dict[str, Any]:

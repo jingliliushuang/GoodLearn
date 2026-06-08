@@ -54,7 +54,7 @@
 | 动态加载器 | `backend/core/loader.py` | 符合 | 动态 import model/dataset/metrics | 保持 |
 | 统一运行器 | `backend/core/runner.py` | 部分符合 | 完整流程缺 report.json；超分未用 dataset | P2 补 report.json |
 | 组合节点生成器 | `backend/core/combiner.py` | 部分实现 | `run_pipeline()` 支持 cascade；`create_combined_node()` 未实现 | P2 持久化组合节点 |
-| 导入导出模块 | `backend/core/packer.py` + `node_generator.py` + `delete_manager.py` | 部分实现 | 节点/方法模板、导出/导入、软删除；protected 列表防误删 | 见节点管理页 |
+| 导入导出模块 | `packer.py` + `method_packer.py` + `zip_import.py` + `node_generator.py` + `delete_manager.py` | 部分实现 | 节点/方法模板、导出、**ZIP 节点/方法模板导入**、软删除 | 见节点管理页 |
 | 前端层 | `frontend/web/` | 符合 | React + Vite | 保持 |
 | Electron 桌面壳 | `desktop/` | 符合 | 加载 Vite dev URL | 保持 |
 | CLI 层 | — | 未实现 | 无 `frontend/cli/` | 非当前阶段必须项 |
@@ -175,9 +175,9 @@ GoodLearnApp/
 
 全部未实现（combiner 占位）。**后续优先级 P2**。
 
-### 流程 3：节点分享（packer）
+### 流程 3：节点分享（packer / method_packer）
 
-**部分实现**：`POST /api/node-manager/export` 导出 zip；`POST /api/node-manager/import` 导入并校验；默认不含权重。
+**部分实现**：`POST /api/node-manager/export` 导出 zip；`POST /api/node-manager/import-node-template` 导入节点模板；`POST /api/node-manager/import-method-template` 导入方法模板；导入前结构校验 + ZIP 安全检查；默认不含权重。
 
 ---
 
@@ -203,10 +203,12 @@ GoodLearnApp/
 4. **`metrics.py` 节点化** — 原先仅 `backend/core/metrics.py`；现已双轨，节点可覆盖。
 5. **`combined`** — 已部分实现：类型安全 Pipeline Builder + `run_pipeline()`；完整组合节点目录生成仍缺失。
 6. **方法 IO 类型** — 每个 `methods/{method}/metadata.json` 支持 `input_spec` / `output_spec`；`io_spec.py` 提供校验与默认推断；Pipeline 前后步骤按 kind / media_type 链式匹配。
-7. **`packer`** — 已实现：节点/方法模板、导出、导入与 `validate_node()`；`validate_node()` 对缺失 IO spec 给出 warning；`patch_node_metadata()` 自动补齐 domain；权重导出暂不支持。
-8. **`node_generator`** — 支持 `create_node_template()`（leaf 节点）与 `create_method_template()`（含 IO 类型参数）。
-9. **`delete_manager`** — 软删除至 `backend/runtime/trash/`；`protected_nodes` / `protected_methods`；node_manager 支持 create / import / export / validate / delete。
-10. **`CLI`** — 缺失，开发阶段用 `start_dev.bat` 替代，非必须项。
+7. **`packer`** — 已实现：节点模板、导出、**ZIP 节点模板导入**（`import_node_template`）、`validate_node()`；domain 不一致时自动 patch；权重 ZIP 导入拒绝。
+8. **`method_packer`** — 已实现：**ZIP 方法模板导入**（`import_method_template`）、`validate_method_template()`（强制 input_spec / output_spec，类型安全 Pipeline 基础）。
+9. **`zip_import`** — ZIP 安全检查：zip slip、50MB 上限、拒绝权重与可执行脚本；临时目录 `runtime/temp/imports/`。
+10. **`node_generator`** — 支持 `create_node_template()` 与 `create_method_template()`（含 IO 类型）。
+11. **`delete_manager`** — 软删除至 `runtime/trash/`；protected 列表。
+12. **`CLI`** — 缺失，开发阶段用 `start_dev.bat` 替代。
 
 ---
 

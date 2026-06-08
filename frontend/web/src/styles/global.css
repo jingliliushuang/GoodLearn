@@ -294,6 +294,25 @@ a:hover {
   font-size: 0.85rem;
 }
 
+.manager-zip-import .info-box {
+  margin-bottom: 1rem;
+}
+
+.manager-zip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.manager-zip-card {
+  padding: 1rem;
+}
+
+.manager-zip-card-title {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
 .manager-error {
   margin-bottom: 1rem;
 }

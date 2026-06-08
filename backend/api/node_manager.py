@@ -3,8 +3,10 @@ from pydantic import BaseModel
 
 from core.delete_manager import list_domain_nodes_detail, safe_delete_method, safe_delete_node
 from core.node_generator import create_method_template, create_node_template
-from core.packer import export_node, import_node, validate_node
+from core.packer import export_node, import_node, import_node_template, validate_node
+from core.method_packer import import_method_template
 from core.tree import get_node_dir
+from core.zip_import import assert_zip_size, create_import_temp_dir
 
 router = APIRouter(prefix="/api/node-manager", tags=["node-manager"])
 
@@ -169,6 +171,85 @@ def export_node_api(body: ExportNodeRequest):
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 
+@router.post("/import-node-template")
+async def import_node_template_api(
+    file: UploadFile = File(...),
+    target_domain: str = Form("cv"),
+    overwrite: bool = Form(False),
+):
+    from pathlib import Path
+
+    if not file.filename or not file.filename.lower().endswith(".zip"):
+        raise HTTPException(status_code=400, detail="请上传 .zip 文件")
+
+    data = await file.read()
+    try:
+        assert_zip_size(data)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    imports_dir = create_import_temp_dir()
+    tmp_path = imports_dir / (file.filename or "upload.zip")
+    tmp_path.write_bytes(data)
+
+    try:
+        result = import_node_template(tmp_path, target_domain, overwrite=overwrite)
+    except FileExistsError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+    finally:
+        tmp_path.unlink(missing_ok=True)
+
+    return result
+
+
+@router.post("/import-method-template")
+async def import_method_template_api(
+    file: UploadFile = File(...),
+    target_domain: str = Form("cv"),
+    target_node_id: str = Form(...),
+    overwrite: bool = Form(False),
+):
+    from pathlib import Path
+
+    if not file.filename or not file.filename.lower().endswith(".zip"):
+        raise HTTPException(status_code=400, detail="请上传 .zip 文件")
+
+    if not target_node_id.strip():
+        raise HTTPException(status_code=400, detail="target_node_id 不能为空")
+
+    data = await file.read()
+    try:
+        assert_zip_size(data)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    imports_dir = create_import_temp_dir()
+    tmp_path = imports_dir / (file.filename or "upload.zip")
+    tmp_path.write_bytes(data)
+
+    try:
+        result = import_method_template(
+            tmp_path,
+            target_domain,
+            target_node_id.strip(),
+            overwrite=overwrite,
+        )
+    except FileExistsError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    except (ValueError, FileNotFoundError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+    finally:
+        tmp_path.unlink(missing_ok=True)
+
+    return result
+
+
 @router.post("/import")
 async def import_node_api(
     file: UploadFile = File(...),
@@ -182,8 +263,10 @@ async def import_node_api(
         raise HTTPException(status_code=400, detail="请上传 .zip 文件")
 
     data = await file.read()
-    if len(data) == 0:
-        raise HTTPException(status_code=400, detail="空文件")
+    try:
+        assert_zip_size(data)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as tmp:
         tmp.write(data)

@@ -8,7 +8,8 @@ import {
   exportNode,
   fetchDomains,
   fetchManagerNodes,
-  importNode,
+  importMethodTemplate,
+  importNodeTemplate,
 } from '../api/client';
 import {
   INPUT_KIND_OPTIONS,
@@ -69,6 +70,17 @@ export default function NodeManagerPage() {
   const [importDomain, setImportDomain] = useState('cv');
   const [overwrite, setOverwrite] = useState(false);
 
+  const [zipNodeFile, setZipNodeFile] = useState(null);
+  const [zipNodeDomain, setZipNodeDomain] = useState('cv');
+  const [zipNodeOverwrite, setZipNodeOverwrite] = useState(false);
+  const [zipNodeResult, setZipNodeResult] = useState(null);
+
+  const [zipMethodFile, setZipMethodFile] = useState(null);
+  const [zipMethodDomain, setZipMethodDomain] = useState('cv');
+  const [zipMethodNodeId, setZipMethodNodeId] = useState('');
+  const [zipMethodOverwrite, setZipMethodOverwrite] = useState(false);
+  const [zipMethodResult, setZipMethodResult] = useState(null);
+
   const [loading, setLoading] = useState('');
   const [error, setError] = useState(null);
   const [createResult, setCreateResult] = useState(null);
@@ -123,6 +135,7 @@ export default function NodeManagerPage() {
           setMethodNodeId((prev) => (prev && leaves.some((n) => n.id === prev) ? prev : leaves[0].id));
           setDeleteNodeId((prev) => (prev && list.some((n) => n.id === prev) ? prev : leaves[0].id));
           setDeleteMethodNodeId((prev) => (prev && leaves.some((n) => n.id === prev) ? prev : leaves[0].id));
+          setZipMethodNodeId((prev) => (prev && leaves.some((n) => n.id === prev) ? prev : leaves[0].id));
         }
         const methodNode = list.find((n) => n.id === deleteMethodNodeId) || leaves[0];
         const methods = methodNode?.methods || [];
@@ -217,8 +230,45 @@ export default function NodeManagerPage() {
     setError(null);
     setImportResult(null);
     try {
-      const result = await importNode(importFile, importDomain, overwrite);
+      const result = await importNodeTemplate(importFile, importDomain, overwrite);
       setImportResult(result);
+      loadNodes();
+    } catch (err) {
+      setError(err.response?.data?.detail || err.message);
+    } finally {
+      setLoading('');
+    }
+  };
+
+  const handleImportNodeTemplate = async () => {
+    if (!zipNodeFile) return;
+    setLoading('zip-node');
+    setError(null);
+    setZipNodeResult(null);
+    try {
+      const result = await importNodeTemplate(zipNodeFile, zipNodeDomain, zipNodeOverwrite);
+      setZipNodeResult(result);
+      loadNodes();
+    } catch (err) {
+      setError(err.response?.data?.detail || err.message);
+    } finally {
+      setLoading('');
+    }
+  };
+
+  const handleImportMethodTemplate = async () => {
+    if (!zipMethodFile || !zipMethodNodeId) return;
+    setLoading('zip-method');
+    setError(null);
+    setZipMethodResult(null);
+    try {
+      const result = await importMethodTemplate(
+        zipMethodFile,
+        zipMethodDomain,
+        zipMethodNodeId,
+        zipMethodOverwrite,
+      );
+      setZipMethodResult(result);
       loadNodes();
     } catch (err) {
       setError(err.response?.data?.detail || err.message);
@@ -524,8 +574,122 @@ export default function NodeManagerPage() {
         )}
       </section>
 
+      <section className="manager-section card manager-zip-import">
+        <h2 className="section-title">从 ZIP 导入模板</h2>
+        <div className="info-box manager-intro">
+          <p><strong>节点模板 ZIP：</strong>用于导入一个完整知识节点，例如图像去模糊、边缘检测。导入后会出现在对应领域页面中。</p>
+          <p><strong>方法模板 ZIP：</strong>用于导入某个已有节点下的算法方法，例如在图像超分中导入 SRCNN，在图像去噪中导入 DnCNN。</p>
+          <p><strong>安全限制：</strong>当前版本不支持通过 ZIP 导入模型权重。权重请手动放入 external_model_root 或对应 methods/&#123;method&#125;/weights/ 目录。</p>
+        </div>
+
+        <div className="manager-zip-grid">
+          <div className="manager-zip-card card card-compact">
+            <h3 className="manager-zip-card-title">导入节点模板</h3>
+            <div className="manager-form-grid">
+              <label>
+                目标领域
+                <select value={zipNodeDomain} onChange={(e) => setZipNodeDomain(e.target.value)}>
+                  {domainOptions.map((d) => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="manager-checkbox">
+                <input
+                  type="checkbox"
+                  checked={zipNodeOverwrite}
+                  onChange={(e) => setZipNodeOverwrite(e.target.checked)}
+                />
+                覆盖已存在节点 (overwrite)
+              </label>
+              <label className="span-2">
+                节点模板 ZIP
+                <input
+                  type="file"
+                  accept=".zip"
+                  onChange={(e) => setZipNodeFile(e.target.files?.[0] || null)}
+                />
+              </label>
+            </div>
+            <button
+              type="button"
+              className="btn btn-primary"
+              disabled={loading === 'zip-node' || !zipNodeFile}
+              onClick={handleImportNodeTemplate}
+            >
+              {loading === 'zip-node' ? '导入中...' : '校验并导入节点模板'}
+            </button>
+            {zipNodeResult && (
+              <div className="manager-result">
+                <p>已导入节点：<strong>{zipNodeResult.node_id}</strong></p>
+                <p>路径：<code>{zipNodeResult.target_path}</code></p>
+                <ValidationBox validation={zipNodeResult.validation} />
+              </div>
+            )}
+          </div>
+
+          <div className="manager-zip-card card card-compact">
+            <h3 className="manager-zip-card-title">导入方法模板</h3>
+            <div className="manager-form-grid">
+              <label>
+                目标领域
+                <select value={zipMethodDomain} onChange={(e) => setZipMethodDomain(e.target.value)}>
+                  {domainOptions.map((d) => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                所属节点 (leaf)
+                <select value={zipMethodNodeId} onChange={(e) => setZipMethodNodeId(e.target.value)}>
+                  {leafNodes.map((n) => (
+                    <option key={n.id} value={n.id}>{n.title} ({n.id})</option>
+                  ))}
+                </select>
+              </label>
+              <label className="manager-checkbox">
+                <input
+                  type="checkbox"
+                  checked={zipMethodOverwrite}
+                  onChange={(e) => setZipMethodOverwrite(e.target.checked)}
+                />
+                覆盖已存在方法 (overwrite)
+              </label>
+              <label className="span-2">
+                方法模板 ZIP
+                <input
+                  type="file"
+                  accept=".zip"
+                  onChange={(e) => setZipMethodFile(e.target.files?.[0] || null)}
+                />
+              </label>
+            </div>
+            <button
+              type="button"
+              className="btn btn-primary"
+              disabled={loading === 'zip-method' || !zipMethodFile || !zipMethodNodeId}
+              onClick={handleImportMethodTemplate}
+            >
+              {loading === 'zip-method' ? '导入中...' : '校验并导入方法模板'}
+            </button>
+            {zipMethodResult && (
+              <div className="manager-result">
+                <p>已导入方法：<strong>{zipMethodResult.method_id}</strong></p>
+                <p>路径：<code>{zipMethodResult.target_path}</code></p>
+                {zipMethodResult.input_spec && zipMethodResult.output_spec && (
+                  <p className="card-desc">
+                    类型：{formatIoArrow(zipMethodResult.input_spec, zipMethodResult.output_spec)}
+                  </p>
+                )}
+                <ValidationBox validation={zipMethodResult.validation} />
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
       <section className="manager-section card">
-        <h2 className="section-title">导入节点</h2>
+        <h2 className="section-title">导入节点（兼容入口）</h2>
         <p className="card-desc manager-risk">
           导入节点只会进行结构校验，不会执行其中代码。拒绝权重文件与可执行脚本。
         </p>
@@ -566,7 +730,7 @@ export default function NodeManagerPage() {
         {importResult && (
           <div className="manager-result">
             <p>已导入：{importResult.domain}/{importResult.node_id}</p>
-            <p><code>{importResult.node_path}</code></p>
+            <p><code>{importResult.target_path || importResult.node_path}</code></p>
             <ValidationBox validation={importResult.validation} />
           </div>
         )}

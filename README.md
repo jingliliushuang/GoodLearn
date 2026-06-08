@@ -163,13 +163,22 @@ Pipeline Builder 与模型对比实验暂使用**默认参数**。
 | **节点模板** | 创建新任务节点（如 `knowledge/cv/deblur/`） | `POST /api/node-manager/create-template` |
 | **方法模板** | 在已有 leaf 节点下创建算法（如 `methods/srcnn/`） | `POST /api/node-manager/create-method-template` |
 | 导出 zip | 打包整个节点 | `POST /api/node-manager/export` |
-| 导入 zip | 结构校验 + 导入 | `POST /api/node-manager/import` |
+| **ZIP 导入节点模板** | 上传节点 zip，校验后导入 `knowledge/{domain}/{node_id}/` | `POST /api/node-manager/import-node-template` |
+| **ZIP 导入方法模板** | 上传方法 zip，导入到已有 leaf 节点的 `methods/{method_id}/` | `POST /api/node-manager/import-method-template` |
+| 导入 zip（兼容） | 同节点模板导入 | `POST /api/node-manager/import` |
 
 导出前会校验 `metadata.json`、`dataset.py`、`metrics.py`、`methods/` 结构。若老节点 `metadata.json` 缺少 `domain`，系统会从路径推断并**自动写回**后再导出。
 
 方法模板默认 `available=false`，显示「方法模板已创建，模型实现或权重暂未接入」，不影响其他可运行方法。
 
 创建方法模板时需选择 **input_spec / output_spec**（kind、count、media_type），供 Pipeline Builder 类型校验使用。
+
+**ZIP 手动导入：**
+- **节点模板 ZIP**：根目录含完整节点（`metadata.json`、`methods/`、`dataset.py` 等），导入到 `knowledge/{domain}/{node_id}/`
+- **方法模板 ZIP**：根目录含单个方法（`metadata.json`、`model.py`、`README.md` 等），导入到 `knowledge/{domain}/{node_id}/methods/{method_id}/`
+- 导入前进行结构校验与安全检查（zip slip 防护、拒绝可执行脚本与模型权重）
+- 当前版本**不支持**通过 ZIP 导入模型权重（`.pth` / `.onnx` / `.pb` 等）；权重需手动放入 `external_model_root` 或 `methods/{method}/weights/`，且不要提交到 Git
+- ZIP 大小上限 50MB；不执行 zip 内任何 Python 代码
 
 **删除（软删除）：**
 - `DELETE /api/node-manager/node` — 将节点移动到 `backend/runtime/trash/`
