@@ -1,0 +1,33 @@
+{
+  "id": "test_uploaded_method",
+  "title": "Test Uploaded Method",
+  "problem": "Test Uploaded Method 用于解决当前节点任务。",
+  "core_idea": [
+    "TODO：补充方法核心思想。",
+    "TODO：补充算法流程。",
+    "TODO：补充与其他方法的区别。"
+  ],
+  "pipeline": [
+    "输入 degraded data",
+    "执行模型或算法推理",
+    "输出 prediction / recovered result"
+  ],
+  "advantages": [
+    "TODO：补充方法优点。"
+  ],
+  "limitations": [
+    "TODO：补充方法局限。"
+  ],
+  "suitable_for": [
+    "TODO：补充适用场景。"
+  ],
+  "code_entry": "model.py",
+  "paper_relation": {
+    "paper_id": "",
+    "title": "",
+    "local_pdf": "",
+    "paper_url": "",
+    "note": "该方法通过 Create 模块添加。"
+  },
+  "teaching_notes": "这是通过 Create 模块添加的方法，可继续补充论文解读、代码说明和实验结果。"
+}

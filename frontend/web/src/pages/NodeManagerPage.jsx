@@ -1,15 +1,21 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
+  addMethodToNode,
   createMethodTemplate,
   createNodeTemplate,
+  createProfessionalNode,
   deleteMethod,
   deleteNode,
   exportNode,
+  exportProfessionalNode,
   fetchDomains,
   fetchManagerNodes,
+  fetchParentPathPresets,
+  fetchProfessionalNodes,
   importMethodTemplate,
   importNodeTemplate,
+  importProfessionalNode,
 } from '../api/client';
 import {
   INPUT_KIND_OPTIONS,
@@ -34,7 +40,8 @@ function ValidationBox({ validation }) {
 }
 
 const METHOD_CATEGORIES = [
-  'traditional', 'cnn', 'gan', 'transformer', 'detector', 'classifier', 'feature', 'other',
+  'traditional', 'cnn', 'gan', 'transformer', 'optimization',
+  'detector', 'classifier', 'feature', 'other',
 ];
 
 const METHOD_BACKENDS = [
@@ -99,6 +106,40 @@ export default function NodeManagerPage() {
   const [deleteMethodConfirmText, setDeleteMethodConfirmText] = useState('');
   const [deleteMethodResult, setDeleteMethodResult] = useState(null);
 
+  const [parentPathPresets, setParentPathPresets] = useState(['cv']);
+  const [parentPath, setParentPath] = useState('cv');
+  const [customParentPath, setCustomParentPath] = useState('');
+  const [proNodeInputType, setProNodeInputType] = useState('single_image');
+  const [proCreateResult, setProCreateResult] = useState(null);
+
+  const [professionalNodes, setProfessionalNodes] = useState([]);
+  const [addMethodNodePath, setAddMethodNodePath] = useState('');
+  const [addMethodId, setAddMethodId] = useState('');
+  const [addMethodTitle, setAddMethodTitle] = useState('');
+  const [addMethodDescription, setAddMethodDescription] = useState('');
+  const [addMethodCategory, setAddMethodCategory] = useState('other');
+  const [addMethodBackend, setAddMethodBackend] = useState('planned');
+  const [addMethodAvailable, setAddMethodAvailable] = useState(false);
+  const [addInputKind, setAddInputKind] = useState('single_image');
+  const [addOutputKind, setAddOutputKind] = useState('single_image');
+  const [paperTitle, setPaperTitle] = useState('');
+  const [paperAuthors, setPaperAuthors] = useState('');
+  const [paperYear, setPaperYear] = useState('');
+  const [paperVenue, setPaperVenue] = useState('');
+  const [paperUrl, setPaperUrl] = useState('');
+  const [paperSummary, setPaperSummary] = useState('');
+  const [paperPdfFile, setPaperPdfFile] = useState(null);
+  const [modelPyFile, setModelPyFile] = useState(null);
+  const [modelWeightFile, setModelWeightFile] = useState(null);
+  const [addMethodResult, setAddMethodResult] = useState(null);
+
+  const [exportProNodePath, setExportProNodePath] = useState('');
+  const [exportProResult, setExportProResult] = useState(null);
+
+  const [proImportFile, setProImportFile] = useState(null);
+  const [proImportOverwrite, setProImportOverwrite] = useState(false);
+  const [proImportResult, setProImportResult] = useState(null);
+
   const leafNodes = useMemo(
     () => nodes.filter((n) => n.type === 'leaf'),
     [nodes],
@@ -150,11 +191,33 @@ export default function NodeManagerPage() {
 
   useEffect(() => {
     fetchDomains().then(setDomains).catch(() => setDomains([]));
+    fetchParentPathPresets()
+      .then((data) => setParentPathPresets(data.presets || ['cv']))
+      .catch(() => setParentPathPresets(['cv']));
   }, []);
+
+  const loadProfessionalNodes = useCallback(() => {
+    fetchProfessionalNodes(domain)
+      .then((data) => {
+        const list = data.nodes || [];
+        setProfessionalNodes(list);
+        const leafList = list.filter((n) => n.type === 'leaf');
+        if (leafList.length) {
+          setAddMethodNodePath((prev) => (
+            prev && leafList.some((n) => n.node_path === prev) ? prev : leafList[0].node_path
+          ));
+          setExportProNodePath((prev) => (
+            prev && leafList.some((n) => n.node_path === prev) ? prev : leafList[0].node_path
+          ));
+        }
+      })
+      .catch(() => setProfessionalNodes([]));
+  }, [domain]);
 
   useEffect(() => {
     loadNodes();
-  }, [loadNodes]);
+    loadProfessionalNodes();
+  }, [loadNodes, loadProfessionalNodes]);
 
   const handleCreate = async () => {
     setLoading('create');
@@ -170,6 +233,117 @@ export default function NodeManagerPage() {
       });
       setCreateResult(result);
       loadNodes();
+      loadProfessionalNodes();
+    } catch (err) {
+      setError(err.response?.data?.detail || err.message);
+    } finally {
+      setLoading('');
+    }
+  };
+
+  const effectiveParentPath = customParentPath.trim() || parentPath;
+
+  const handleCreateProfessionalNode = async () => {
+    setLoading('pro-create');
+    setError(null);
+    setProCreateResult(null);
+    try {
+      const result = await createProfessionalNode({
+        domain,
+        parent_path: effectiveParentPath,
+        node_id: nodeId.trim(),
+        title: title.trim(),
+        description: description.trim(),
+        node_type: nodeType,
+        input_type: proNodeInputType,
+      });
+      setProCreateResult(result);
+      loadNodes();
+      loadProfessionalNodes();
+    } catch (err) {
+      setError(err.response?.data?.detail || err.message);
+    } finally {
+      setLoading('');
+    }
+  };
+
+  const buildIoSpec = (kind, count, mediaType, label) => ({
+    kind,
+    count: Number(count) || 1,
+    media_type: mediaType,
+    description: label,
+  });
+
+  const handleAddMethod = async () => {
+    if (!addMethodNodePath || !addMethodId.trim() || !addMethodTitle.trim()) return;
+    setLoading('add-method');
+    setError(null);
+    setAddMethodResult(null);
+    try {
+      const form = new FormData();
+      form.append('node_path', addMethodNodePath);
+      form.append('method_id', addMethodId.trim());
+      form.append('method_title', addMethodTitle.trim());
+      form.append('description', addMethodDescription.trim());
+      form.append('category', addMethodCategory);
+      form.append('backend', addMethodBackend);
+      form.append('available', addMethodAvailable ? 'true' : 'false');
+      form.append('input_spec', JSON.stringify(buildIoSpec(addInputKind, 1, 'image', '输入')));
+      form.append('output_spec', JSON.stringify(buildIoSpec(addOutputKind, 1, 'image', '输出')));
+      form.append('paper_meta', JSON.stringify({
+        id: addMethodId.trim(),
+        title: paperTitle.trim() || addMethodTitle.trim(),
+        authors: paperAuthors.trim(),
+        year: paperYear.trim(),
+        venue: paperVenue.trim(),
+        paper_url: paperUrl.trim(),
+        summary: paperSummary.trim(),
+        type: addMethodCategory,
+      }));
+      if (paperPdfFile) form.append('paper_pdf', paperPdfFile);
+      if (modelPyFile) form.append('model_py', modelPyFile);
+      if (modelWeightFile) form.append('model_file', modelWeightFile);
+
+      const result = await addMethodToNode(form);
+      setAddMethodResult(result);
+      loadNodes();
+      loadProfessionalNodes();
+    } catch (err) {
+      setError(err.response?.data?.detail || err.message);
+    } finally {
+      setLoading('');
+    }
+  };
+
+  const handleExportProfessional = async () => {
+    if (!exportProNodePath) return;
+    setLoading('export-pro');
+    setError(null);
+    setExportProResult(null);
+    try {
+      const result = await exportProfessionalNode({
+        node_path: exportProNodePath,
+        include_papers: true,
+        include_weights: false,
+      });
+      setExportProResult(result);
+    } catch (err) {
+      setError(err.response?.data?.detail || err.message);
+    } finally {
+      setLoading('');
+    }
+  };
+
+  const handleImportProfessional = async () => {
+    if (!proImportFile) return;
+    setLoading('import-pro');
+    setError(null);
+    setProImportResult(null);
+    try {
+      const result = await importProfessionalNode(proImportFile, proImportOverwrite);
+      setProImportResult(result);
+      loadNodes();
+      loadProfessionalNodes();
     } catch (err) {
       setError(err.response?.data?.detail || err.message);
     } finally {
@@ -340,13 +514,272 @@ export default function NodeManagerPage() {
         <p><strong>输入输出类型：</strong>方法模板创建时需要声明 input_spec / output_spec。Pipeline Builder 会根据这些类型判断方法是否能和前后步骤组合。例如，图像去噪和图像超分都是 single_image → single_image，因此可以串联；特征匹配是 image_pair → match_visualization，不能直接接在单图流水线后面。</p>
         <p><strong>导出节点：</strong>将整个任务节点打包为 zip，默认不导出模型权重。</p>
         <p><strong>导入节点：</strong>导入标准节点 zip 并校验结构，不会执行其中代码。</p>
+        <p><strong>Create 模块：</strong>创建专业节点（可选 parent_path）、导入/导出带 <code>package_manifest.json</code> 的专业节点包、向节点添加方法并上传论文 PDF / model.py / 权重。</p>
+        <p><strong>专业节点包导入：</strong>目标位置由 zip 内 <code>target_path</code> 决定，无需手动选择领域。</p>
         <p><strong>删除节点 / 方法：</strong>软删除到 <code>backend/runtime/trash/</code>，核心节点与方法受保护。第一版无 UI 恢复，可手动从 trash 复制回 knowledge/。</p>
       </div>
 
       {error && <div className="error manager-error">{error}</div>}
 
       <section className="manager-section card">
-        <h2 className="section-title">新建节点模板</h2>
+        <h2 className="section-title">Create：创建专业节点</h2>
+        <p className="card-desc">选择父级路径后创建独立专业节点，自动生成 package_manifest.json 与实验脚手架。</p>
+        <div className="manager-form-grid">
+          <label>
+            领域
+            <select value={domain} onChange={(e) => setDomain(e.target.value)}>
+              {domainOptions.map((d) => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            父级路径 parent_path
+            <select value={parentPath} onChange={(e) => setParentPath(e.target.value)}>
+              {parentPathPresets.map((p) => (
+                <option key={p} value={p}>{p}</option>
+              ))}
+            </select>
+          </label>
+          <label className="span-2">
+            或手动输入新父级路径
+            <input
+              value={customParentPath}
+              onChange={(e) => setCustomParentPath(e.target.value)}
+              placeholder="例如 cv/computational_imaging"
+            />
+          </label>
+          <label>
+            节点 ID
+            <input value={nodeId} onChange={(e) => setNodeId(e.target.value)} placeholder="compressed_imaging" />
+          </label>
+          <label>
+            节点名称
+            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="压缩成像" />
+          </label>
+          <label className="span-2">
+            描述
+            <input value={description} onChange={(e) => setDescription(e.target.value)} />
+          </label>
+          <label>
+            输入类型
+            <select value={proNodeInputType} onChange={(e) => setProNodeInputType(e.target.value)}>
+              <option value="single_image">single_image</option>
+              <option value="image_pair">image_pair</option>
+              <option value="single_video">single_video</option>
+            </select>
+          </label>
+          <label>
+            类型
+            <select value={nodeType} onChange={(e) => setNodeType(e.target.value)}>
+              <option value="leaf">leaf</option>
+              <option value="combined">combined</option>
+            </select>
+          </label>
+        </div>
+        <p className="card-desc">目标路径：<code>knowledge/{effectiveParentPath}/{nodeId || '...'}</code></p>
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={loading === 'pro-create' || !nodeId.trim() || !title.trim()}
+          onClick={handleCreateProfessionalNode}
+        >
+          {loading === 'pro-create' ? '创建中...' : '创建专业节点'}
+        </button>
+        {proCreateResult && (
+          <div className="manager-result">
+            <p>已创建：<code>{proCreateResult.target_path}</code></p>
+            <ValidationBox validation={proCreateResult.validation} />
+          </div>
+        )}
+      </section>
+
+      <section className="manager-section card">
+        <h2 className="section-title">Create：添加方法到专业节点</h2>
+        <p className="card-desc">可上传论文 PDF（写入 papers.json）、model.py（须含 process）、模型权重（保存到 methods/weights/）。</p>
+        <div className="manager-form-grid">
+          <label className="span-2">
+            专业节点 node_path
+            <select value={addMethodNodePath} onChange={(e) => setAddMethodNodePath(e.target.value)}>
+              {professionalNodes.filter((n) => n.type === 'leaf').map((n) => (
+                <option key={n.node_path} value={n.node_path}>
+                  {n.title} ({n.node_path})
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            方法 ID
+            <input value={addMethodId} onChange={(e) => setAddMethodId(e.target.value)} placeholder="test_uploaded_method" />
+          </label>
+          <label>
+            方法名称
+            <input value={addMethodTitle} onChange={(e) => setAddMethodTitle(e.target.value)} />
+          </label>
+          <label>
+            类别
+            <select value={addMethodCategory} onChange={(e) => setAddMethodCategory(e.target.value)}>
+              {METHOD_CATEGORIES.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            后端类型
+            <select value={addMethodBackend} onChange={(e) => setAddMethodBackend(e.target.value)}>
+              {METHOD_BACKENDS.map((b) => (
+                <option key={b} value={b}>{b}</option>
+              ))}
+            </select>
+          </label>
+          <label className="span-2">
+            描述
+            <textarea rows={2} value={addMethodDescription} onChange={(e) => setAddMethodDescription(e.target.value)} />
+          </label>
+          <label>
+            输入类型
+            <select value={addInputKind} onChange={(e) => setAddInputKind(e.target.value)}>
+              {INPUT_KIND_OPTIONS.map((k) => (
+                <option key={k} value={k}>{k}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            输出类型
+            <select value={addOutputKind} onChange={(e) => setAddOutputKind(e.target.value)}>
+              {OUTPUT_KIND_OPTIONS.map((k) => (
+                <option key={k} value={k}>{k}</option>
+              ))}
+            </select>
+          </label>
+          <label className="manager-checkbox">
+            <input type="checkbox" checked={addMethodAvailable} onChange={(e) => setAddMethodAvailable(e.target.checked)} />
+            立即可运行 (available)
+          </label>
+          <label className="span-2">
+            论文 PDF（可选）
+            <input type="file" accept=".pdf" onChange={(e) => setPaperPdfFile(e.target.files?.[0] || null)} />
+          </label>
+          <label>
+            论文标题
+            <input value={paperTitle} onChange={(e) => setPaperTitle(e.target.value)} />
+          </label>
+          <label>
+            作者
+            <input value={paperAuthors} onChange={(e) => setPaperAuthors(e.target.value)} />
+          </label>
+          <label>
+            年份
+            <input value={paperYear} onChange={(e) => setPaperYear(e.target.value)} />
+          </label>
+          <label>
+            发表 venue
+            <input value={paperVenue} onChange={(e) => setPaperVenue(e.target.value)} />
+          </label>
+          <label className="span-2">
+            论文链接（可选）
+            <input value={paperUrl} onChange={(e) => setPaperUrl(e.target.value)} />
+          </label>
+          <label className="span-2">
+            论文摘要
+            <textarea rows={2} value={paperSummary} onChange={(e) => setPaperSummary(e.target.value)} />
+          </label>
+          <label>
+            model.py（可选）
+            <input type="file" accept=".py" onChange={(e) => setModelPyFile(e.target.files?.[0] || null)} />
+          </label>
+          <label>
+            模型文件（可选）
+            <input type="file" onChange={(e) => setModelWeightFile(e.target.files?.[0] || null)} />
+          </label>
+        </div>
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={loading === 'add-method' || !addMethodNodePath || !addMethodId.trim() || !addMethodTitle.trim()}
+          onClick={handleAddMethod}
+        >
+          {loading === 'add-method' ? '提交中...' : '添加方法'}
+        </button>
+        {addMethodResult && (
+          <div className="manager-result">
+            <p>方法添加成功：<code>{addMethodResult.method_path}</code></p>
+            <p>论文已保存：{addMethodResult.paper_saved ? '是' : '否'}；模型已保存：{addMethodResult.model_saved ? '是' : '否'}</p>
+            <ValidationBox validation={addMethodResult.validation} />
+          </div>
+        )}
+      </section>
+
+      <section className="manager-section card">
+        <h2 className="section-title">Create：导出专业节点包</h2>
+        <div className="manager-form-grid">
+          <label className="span-2">
+            专业节点
+            <select value={exportProNodePath} onChange={(e) => setExportProNodePath(e.target.value)}>
+              {professionalNodes.filter((n) => n.type === 'leaf').map((n) => (
+                <option key={n.node_path} value={n.node_path}>
+                  {n.title} ({n.node_path})
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <p className="card-desc">导出 zip 含 package_manifest.json，默认包含论文 PDF，不含模型权重。</p>
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={loading === 'export-pro' || !exportProNodePath}
+          onClick={handleExportProfessional}
+        >
+          {loading === 'export-pro' ? '导出中...' : '导出专业节点包'}
+        </button>
+        {exportProResult && (
+          <div className="manager-result">
+            <p>目标路径：{exportProResult.target_path}</p>
+            {exportProResult.download_url && (
+              <a href={exportProResult.download_url} className="btn btn-secondary btn-sm" download>
+                下载 {exportProResult.filename}
+              </a>
+            )}
+            <ValidationBox validation={exportProResult.validation} />
+          </div>
+        )}
+      </section>
+
+      <section className="manager-section card">
+        <h2 className="section-title">Create：导入专业节点包</h2>
+        <p className="card-desc">导入位置由 zip 内 package_manifest.json 的 target_path 自动决定（与普通节点模板导入区分）。</p>
+        <div className="manager-form-grid">
+          <label className="manager-checkbox">
+            <input type="checkbox" checked={proImportOverwrite} onChange={(e) => setProImportOverwrite(e.target.checked)} />
+            覆盖已存在节点 (overwrite)
+          </label>
+          <label className="span-2">
+            专业节点包 ZIP
+            <input type="file" accept=".zip" onChange={(e) => setProImportFile(e.target.files?.[0] || null)} />
+          </label>
+        </div>
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={loading === 'import-pro' || !proImportFile}
+          onClick={handleImportProfessional}
+        >
+          {loading === 'import-pro' ? '导入中...' : '导入专业节点包'}
+        </button>
+        {proImportResult && (
+          <div className="manager-result">
+            <p>已导入：<strong>{proImportResult.title}</strong> → <code>{proImportResult.target_path}</code></p>
+            {proImportResult.warnings?.length > 0 && (
+              <ul className="validation-warn">{proImportResult.warnings.map((w) => <li key={w}>{w}</li>)}</ul>
+            )}
+            <ValidationBox validation={proImportResult.validation} />
+          </div>
+        )}
+      </section>
+
+      <section className="manager-section card">
+        <h2 className="section-title">新建节点模板（兼容）</h2>
         <div className="manager-form-grid">
           <label>
             领域

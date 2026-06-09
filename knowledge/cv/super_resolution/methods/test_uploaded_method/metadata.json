@@ -1,0 +1,25 @@
+{
+  "id": "test_uploaded_method",
+  "title": "Test Uploaded Method",
+  "category": "other",
+  "description": "Create module test",
+  "backend": "planned",
+  "available": false,
+  "reason": "方法已添加，但模型实现或依赖尚未确认。",
+  "requirements": [],
+  "weights": [],
+  "input_spec": {
+    "kind": "single_image",
+    "count": 1,
+    "media_type": "image",
+    "description": "in"
+  },
+  "output_spec": {
+    "kind": "single_image",
+    "count": 1,
+    "media_type": "image",
+    "description": "out"
+  },
+  "params_schema": [],
+  "created_at": "2026-06-09T10:26:18"
+}

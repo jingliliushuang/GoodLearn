@@ -39,6 +39,11 @@ out/
 *.safetensors
 *.h5
 *.pb
+**/weights/*
+!**/weights/README.md
+
+# User-uploaded papers (local only)
+knowledge/**/papers/files/*.pdf
 
 # Outputs
 outputs/

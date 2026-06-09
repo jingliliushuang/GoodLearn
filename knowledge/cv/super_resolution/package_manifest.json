@@ -1,0 +1,13 @@
+{
+  "package_type": "professional_node",
+  "schema_version": "1.0",
+  "node_id": "super_resolution",
+  "title": "图像超分辨率",
+  "domain": "cv",
+  "parent_path": "cv",
+  "target_path": "knowledge/cv/super_resolution",
+  "exported_at": "2026-06-09T10:26:18",
+  "include_papers": true,
+  "include_weights": false,
+  "description": "从低分辨率图像恢复高分辨率图像"
+}

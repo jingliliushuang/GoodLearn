@@ -213,6 +213,37 @@ Pipeline Builder 与模型对比实验暂使用**默认参数**。
 
 前端入口：首页或顶栏 **节点管理**。
 
+## 专业节点包
+
+每个专业节点可以作为独立 zip 包导出。专业节点包包含 `package_manifest.json`，用于声明 `node_id`、`domain`、`parent_path` 和 `target_path`。导入时系统根据 `target_path` 自动放置节点。
+
+## Create 模块
+
+Create 模块（`/api/create/*`）支持：
+
+- 创建专业节点（可选 `parent_path`，如 `cv/computational_imaging`）
+- 导入专业节点包（目标位置由 manifest 决定）
+- 导出专业节点包（含 manifest，默认不含权重）
+- 添加方法到专业节点
+- 上传论文 PDF
+- 上传 `model.py` 或模型文件
+
+论文 PDF 会保存到节点学习板块 `papers/files/`，并写入 `papers.json`。  
+模型文件会保存到 `methods/{method}/weights/`。  
+方法代码必须提供 `model.py`，并实现 `process()` 接口。
+
+默认不将模型权重和用户上传 PDF 提交到 Git。
+
+| API | 说明 |
+|-----|------|
+| `POST /api/create/create-professional-node` | 创建带 manifest 的专业节点 |
+| `POST /api/create/export-professional-node` | 导出专业节点 zip |
+| `POST /api/create/import-professional-node` | 按 manifest 导入 |
+| `POST /api/create/add-method` | 添加方法（multipart，含 PDF / model.py / 权重） |
+| `GET /api/create/professional-nodes` | 列出专业节点及 node_path |
+
+详见 [CREATE_MODULE_AUDIT.md](./CREATE_MODULE_AUDIT.md)。
+
 ## CV 模块扩展（特征匹配 / 分类 / 检测）
 
 CV 模块已从图像恢复扩展到特征匹配、图像分类与目标检测：

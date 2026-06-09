@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 from api import (
     compare,
+    create_api,
     demos,
     domains,
     experiments,
@@ -68,6 +69,7 @@ app.mount("/outputs/exports", StaticFiles(directory=str(exports_dir)), name="exp
 app.include_router(experiments.router)
 app.include_router(compare.router)
 app.include_router(node_manager.router)
+app.include_router(create_api.router)
 app.include_router(demos.router)
 app.include_router(domains.router)
 app.include_router(nodes.router)

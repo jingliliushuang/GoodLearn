@@ -190,4 +190,43 @@ export async function importMethodTemplate(file, targetDomain, targetNodeId, ove
   return data;
 }
 
+export async function fetchProfessionalNodes(domain) {
+  const { data } = await client.get('/api/create/professional-nodes', { params: { domain } });
+  return data;
+}
+
+export async function fetchParentPathPresets() {
+  const { data } = await client.get('/api/create/parent-path-presets');
+  return data;
+}
+
+export async function createProfessionalNode(payload) {
+  const { data } = await client.post('/api/create/create-professional-node', payload);
+  return data;
+}
+
+export async function exportProfessionalNode(payload) {
+  const { data } = await client.post('/api/create/export-professional-node', payload);
+  return data;
+}
+
+export async function importProfessionalNode(file, overwrite) {
+  const form = new FormData();
+  form.append('file', file);
+  form.append('overwrite', overwrite ? 'true' : 'false');
+  const { data } = await client.post('/api/create/import-professional-node', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 120000,
+  });
+  return data;
+}
+
+export async function addMethodToNode(formData) {
+  const { data } = await client.post('/api/create/add-method', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 120000,
+  });
+  return data;
+}
+
 export default client;

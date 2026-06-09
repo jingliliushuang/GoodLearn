@@ -286,6 +286,53 @@ GoodLearnApp/
 
 ---
 
+## 专业节点独立包结构
+
+节点包通过 `package_manifest.json` 描述导入位置和节点元数据，支持独立导出与导入。
+
+标准 zip 结构：
+
+```text
+{node_id}/
+├── package_manifest.json
+├── metadata.json
+├── content.md
+├── papers.json
+├── resources.json
+├── experiment.json
+├── papers/files/
+├── methods/{method}/
+└── ...
+```
+
+## 学习板块与实验板块
+
+**学习板块：**
+- `content.md`
+- `papers.json`
+- `resources.json`
+- `papers/files/`
+- method `detail.json`
+
+**实验板块：**
+- `experiment.json`
+- `dataset.py`
+- `metrics.py`
+- `methods/{method}/model.py`
+- `methods/{method}/weights/`
+
+## Create 模块
+
+Create 模块（`backend/core/create_manager.py` + `backend/api/create_api.py`）已从简单模板生成升级为专业节点和方法管理入口，支持：
+
+- 创建专业节点（`parent_path` / `node_path`）
+- 专业节点包导入导出（manifest 驱动）
+- 添加方法并上传论文 PDF、model.py、模型权重
+
+详见 [CREATE_MODULE_AUDIT.md](./CREATE_MODULE_AUDIT.md)。
+
+---
+
 ## 11. 本次补齐清单
 
 | 文件 | 动作 |
