@@ -19,6 +19,9 @@ from core.create_manager import (
     import_professional_node,
     list_professional_nodes,
 )
+from core.module_compat import list_node_modules
+from core.node_experiment_runner import run_node_experiment
+from core.workspace_runner import run_workspace_experiment
 from core.utils import get_project_root
 from core.zip_import import assert_zip_size, create_import_temp_dir
 
@@ -69,6 +72,28 @@ class ExportProfessionalNodeRequest(BaseModel):
     include_weights: bool = False
 
 
+class RunNodeExperimentRequest(BaseModel):
+    node_path: str
+    preprocess_id: str
+    process_id: str
+    judge_ids: list[str] = ["mse", "psnr", "ssim"]
+    preprocess_params: dict = {}
+    process_params: dict = {}
+    judge_params: dict = {}
+
+
+class WorkspaceBlock(BaseModel):
+    source_node: str
+    module_type: str
+    module_id: str
+    params: dict = {}
+
+
+class RunWorkspaceExperimentRequest(BaseModel):
+    workspace_path: str = "cv/experiment_workspace"
+    blocks: list[WorkspaceBlock]
+
+
 @router.get("/professional-nodes")
 def get_professional_nodes(domain: str = Query("cv")):
     return {"domain": domain, "nodes": list_professional_nodes(domain)}
@@ -97,6 +122,71 @@ def create_professional_node_api(body: CreateProfessionalNodeRequest):
         raise HTTPException(status_code=409, detail=str(exc)) from exc
     except (ValueError, FileNotFoundError) as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.get("/node-modules")
+def get_node_modules(node_path: str = Query(...)):
+    try:
+        return list_node_modules(node_path)
+    except (ValueError, FileNotFoundError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.post("/run-node-experiment")
+async def run_node_experiment_api(
+    node_path: str = Form(...),
+    preprocess_id: str = Form(...),
+    process_id: str = Form(...),
+    judge_ids: str = Form('["mse","psnr","ssim"]'),
+    preprocess_params: str = Form("{}"),
+    process_params: str = Form("{}"),
+    judge_params: str = Form("{}"),
+    image: UploadFile = File(...),
+):
+    temp_dir = project_root() / "backend" / "runtime" / "temp" / "node_experiment_uploads"
+    temp_dir.mkdir(parents=True, exist_ok=True)
+    suffix = Path(image.filename or "input.png").suffix or ".png"
+    temp_path = temp_dir / f"{uuid.uuid4().hex}{suffix}"
+    temp_path.write_bytes(await image.read())
+    try:
+        return run_node_experiment(
+            node_path=node_path.strip(),
+            preprocess_id=preprocess_id.strip(),
+            process_id=process_id.strip(),
+            judge_ids=parse_json_field(judge_ids, ["mse", "psnr", "ssim"]),
+            preprocess_params=parse_json_field(preprocess_params, {}),
+            process_params=parse_json_field(process_params, {}),
+            judge_params=parse_json_field(judge_params, {}),
+            image_path=temp_path,
+        )
+    except (ValueError, FileNotFoundError, RuntimeError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    finally:
+        temp_path.unlink(missing_ok=True)
+
+
+@router.post("/run-workspace-experiment")
+async def run_workspace_experiment_api(
+    workspace_path: str = Form("cv/experiment_workspace"),
+    blocks: str = Form(...),
+    image: UploadFile = File(...),
+):
+    temp_dir = project_root() / "backend" / "runtime" / "temp" / "workspace_uploads"
+    temp_dir.mkdir(parents=True, exist_ok=True)
+    suffix = Path(image.filename or "input.png").suffix or ".png"
+    temp_path = temp_dir / f"{uuid.uuid4().hex}{suffix}"
+    temp_path.write_bytes(await image.read())
+    try:
+        block_list = parse_json_field(blocks, [])
+        return run_workspace_experiment(
+            workspace_path=workspace_path.strip(),
+            blocks=block_list,
+            image_path=temp_path,
+        )
+    except (ValueError, FileNotFoundError, RuntimeError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    finally:
+        temp_path.unlink(missing_ok=True)
 
 
 @router.post("/export-professional-node")

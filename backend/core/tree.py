@@ -94,7 +94,11 @@ def list_node_methods(domain_id: str, node_id: str) -> list[dict[str, Any]]:
 
 
 def get_method_dir(domain_id: str, node_id: str, method_id: str) -> Path:
-    return get_node_dir(domain_id, node_id) / "methods" / method_id
+    node_dir = get_node_dir(domain_id, node_id)
+    process_path = node_dir / "process" / method_id
+    if process_path.is_dir() and (process_path / "model.py").exists():
+        return process_path
+    return node_dir / "methods" / method_id
 
 
 def load_learning_path(domain_id: str, node_id: str) -> list[dict[str, Any]]:

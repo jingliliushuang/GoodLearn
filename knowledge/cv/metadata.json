@@ -74,6 +74,18 @@
       "card_badges": [
         "进阶实验"
       ]
+    },
+    {
+      "id": "experiment_workspace",
+      "title": "CV 实验工作台",
+      "description": "组合多个专业节点的 preprocess / process / judge 模块，构建串行实验流程。",
+      "status": "ready",
+      "section": "advanced",
+      "order": 31,
+      "link_type": "workspace",
+      "card_badges": [
+        "实验工作台"
+      ]
     }
   ]
 }

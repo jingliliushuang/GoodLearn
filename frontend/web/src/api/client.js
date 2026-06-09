@@ -229,4 +229,29 @@ export async function addMethodToNode(formData) {
   return data;
 }
 
+export async function fetchNodeModules(nodePath) {
+  const { data } = await client.get('/api/create/node-modules', { params: { node_path: nodePath } });
+  return data;
+}
+
+export async function runNodeExperiment(formData) {
+  const { data } = await client.post('/api/create/run-node-experiment', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 180000,
+  });
+  return data;
+}
+
+export async function runWorkspaceExperiment(workspacePath, blocks, imageFile) {
+  const form = new FormData();
+  form.append('workspace_path', workspacePath);
+  form.append('blocks', JSON.stringify(blocks));
+  form.append('image', imageFile);
+  const { data } = await client.post('/api/create/run-workspace-experiment', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    timeout: 180000,
+  });
+  return data;
+}
+
 export default client;

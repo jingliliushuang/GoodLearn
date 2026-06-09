@@ -10,7 +10,8 @@ from datetime import datetime
 from pathlib import Path, PurePosixPath
 from typing import Any, Optional
 
-from core.io_spec import build_spec, infer_default_specs, validate_spec_fields
+from core.io_spec import build_spec, infer_default_specs
+from core.module_compat import node_module_flags, sync_method_dirs
 from core.method_packer import validate_method_template
 from core.node_generator import register_node_in_domain
 from core.packer import (
@@ -90,11 +91,38 @@ def list_professional_nodes(domain: str) -> list[dict[str, Any]]:
         node_dir = meta_path.parent
         if node_dir == domain_dir:
             continue
-        if not (node_dir / "methods").is_dir():
+
+        meta = read_json(meta_path, {})
+        node_type = meta.get("type", "leaf")
+        if node_type == "workspace":
+            node_path = node_path_from_dir(node_dir)
+            nodes.append(
+                {
+                    "id": meta.get("id", node_dir.name),
+                    "title": meta.get("title", node_dir.name),
+                    "description": meta.get("description", ""),
+                    "status": meta.get("status", "draft"),
+                    "type": "workspace",
+                    "domain": meta.get("domain", domain),
+                    "parent_path": meta.get("parent_path", domain),
+                    "node_path": node_path,
+                    "path": str(node_dir),
+                    "has_preprocess": False,
+                    "has_process": False,
+                    "has_judge": False,
+                    "compat_mode": False,
+                }
+            )
+            continue
+
+        has_methods = (node_dir / "methods").is_dir()
+        has_process = (node_dir / "process").is_dir()
+        if not has_methods and not has_process:
             continue
 
         meta = read_json(meta_path, {})
         node_path = node_path_from_dir(node_dir)
+        flags = node_module_flags(node_dir)
         nodes.append(
             {
                 "id": meta.get("id", node_dir.name),
@@ -106,6 +134,7 @@ def list_professional_nodes(domain: str) -> list[dict[str, Any]]:
                 "parent_path": meta.get("parent_path", domain),
                 "node_path": node_path,
                 "path": str(node_dir),
+                **flags,
             }
         )
     return nodes
@@ -375,6 +404,7 @@ def add_method_to_node(
         (method_dir / "README.md").write_text(readme, encoding="utf-8")
 
         validation = validate_method_template(method_dir)
+        sync_method_dirs(node_dir, method_id)
         rel_method = f"knowledge/{node_path_from_dir(node_dir)}/methods/{method_id}"
 
         return {
@@ -510,6 +540,22 @@ def create_professional_node(
     )
     (methods_dir / "README.md").write_text(BASELINE_README, encoding="utf-8")
     (methods_dir / "model.py").write_text(BASELINE_MODEL_PY, encoding="utf-8")
+    sync_method_dirs(node_dir, "baseline")
+
+    for sub in ("preprocess", "process", "judge", "test", "papers/files"):
+        (node_dir / sub).mkdir(parents=True, exist_ok=True)
+    (node_dir / "preprocess" / "README.md").write_text(
+        "# preprocess\n\n测试集生成模块目录。每个子目录含 module.py（generate 接口）。\n",
+        encoding="utf-8",
+    )
+    (node_dir / "judge" / "README.md").write_text(
+        "# judge\n\n评价模块目录。每个子目录含 module.py（evaluate 接口）。\n",
+        encoding="utf-8",
+    )
+    (node_dir / "test" / "README.md").write_text(
+        "# test\n\n节点实验结果保存目录（本地，不提交 Git）。\n",
+        encoding="utf-8",
+    )
 
     tests_dir = node_dir / "tests"
     tests_dir.mkdir()
@@ -697,6 +743,8 @@ def export_professional_node(
             arcname = f"{node_id}/{rel}"
 
             if not include_papers and rel.startswith("papers/files/"):
+                continue
+            if rel.startswith("test/"):
                 continue
             if _should_exclude_from_export(arcname, include_weights):
                 continue

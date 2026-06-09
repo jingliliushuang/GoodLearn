@@ -331,6 +331,15 @@ Create 模块（`backend/core/create_manager.py` + `backend/api/create_api.py`�
 
 详见 [CREATE_MODULE_AUDIT.md](./CREATE_MODULE_AUDIT.md)。
 
+详见 [CREATE_MODULE_AUDIT.md](./CREATE_MODULE_AUDIT.md) 与 [FINAL_FEATURE_AUDIT.md](./FINAL_FEATURE_AUDIT.md)。
+
+## 实验工作台与 test/ 输出
+
+- 工作台节点：`knowledge/cv/experiment_workspace/`
+- 运行器：`backend/core/workspace_runner.py`
+- 普通节点实验：`backend/core/node_experiment_runner.py` → `node/test/{run_id}/`
+- 兼容层：`backend/core/module_compat.py`
+
 ---
 
 ## 11. 本次补齐清单

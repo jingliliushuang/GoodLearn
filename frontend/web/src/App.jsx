@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import DomainPage from './pages/DomainPage';
 import NodePage from './pages/NodePage';
 import PipelinePage from './pages/PipelinePage';
+import ExperimentWorkspacePage from './pages/ExperimentWorkspacePage';
 import NodeManagerPage from './pages/NodeManagerPage';
 import ErrorBoundary from './components/ErrorBoundary';
 import ThemeToggle from './components/ThemeToggle';
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/domain/:domainId" element={<DomainPage />} />
             <Route path="/domain/:domainId/pipeline" element={<PipelinePage />} />
+            <Route path="/domain/:domainId/workspace" element={<ExperimentWorkspacePage />} />
             <Route path="/node-manager" element={<NodeManagerPage />} />
             <Route path="/node/:domainId/:nodeId" element={<NodePage />} />
           </Routes>

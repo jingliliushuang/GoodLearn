@@ -170,6 +170,9 @@ def import_method_template(
 
         shutil.copytree(method_root, target_method_dir)
 
+        from core.module_compat import sync_method_dirs
+        sync_method_dirs(node_dir, method_id)
+
         return {
             "success": True,
             "type": "method",

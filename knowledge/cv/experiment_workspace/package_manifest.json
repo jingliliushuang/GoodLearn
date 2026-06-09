@@ -1,0 +1,12 @@
+{
+  "package_type": "professional_node",
+  "schema_version": "1.0",
+  "node_id": "experiment_workspace",
+  "title": "CV 实验工作台",
+  "domain": "cv",
+  "parent_path": "cv",
+  "target_path": "knowledge/cv/experiment_workspace",
+  "include_papers": false,
+  "include_weights": false,
+  "description": "组合多个专业节点的 preprocess / process / judge 模块，构建串行实验流程。"
+}

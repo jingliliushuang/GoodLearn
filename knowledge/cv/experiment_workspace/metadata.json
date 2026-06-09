@@ -1,0 +1,10 @@
+{
+  "id": "experiment_workspace",
+  "title": "CV 实验工作台",
+  "type": "workspace",
+  "domain": "cv",
+  "parent_path": "cv",
+  "node_path": "cv/experiment_workspace",
+  "description": "用于组合多个专业节点的 preprocess / process / judge 模块，构建串行实验流程。",
+  "status": "ready"
+}

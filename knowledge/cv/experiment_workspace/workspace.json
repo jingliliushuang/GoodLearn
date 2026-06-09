@@ -1,0 +1,8 @@
+{
+  "available_nodes": [
+    "cv/denoise",
+    "cv/super_resolution",
+    "cv/feature_matching"
+  ],
+  "default_blocks": []
+}

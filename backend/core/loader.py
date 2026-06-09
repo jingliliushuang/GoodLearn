@@ -6,7 +6,8 @@ import importlib.util
 from pathlib import Path
 from typing import Any, Callable
 
-from core.tree import get_method_dir, get_node_dir
+from core.module_compat import resolve_process_dir
+from core.tree import get_node_dir
 
 
 def _load_node_callable(domain_id: str, node_id: str, module_name: str, fn_name: str) -> Callable[..., Any]:
@@ -49,7 +50,8 @@ def load_evaluate_fn(domain_id: str, node_id: str) -> Callable[..., Any] | None:
 
 
 def load_process_fn(domain_id: str, node_id: str, method_id: str) -> Callable[..., Any]:
-    method_dir = get_method_dir(domain_id, node_id, method_id)
+    node_dir = get_node_dir(domain_id, node_id)
+    method_dir = resolve_process_dir(node_dir, method_id)
     model_path = method_dir / "model.py"
     if not model_path.exists():
         raise FileNotFoundError(f"Model not found: {model_path}")
@@ -73,13 +75,15 @@ def load_process_fn(domain_id: str, node_id: str, method_id: str) -> Callable[..
 def load_method_metadata(domain_id: str, node_id: str, method_id: str) -> dict[str, Any]:
     import json
 
-    meta_path = get_method_dir(domain_id, node_id, method_id) / "metadata.json"
+    node_dir = get_node_dir(domain_id, node_id)
+    meta_path = resolve_process_dir(node_dir, method_id) / "metadata.json"
     with open(meta_path, encoding="utf-8") as f:
         return json.load(f)
 
 
 def get_method_readme(domain_id: str, node_id: str, method_id: str) -> str:
-    readme_path = get_method_dir(domain_id, node_id, method_id) / "README.md"
+    node_dir = get_node_dir(domain_id, node_id)
+    readme_path = resolve_process_dir(node_dir, method_id) / "README.md"
     if readme_path.exists():
         return readme_path.read_text(encoding="utf-8")
     return ""

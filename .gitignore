@@ -45,6 +45,9 @@ out/
 # User-uploaded papers (local only)
 knowledge/**/papers/files/*.pdf
 
+# Node / workspace experiment outputs (local only)
+knowledge/**/test/
+
 # Outputs
 outputs/
 assets/samples/*.png

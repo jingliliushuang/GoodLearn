@@ -2165,6 +2165,46 @@ a:hover {
   }
 }
 
+.workspace-node-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.workspace-node-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+}
+
+.workspace-block {
+  margin-bottom: 1rem;
+}
+
+.workspace-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.workspace-block-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.report-pre {
+  white-space: pre-wrap;
+  background: var(--bg-soft);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
 .error-boundary {
   margin: 40px;
   padding: 24px;

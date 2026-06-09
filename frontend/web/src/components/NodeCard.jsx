@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom';
 export default function NodeCard({ domainId, node }) {
   const isReady = node.status !== 'planned';
   const isPipeline = node.link_type === 'pipeline';
+  const isWorkspace = node.link_type === 'workspace';
   const entryPath = isPipeline
     ? `/domain/${domainId}/pipeline`
-    : `/node/${domainId}/${node.id}`;
+    : isWorkspace
+      ? `/domain/${domainId}/workspace`
+      : `/node/${domainId}/${node.id}`;
 
   const badges = node.card_badges || (isPipeline ? ['进阶实验'] : [isReady ? '可学习' : '预留']);
   const hint = node.card_hint;
@@ -36,7 +39,7 @@ export default function NodeCard({ domainId, node }) {
       {isReady && (
         <div style={{ marginTop: '1rem' }}>
           <Link to={entryPath} className="btn btn-primary">
-            {isPipeline ? '开始组合' : '开始学习'}
+            {isPipeline ? '开始组合' : isWorkspace ? '打开工作台' : '开始学习'}
           </Link>
         </div>
       )}

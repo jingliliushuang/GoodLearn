@@ -21,6 +21,7 @@ from core.utils import (
     ensure_runtime_dirs,
     get_comparisons_dir,
     get_exports_dir,
+    get_knowledge_root,
     get_pipelines_dir,
     get_project_root,
     load_config,
@@ -65,6 +66,9 @@ app.mount(
 exports_dir = get_exports_dir()
 exports_dir.mkdir(parents=True, exist_ok=True)
 app.mount("/outputs/exports", StaticFiles(directory=str(exports_dir)), name="exports")
+
+knowledge_root = get_knowledge_root()
+app.mount("/knowledge-assets", StaticFiles(directory=str(knowledge_root)), name="knowledge_assets")
 
 app.include_router(experiments.router)
 app.include_router(compare.router)

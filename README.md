@@ -242,7 +242,31 @@ Create 模块（`/api/create/*`）支持：
 | `POST /api/create/add-method` | 添加方法（multipart，含 PDF / model.py / 权重） |
 | `GET /api/create/professional-nodes` | 列出专业节点及 node_path |
 
-详见 [CREATE_MODULE_AUDIT.md](./CREATE_MODULE_AUDIT.md)。
+详见 [CREATE_MODULE_AUDIT.md](./CREATE_MODULE_AUDIT.md) 与 [FINAL_FEATURE_AUDIT.md](./FINAL_FEATURE_AUDIT.md)。
+
+## 实验架构（最终版）
+
+### 专业节点三模块
+
+每个专业节点支持（新结构优先，旧结构兼容）：
+
+| 模块 | 新目录 | 旧兼容 | 接口 |
+|------|--------|--------|------|
+| 测试集生成 | `preprocess/{id}/module.py` | `dataset.py` | `generate()` / `degrade()` |
+| 处理算法 | `process/{id}/model.py` | `methods/{id}/model.py` | `process()` |
+| 评价 | `judge/{id}/module.py` | `metrics.py` | `evaluate()` |
+
+### 实验结果保存
+
+- **普通专业节点**：`knowledge/{node_path}/test/{run_id}/`（含 `result.json`、`report.txt`）
+- **实验工作台**：`knowledge/cv/experiment_workspace/test/{run_id}/`
+- 全局缓存：`backend/runtime/`（不提交 Git）
+
+### 实验工作台
+
+CV 领域 → **CV 实验工作台**，可组合多个节点的 preprocess / process / judge 模块构建串行流水线。
+
+API：`POST /api/create/run-workspace-experiment`
 
 ## CV 模块扩展（特征匹配 / 分类 / 检测）
 
