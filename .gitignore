@@ -17,6 +17,7 @@ backend/runtime/experiments/
 backend/runtime/pipelines/
 backend/runtime/comparisons/
 backend/runtime/standard_experiments/
+backend/runtime/workspace/
 backend/runtime/trash/
 backend/logs/
 

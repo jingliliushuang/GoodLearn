@@ -63,6 +63,14 @@ app.mount(
     name="runtime_standard_experiments",
 )
 
+workspace_runtime_dir = backend_runtime / "workspace"
+workspace_runtime_dir.mkdir(parents=True, exist_ok=True)
+app.mount(
+    "/runtime/workspace",
+    StaticFiles(directory=str(workspace_runtime_dir)),
+    name="runtime_workspace",
+)
+
 exports_dir = get_exports_dir()
 exports_dir.mkdir(parents=True, exist_ok=True)
 app.mount("/outputs/exports", StaticFiles(directory=str(exports_dir)), name="exports")

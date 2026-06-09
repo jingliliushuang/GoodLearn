@@ -21,7 +21,7 @@ from core.create_manager import (
 )
 from core.module_compat import list_node_modules
 from core.node_experiment_runner import run_node_experiment
-from core.workspace_runner import run_workspace_experiment
+from core.workspace_runner import WorkspacePipelineError, run_workspace_experiment
 from core.utils import get_project_root
 from core.zip_import import assert_zip_size, create_import_temp_dir
 
@@ -183,6 +183,14 @@ async def run_workspace_experiment_api(
             blocks=block_list,
             image_path=temp_path,
         )
+    except WorkspacePipelineError as exc:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "message": "工作台流水线不合法",
+                "errors": exc.errors,
+            },
+        ) from exc
     except (ValueError, FileNotFoundError, RuntimeError) as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     finally:

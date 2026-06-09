@@ -2205,6 +2205,100 @@ a:hover {
   overflow-x: auto;
 }
 
+.workspace-pipeline-warn p {
+  margin: 0.25rem 0;
+}
+
+.workspace-warn-inline {
+  color: var(--danger);
+  font-weight: normal;
+  font-size: 0.9em;
+}
+
+.workspace-results-panel .subsection-title {
+  margin-top: 1.5rem;
+}
+
+.workspace-result-meta p {
+  margin: 0.35rem 0;
+}
+
+.workspace-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.workspace-step-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.workspace-step-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.workspace-step-badge {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+}
+
+.workspace-step-line {
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+.workspace-step-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.metric-chip {
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  background: var(--bg-soft);
+  font-size: 0.85rem;
+}
+
+.workspace-result-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem;
+  background: var(--bg-soft);
+}
+
+.workspace-result-card-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.workspace-result-image {
+  max-width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+.workspace-result-error {
+  color: var(--danger);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.workspace-report-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
 .error-boundary {
   margin: 40px;
   padding: 24px;
